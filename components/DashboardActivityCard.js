@@ -29,7 +29,7 @@ export default function DashboardCard() {
   );
 }
 
-const StyledHeadline2 = styled.h2`
+export const StyledHeadline2 = styled.h2`
   font-size: var(--font-size-headline);
   color: var(--secondary-color);
   margin-left: 40px;
