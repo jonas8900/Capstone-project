@@ -1,14 +1,13 @@
 import { activityList } from "@/dummyList/activityList";
 import { styled } from "styled-components";
 import { StyledHeadline } from "./Dashboard";
-import { StyledHeadline2 } from "./DashboardActivityCard";
 
 export default function Activitylist() {
   return (
     <>
       <StyledHeadline>Friends</StyledHeadline>
       <StyledActivitySection>
-        <StyledHeadline2>Aktivitäten</StyledHeadline2>
+        <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
         {activityList.map((activity) => (
           <StyledList key={activity.id}>
             <StyledListItem>
@@ -47,3 +46,9 @@ const StyledListItemHeadline = styled.h3`
 const StyledActivitySection = styled.section`
   margin: 1rem auto;
 `;
+
+const StyledHeadlineForSubpages = styled.h2`
+  font-size: var(--font-size-headline);
+  margin-left: 40px;
+  margin-bottom: 0px;
+`
