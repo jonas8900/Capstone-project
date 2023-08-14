@@ -25,5 +25,9 @@ export default createGlobalStyle`
     font-family: ${roboto.style.fontFamily};
     margin: 0;
     font-family: system-ui;
+    width: 100%;
+    height: 100%;
+    max-width: 420px;
+    margin-inline: auto;
   }
 `;
