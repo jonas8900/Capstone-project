@@ -63,6 +63,7 @@ const StyledListItem = styled.li`
   display: grid;
   grid-template-columns: repeat(2, 0.5fr) 2fr 1fr;
   grid-template-rows: repeat(2, 0.8fr);
+  grid-auto-flow: column;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   margin-top: 2rem;
@@ -70,12 +71,13 @@ const StyledListItem = styled.li`
   border: 1px solid rgba(181, 181, 181, 0.2);
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
-  max-width: 356px;
+  word-break: break-word;
 `;
 
 const StyledListItemHeadline = styled.h3`
   grid-area: 1 / 3 / 2 / 4;
   font-size: var(--font-size-headlines);
+  max-width: 356px;
 `;
 
 const StyledActivitySection = styled.section`
