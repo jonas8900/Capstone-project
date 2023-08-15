@@ -2,7 +2,6 @@ import  styled  from "styled-components";
 
 export default function DashboardCard() {
   return (
-    <>
       <StyledSection>
         <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
         <StyledUl>
@@ -25,7 +24,6 @@ export default function DashboardCard() {
           </li>
         </StyledUl>
       </StyledSection>
-    </>
   );
 }
 

@@ -20,28 +20,27 @@ export default function Activitylist() {
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-    const inputData = {
+    const newActivity = {
       name: data.activityName,
       id: uid(),
     };
-    setActivityCards([...activityCards, inputData]);
+    setActivityCards([...activityCards, newActivity]);
 
     event.target.reset();
   }
 
   return (
-    <>
       <main>
         <StyledHeadline>Friends</StyledHeadline>
         <StyledActivitySection>
           <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
+          <StyledList>
           {activityCards.map((activity) => (
-            <StyledList key={activity.id}>
-              <StyledListItem>
+              <StyledListItem key={activity.id}>
                 <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
               </StyledListItem>
-            </StyledList>
           ))}
+          </StyledList>
         </StyledActivitySection>
         <Form
           name={"activityName"}
@@ -50,7 +49,6 @@ export default function Activitylist() {
           placeholder={"hier aktivität eingeben..."}
         />
       </main>
-    </>
   );
 }
 
@@ -59,9 +57,6 @@ const StyledList = styled.ul`
   margin: 2rem 2rem 2rem 2rem;
   padding: 0;
   text-align: center;
-  border: 1px solid rgba(181, 181, 181, 0.2);
-  border-radius: 9px;
-  box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
 `;
 
 const StyledListItem = styled.li`
@@ -70,6 +65,13 @@ const StyledListItem = styled.li`
   grid-template-rows: repeat(2, 0.8fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
+  list-style: none;
+  margin-top: 2rem;
+  padding: 0;
+  text-align: center;
+  border: 1px solid rgba(181, 181, 181, 0.2);
+  border-radius: 9px;
+  box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
 `;
 
 const StyledListItemHeadline = styled.h3`

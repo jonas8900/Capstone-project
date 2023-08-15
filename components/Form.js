@@ -4,7 +4,6 @@ import styled from "styled-components";
 
 export default function Form({ name, onSubmit, placeholder, type }) {
   return (
-    <>
       <StyledForm onSubmit={onSubmit}>
         <label htmlFor="inputTextField">
           <StyledInputField
@@ -19,7 +18,6 @@ export default function Form({ name, onSubmit, placeholder, type }) {
           <StyledIcon icon={faPlus} />
         </StyledSubmitButton>
       </StyledForm>
-    </>
   );
 }
 
