@@ -30,25 +30,25 @@ export default function Activitylist() {
   }
 
   return (
-      <main>
-        <StyledHeadline>Friends</StyledHeadline>
-        <StyledActivitySection>
-          <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
-          <StyledList>
+    <main>
+      <StyledHeadline>Friends</StyledHeadline>
+      <StyledActivitySection>
+        <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
+        <StyledList>
           {activityCards.map((activity) => (
-              <StyledListItem key={activity.id}>
-                <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
-              </StyledListItem>
+            <StyledListItem key={activity.id}>
+              <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
+            </StyledListItem>
           ))}
-          </StyledList>
-        </StyledActivitySection>
-        <Form
-          name={"activityName"}
-          type={"text"}
-          onSubmit={handleSubmitActivity}
-          placeholder={"hier aktivität eingeben..."}
-        />
-      </main>
+        </StyledList>
+      </StyledActivitySection>
+      <Form
+        name={"activityName"}
+        type={"text"}
+        onSubmit={handleSubmitActivity}
+        placeholder={"hier aktivität eingeben..."}
+      />
+    </main>
   );
 }
 
@@ -70,6 +70,7 @@ const StyledListItem = styled.li`
   border: 1px solid rgba(181, 181, 181, 0.2);
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
+  max-width: 356px;
 `;
 
 const StyledListItemHeadline = styled.h3`
