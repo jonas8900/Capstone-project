@@ -1,31 +1,29 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 export default function DashboardCard() {
   return (
-    <>
-      <StyledSection>
-        <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
-        <StyledUl>
-          <li>
-            <StyledHeadline3>Aktivitäten</StyledHeadline3>
-            <StyledDetailText>Filme Abend</StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>Datum</StyledHeadline3>
-            <StyledDetailText>21.01.2023</StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>Ort</StyledHeadline3>
-            <StyledDetailText>Max Zuhause</StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>was bringst du mit</StyledHeadline3>
-            <StyledDetailText>Popcorn</StyledDetailText>
-            <StyledDetailText>Eistee</StyledDetailText>
-          </li>
-        </StyledUl>
-      </StyledSection>
-    </>
+    <StyledSection>
+      <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
+      <StyledUl>
+        <li>
+          <StyledHeadline3>Aktivitäten</StyledHeadline3>
+          <StyledDetailText>Filme Abend</StyledDetailText>
+        </li>
+        <li>
+          <StyledHeadline3>Datum</StyledHeadline3>
+          <StyledDetailText>21.01.2023</StyledDetailText>
+        </li>
+        <li>
+          <StyledHeadline3>Ort</StyledHeadline3>
+          <StyledDetailText>Max Zuhause</StyledDetailText>
+        </li>
+        <li>
+          <StyledHeadline3>was bringst du mit</StyledHeadline3>
+          <StyledDetailText>Popcorn</StyledDetailText>
+          <StyledDetailText>Eistee</StyledDetailText>
+        </li>
+      </StyledUl>
+    </StyledSection>
   );
 }
 
@@ -39,7 +37,7 @@ export const StyledHeadline2 = styled.h2`
 const StyledHeadline3 = styled.h3`
   font-size: var(--font-size-details);
   color: var(--grey-topics);
-  font-weight: var(--font-weight-light)
+  font-weight: var(--font-weight-light);
 `;
 
 const StyledDetailText = styled.p`
