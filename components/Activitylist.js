@@ -1,21 +1,55 @@
 import { activityList } from "@/dummyList/activityList";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { StyledHeadline } from "./Dashboard";
+import Form from "./Form";
+import { uid } from "uid";
+import useLocalStorageState from "use-local-storage-state";
 
 export default function Activitylist() {
+  // the defaultValue is connected to the dummyList. This is helpful in the future for the mongoDB connection
+  const [activityCards, setActivityCards] = useLocalStorageState(
+    "activityList",
+    {
+      defaultValue: activityList,
+    }
+  );
+
+  function handleSubmitActivity(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData);
+
+    const inputData = {
+      name: data.activityName,
+      id: uid(),
+    };
+    setActivityCards([...activityCards, inputData]);
+
+    event.target.reset();
+  }
+
   return (
     <>
-      <StyledHeadline>Friends</StyledHeadline>
-      <StyledActivitySection>
-        <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
-        {activityList.map((activity) => (
-          <StyledList key={activity.id}>
-            <StyledListItem>
-              <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
-            </StyledListItem>
-          </StyledList>
-        ))}
-      </StyledActivitySection>
+      <main>
+        <StyledHeadline>Friends</StyledHeadline>
+        <StyledActivitySection>
+          <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
+          {activityCards.map((activity) => (
+            <StyledList key={activity.id}>
+              <StyledListItem>
+                <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
+              </StyledListItem>
+            </StyledList>
+          ))}
+        </StyledActivitySection>
+        <Form
+          name={"activityName"}
+          type={"text"}
+          onSubmit={handleSubmitActivity}
+          placeholder={"hier aktivität eingeben..."}
+        />
+      </main>
     </>
   );
 }
@@ -45,10 +79,11 @@ const StyledListItemHeadline = styled.h3`
 
 const StyledActivitySection = styled.section`
   margin: 1rem auto;
+  padding-bottom: 2rem;
 `;
 
 const StyledHeadlineForSubpages = styled.h2`
   font-size: var(--font-size-headline);
   margin-left: 40px;
   margin-bottom: 0px;
-`
+`;
