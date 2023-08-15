@@ -31,3 +31,5 @@ export default createGlobalStyle`
     margin-inline: auto;
   }
 `;
+
+

@@ -10,7 +10,7 @@ export default function Dashboard() {
   );
 }
 
-const StyledHeadline = styled.h1`
+export const StyledHeadline = styled.h1`
   text-align: center;
   border-bottom: 2px solid black;
 `;
