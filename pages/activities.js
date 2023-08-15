@@ -4,8 +4,8 @@ import Link from "next/link";
 export default function Activities() {
   return (
     <>
-      <Activitylist />
-      <Link href={"/"}>Go to the Dashboard</Link>
-    </>
+  <Activitylist />
+  <Link href={"/"}>Go to the Dashboard</Link>
+  </>
   );
 }

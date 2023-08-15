@@ -5,7 +5,7 @@ export default function HomePage() {
   return (
     <>
       <Dashboard />
-      <Link href={"/Subpages/Activities"}>Go to Activities</Link>
+      <Link href={"/activities"}>Go to Activities</Link>
     </>
   );
 }
