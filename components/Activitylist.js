@@ -65,10 +65,8 @@ const StyledListItem = styled.li`
   grid-template-rows: repeat(2, 0.8fr);
   grid-column-gap: 0px;
   grid-row-gap: 0px;
-  list-style: none;
   margin-top: 2rem;
   padding: 0;
-  text-align: center;
   border: 1px solid rgba(181, 181, 181, 0.2);
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
