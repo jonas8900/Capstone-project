@@ -4,20 +4,20 @@ import styled from "styled-components";
 
 export default function Form({ name, onSubmit, placeholder, type }) {
   return (
-      <StyledForm onSubmit={onSubmit}>
-        <label htmlFor="inputTextField">
-          <StyledInputField
-            id="inputTextField"
-            type={type}
-            name={name}
-            placeholder={placeholder}
-            required
-          ></StyledInputField>
-        </label>
-        <StyledSubmitButton type="submit">
-          <StyledIcon icon={faPlus} />
-        </StyledSubmitButton>
-      </StyledForm>
+    <StyledForm onSubmit={onSubmit}>
+      <label htmlFor="inputTextField">
+        <StyledInputField
+          id="inputTextField"
+          type={type}
+          name={name}
+          placeholder={placeholder}
+          required
+        ></StyledInputField>
+      </label>
+      <StyledSubmitButton type="submit">
+        <StyledIcon icon={faPlus} />
+      </StyledSubmitButton>
+    </StyledForm>
   );
 }
 
@@ -29,7 +29,7 @@ const StyledForm = styled.form`
   position: sticky;
   left: 0;
   right: 0;
-  bottom: 4rem;
+  bottom: 5.5rem;
 `;
 
 const StyledInputField = styled.input`
@@ -59,6 +59,6 @@ const StyledSubmitButton = styled.button`
   border: none;
 
   &:active {
-    background-color: #ff7a00;
+    background-color: var(--secondary-color);
   }
 `;

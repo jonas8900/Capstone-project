@@ -52,7 +52,7 @@ export default function Activitylist() {
   );
 }
 
-const StyledList = styled.ul`
+export const StyledList = styled.ul`
   list-style: none;
   margin: 2rem 2rem 2rem 2rem;
   padding: 0;
@@ -77,7 +77,6 @@ const StyledListItem = styled.li`
 const StyledListItemHeadline = styled.h3`
   grid-area: 1 / 3 / 2 / 4;
   font-size: var(--font-size-headlines);
-  max-width: 356px;
 `;
 
 const StyledActivitySection = styled.section`
