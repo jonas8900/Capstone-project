@@ -58,4 +58,5 @@ const StyledListItemText = styled.p`
 
 const StyledMenuLink = styled(Link)`
   text-decoration: none;
+  color: black;
 `;
