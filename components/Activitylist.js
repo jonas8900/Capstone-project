@@ -52,7 +52,7 @@ export default function Activitylist() {
   );
 }
 
-const StyledList = styled.ul`
+export const StyledList = styled.ul`
   list-style: none;
   margin: 2rem 2rem 2rem 2rem;
   padding: 0;
