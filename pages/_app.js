@@ -7,7 +7,7 @@ export default function App({ Component, pageProps }) {
   const [activityCards, setActivityCards] = useLocalStorageState(
     "activityList",
     {
-      defaultValue: activityList,
+      defaultValue: [],
     }
   );
 

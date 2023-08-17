@@ -13,10 +13,15 @@ export default function ActivityPlan({ activityCards }) {
   const currentActivities = activityCards.filter(
     (activityCard) => activityCard.id === currentId
   );
-
   const currentActivitieObject = activityCards.find(
     (activityCard) => activityCard.id === currentId
   );
+
+  // to check if we already had a submitevent with generate an object
+  const comparedActivities = dates.filter(
+    (date) => date.veranstaltung === currentActivitieObject.name
+  );
+  const newObject = comparedActivities.find((date) => date);
 
   function handleSubmitDates(event) {
     event.preventDefault();
@@ -24,7 +29,9 @@ export default function ActivityPlan({ activityCards }) {
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-    const dataObject = {
+    let count = 0;
+    const allDates = [];
+    const dateObject = {
       id: uid(),
       veranstaltung: currentActivitieObject.name,
       date1: data.date1,
@@ -32,10 +39,25 @@ export default function ActivityPlan({ activityCards }) {
       date3: data.date3,
       date4: data.date4,
     };
-    setDates([...dates, dataObject]);
+    //to check if we have the same date twice by clicking submit, i put the dates in a array, sort the array, and loop over it to check if there's a same date
+    for (let key in dateObject) {
+      ++count;
+      if (key.includes("date")) {
+        allDates.push(dateObject[key]);
+      }
+    }
+    // if we have choosen the same date twice if true, we get an alert
+    const sortedArray = [...allDates].sort();
+    for (let i = 0; i < sortedArray.length; i++) {
+      if (sortedArray[i + 1] === sortedArray[i] && sortedArray[i] !== "") {
+        return alert("You can't confirm the same dates");
+      }
+    }
+    setDates([...dates, dateObject]);
+    alert("Congratulations, you have started a vote!");
   }
-  console.log(currentActivitieObject);
-  console.log(dates);
+
+  // when we already have an submitevent with an object, the button and the dates get disabled
 
   return (
     <main>
@@ -60,21 +82,62 @@ export default function ActivityPlan({ activityCards }) {
               <StyledForm onSubmit={handleSubmitDates}>
                 <StyledLabels htmlFor="date1">
                   Datum 1
-                  <StyledInputDateField type="date" id="date1" name="date1" />
+                  <StyledInputDateField
+                    type="date"
+                    id="date1"
+                    name="date1"
+                    disabled={comparedActivities.length > 0 ? true : false}
+                    {...(comparedActivities.length > 0
+                      ? { value: newObject.date1 }
+                      : "")}
+                    required
+                  />
                 </StyledLabels>
                 <StyledLabels htmlFor="date2">
                   Datum 2
-                  <StyledInputDateField type="date" id="date2" name="date2" />
+                  <StyledInputDateField
+                    type="date"
+                    id="date2"
+                    name="date2"
+                    disabled={comparedActivities.length > 0 ? true : false}
+                    {...(comparedActivities.length > 0
+                      ? { value: newObject.date2 }
+                      : "")}
+                    required
+                  />
                 </StyledLabels>
                 <StyledLabels htmlFor="date3">
                   Datum 3
-                  <StyledInputDateField type="date" id="date3" name="date3" />
+                  <StyledInputDateField
+                    type="date"
+                    id="date3"
+                    name="date3"
+                    placeholder="Ausweichdatum 2"
+                    disabled={comparedActivities.length > 0 ? true : false}
+                    {...(comparedActivities.length > 0
+                      ? { value: newObject.date3 }
+                      : "")}
+                  />
                 </StyledLabels>
                 <StyledLabels htmlFor="date4">
                   Datum 4
-                  <StyledInputDateField type="date" id="date4" name="date4" />
+                  <StyledInputDateField
+                    type="date"
+                    id="date4"
+                    name="date4"
+                    placeholder="Ausweichdatum 3"
+                    disabled={comparedActivities.length > 0 ? true : false}
+                    {...(comparedActivities.length > 0
+                      ? { value: newObject.date4 }
+                      : "")}
+                  />
                 </StyledLabels>
-                <StyledFormButton type="submit">Bestätigen</StyledFormButton>
+                <StyledFormButton
+                  disabled={comparedActivities.length > 0 ? true : false}
+                  type="submit"
+                >
+                  Bestätigen
+                </StyledFormButton>
               </StyledForm>
             </StyledFormArticle>
           </section>
@@ -164,6 +227,9 @@ const StyledFormButton = styled.button`
   height: 3rem;
   border-radius: 10px;
   border: none;
+
+  background-color: ${({ disabled }) =>
+    disabled == true ? "green" : "#7ae249"};
 
   &:active {
     background-color: green;
