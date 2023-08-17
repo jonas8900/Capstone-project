@@ -1,9 +1,12 @@
 import Activitylist from "@/components/Activitylist";
 
-export default function Activities() {
+export default function Activities({ activityCards, setActivityCards }) {
   return (
     <>
-  <Activitylist />
-  </>
+      <Activitylist
+        activityCards={activityCards}
+        setActivityCards={setActivityCards}
+      />
+    </>
   );
 }

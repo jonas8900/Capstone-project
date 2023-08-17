@@ -1,21 +1,14 @@
-import { activityList } from "@/dummyList/activityList";
 import styled from "styled-components";
 import { StyledHeadline } from "./Dashboard";
 import Form from "./Form";
 import { uid } from "uid";
-import useLocalStorageState from "use-local-storage-state";
-import { useRouter } from "next/router";
 
-export default function Activitylist() {
+import { useRouter } from "next/router";
+import Link from "next/link";
+
+export default function Activitylist({ activityCards, setActivityCards }) {
   // the defaultValue is connected to the dummyList. This is helpful in the future for the mongoDB connection
   const router = useRouter();
-
-  const [activityCards, setActivityCards] = useLocalStorageState(
-    "activityList",
-    {
-      defaultValue: activityList,
-    }
-  );
 
   function handleSubmitActivity(event) {
     event.preventDefault();
@@ -55,7 +48,9 @@ export default function Activitylist() {
               <StyledDeleteButton onClick={() => handleDelete(activity.id)}>
                 X
               </StyledDeleteButton>
-              <StyledPlanButton>planen</StyledPlanButton>
+              <StyledActivityLink href={`/${activity.id}`}>
+                <StyledPlanButton>planen</StyledPlanButton>
+              </StyledActivityLink>
             </StyledListItem>
           ))}
         </StyledList>
@@ -122,7 +117,6 @@ const StyledDeleteButton = styled.button`
 `;
 
 const StyledPlanButton = styled.button`
-  grid-area: 2 / 3 / 3 / 4;
   width: 50%;
   height: 100%;
   max-height: 2rem;
@@ -135,4 +129,8 @@ const StyledPlanButton = styled.button`
   &:active {
     background-color: #ffe89a;
   }
+`;
+
+const StyledActivityLink = styled(Link)`
+  grid-area: 2 / 3 / 3 / 4;
 `;
