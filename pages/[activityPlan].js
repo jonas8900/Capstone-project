@@ -19,10 +19,11 @@ export default function ActivityPlan({ activityCards }) {
 
   // to check if we already had a submitevent with generate an object
   const comparedActivities = dates.filter(
-    (date) => date.veranstaltung === currentActivitieObject.name
+    (date) => date.id === currentActivitieObject.id
   );
-  const newObject = comparedActivities.find((date) => date);
 
+  const newObject = comparedActivities.find((date) => date);
+  console.log(dates);
   function handleSubmitDates(event) {
     event.preventDefault();
 
@@ -32,7 +33,7 @@ export default function ActivityPlan({ activityCards }) {
     let count = 0;
     const allDates = [];
     const dateObject = {
-      id: uid(),
+      id: currentActivitieObject.id,
       veranstaltung: currentActivitieObject.name,
       date1: data.date1,
       date2: data.date2,
@@ -56,7 +57,6 @@ export default function ActivityPlan({ activityCards }) {
     setDates([...dates, dateObject]);
     alert("Congratulations, you have started a vote!");
   }
-
   // when we already have an submitevent with an object, the button and the dates get disabled
 
   return (
