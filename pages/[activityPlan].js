@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
-import { uid } from "uid";
 import useLocalStorageState from "use-local-storage-state";
 
 export default function ActivityPlan({ activityCards }) {
