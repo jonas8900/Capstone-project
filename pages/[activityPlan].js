@@ -15,6 +15,7 @@ export default function ActivityPlan({ activityCards }) {
   const currentActivitieObject = activityCards.find(
     (activityCard) => activityCard.id === currentId
   );
+  const minDateToday = new Date().toISOString().slice(0, 10);
 
   // to check if we already had a submitevent with generate an object
   const comparedActivities = dates.filter(
@@ -85,6 +86,7 @@ export default function ActivityPlan({ activityCards }) {
                     type="date"
                     id="date1"
                     name="date1"
+                    min={minDateToday}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date1 }
@@ -98,6 +100,7 @@ export default function ActivityPlan({ activityCards }) {
                     type="date"
                     id="date2"
                     name="date2"
+                    min={minDateToday}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date2 }
@@ -111,7 +114,7 @@ export default function ActivityPlan({ activityCards }) {
                     type="date"
                     id="date3"
                     name="date3"
-                    placeholder="Ausweichdatum 2"
+                    min={minDateToday}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date3 }
@@ -124,7 +127,7 @@ export default function ActivityPlan({ activityCards }) {
                     type="date"
                     id="date4"
                     name="date4"
-                    placeholder="Ausweichdatum 3"
+                    min={minDateToday}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date4 }
