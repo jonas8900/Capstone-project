@@ -3,11 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
-import useLocalStorageState from "use-local-storage-state";
 
-export default function ActivityPlan({ activityCards }) {
-  const [dates, setDates] = useLocalStorageState("dates", { defaultValue: [] });
-
+export default function ActivityPlan({ activityCards, dates, setDates }) {
   const router = useRouter();
   const currentId = router.query.activityPlan;
   const currentActivities = activityCards.filter(
@@ -52,14 +49,13 @@ export default function ActivityPlan({ activityCards }) {
     const sortedArray = [...allDates].sort();
     for (let i = 0; i < sortedArray.length; i++) {
       if (sortedArray[i + 1] === sortedArray[i] && sortedArray[i] !== "") {
-        return alert("You can't confirm the same dates");
+        return alert("Sie können nicht zwei gleiche Daten angeben");
       }
     }
     setDates([...dates, dateObject]);
-    alert("Congratulations, you have started a vote!");
+    alert("Glückwunsch ! Sie haben eine Abstimmung gestartet.");
   }
   // when we already have an submitevent with an object, the button and the dates get disabled
-  console.log(dates);
   return (
     <main>
       <StyledBackButtonLink href={"/activities"}>

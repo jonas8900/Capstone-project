@@ -1,7 +1,33 @@
+import { uid } from "uid";
 import { styled } from "styled-components";
+import { useState } from "react";
+import useLocalStorageState from "use-local-storage-state";
 
 export default function Votecard({ dates, setDates }) {
-  console.log(dates);
+  const [matchedID, setMatchedID] = useLocalStorageState("matchedID", {
+    defaultValue: {},
+  });
+
+  function handleSubmitCheckboxes(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const checkBoxData = Object.fromEntries(formData);
+
+    setMatchedID({
+      ...matchedID,
+      date1IsTrue: checkBoxData.date1,
+      date2IsTrue: checkBoxData.date2,
+      date3IsTrue: checkBoxData.date3,
+      date4IsTrue: checkBoxData.date4,
+      noDateMatches: checkBoxData.noDate,
+    });
+  }
+  function handleFindId(id) {
+    setMatchedID(dates.find((date) => date.id === id));
+  }
+
+  console.log(matchedID);
   return (
     <>
       {dates.map((date) => (
@@ -9,50 +35,55 @@ export default function Votecard({ dates, setDates }) {
           <StyledVoteCardHeadline>
             Veranstaltungsabstimmung
           </StyledVoteCardHeadline>
-          <StyledVoteCardForm>
+          <StyledVoteCardForm onSubmit={handleSubmitCheckboxes}>
             <StyledVoteCardArticle>
               <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
               <p>{date.veranstaltung}</p>
             </StyledVoteCardArticle>
-            <StyledNoDateMatch>
-              Keins passt <input type="checkbox" />
+            <StyledNoDateMatch htmlFor="noDate">
+              Keins passt <input type="checkbox" name="noDate" id="noDate" />
             </StyledNoDateMatch>
             {date.date1 !== "" && (
               <article>
                 <StyledDateHeadline>Datum 1</StyledDateHeadline>
-                <StyledDateOneLabel>
+                <StyledDateOneLabel htmlFor="date1">
                   {date.date1}
-                  <input type="checkbox" />
+                  <input type="checkbox" id="date1" name="date1" />
                 </StyledDateOneLabel>
               </article>
             )}
             {date.date2 !== "" && (
               <article>
                 <StyledDateHeadline>Datum 2</StyledDateHeadline>
-                <StyledDateTwoLabel>
+                <StyledDateTwoLabel htmlFor="date2">
                   {date.date2}
-                  <input type="checkbox" />
+                  <input type="checkbox" id="date2" name="date2" />
                 </StyledDateTwoLabel>
               </article>
             )}
             {date.date3 !== "" && (
               <article>
                 <StyledDateHeadline>Datum 3</StyledDateHeadline>
-                <StyledDateThreeLabel>
-                  {date.date3} <input type="checkbox" />
+                <StyledDateThreeLabel htmlFor="date3">
+                  {date.date3} <input type="checkbox" id="date3" name="date3" />
                 </StyledDateThreeLabel>
               </article>
             )}
             {date.date4 !== "" && (
               <article>
                 <StyledDateHeadline>Datum 4</StyledDateHeadline>
-                <StyledDateFourLabel>
+                <StyledDateFourLabel htmlFor="date4">
                   {date.date4}
-                  <input type="checkbox" />
+                  <input type="checkbox" id="date4" name="date4" />
                 </StyledDateFourLabel>
               </article>
             )}
-            <StyledVoteCardButton>Bestätigen</StyledVoteCardButton>
+            <StyledVoteCardButton
+              type="submit"
+              onClick={() => handleFindId(date.id)}
+            >
+              Bestätigen
+            </StyledVoteCardButton>
           </StyledVoteCardForm>
         </StyledVoteCardSection>
       ))}
@@ -130,4 +161,8 @@ const StyledVoteCardButton = styled.button`
   color: black;
   border-radius: 10px;
   border: none;
+
+  &:active {
+    background-color: green;
+  }
 `;

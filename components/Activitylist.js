@@ -2,7 +2,6 @@ import styled from "styled-components";
 import Form from "./Form";
 import { uid } from "uid";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 export default function Activitylist({
   activityCards,

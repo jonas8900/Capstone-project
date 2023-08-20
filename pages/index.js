@@ -5,10 +5,9 @@ export default function HomePage({ dates, setDates }) {
   console.log(dates);
   return (
     <>
-      {dates.length > 0 &&
-        dates.map((date) => (
-          <Votecard key={date.key} dates={dates} setDates={setDates} />
-        ))}
+      {dates.length > 0 && (
+        <Votecard dates={dates} setDates={setDates} />
+      )}
       <Dashboard />
     </>
   );
