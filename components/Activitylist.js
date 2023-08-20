@@ -2,13 +2,12 @@ import styled from "styled-components";
 import { StyledHeadline } from "./Dashboard";
 import Form from "./Form";
 import { uid } from "uid";
-
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Activitylist({ activityCards, setActivityCards }) {
   // the defaultValue is connected to the dummyList. This is helpful in the future for the mongoDB connection
-  const router = useRouter();
+  const router = useRouter()
 
   function handleSubmitActivity(event) {
     event.preventDefault();

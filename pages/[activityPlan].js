@@ -7,6 +7,7 @@ import useLocalStorageState from "use-local-storage-state";
 
 export default function ActivityPlan({ activityCards }) {
   const [dates, setDates] = useLocalStorageState("dates", { defaultValue: [] });
+
   const router = useRouter();
   const currentId = router.query.activityPlan;
   const currentActivities = activityCards.filter(
@@ -23,7 +24,7 @@ export default function ActivityPlan({ activityCards }) {
   );
 
   const newObject = comparedActivities.find((date) => date);
-  console.log(dates);
+
   function handleSubmitDates(event) {
     event.preventDefault();
 
@@ -58,7 +59,7 @@ export default function ActivityPlan({ activityCards }) {
     alert("Congratulations, you have started a vote!");
   }
   // when we already have an submitevent with an object, the button and the dates get disabled
-
+  console.log(dates);
   return (
     <main>
       <StyledHeadlineSection>

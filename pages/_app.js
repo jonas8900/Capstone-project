@@ -1,6 +1,5 @@
 import NavigationBar from "@/components/NavigationBar";
 import GlobalStyle from "../styles";
-import { activityList } from "@/dummyList/activityList";
 import useLocalStorageState from "use-local-storage-state";
 
 export default function App({ Component, pageProps }) {
@@ -10,6 +9,7 @@ export default function App({ Component, pageProps }) {
       defaultValue: [],
     }
   );
+
 
   return (
     <>
