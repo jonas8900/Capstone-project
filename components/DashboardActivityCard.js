@@ -49,7 +49,8 @@ const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   margin: 2rem;
-  margin-top: 10rem;
+  margin-top: 4rem;
+  margin-bottom: 6rem;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
 `;

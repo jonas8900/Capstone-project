@@ -8,7 +8,6 @@ import { styled } from "styled-components";
 export default function Menu() {
   return (
     <>
-      <StyledHeadline>Menu</StyledHeadline>
       <section>
         <StyledList>
           <StyledMenuLink href={"/activities"}>

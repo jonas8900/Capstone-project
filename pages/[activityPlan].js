@@ -62,12 +62,9 @@ export default function ActivityPlan({ activityCards }) {
   console.log(dates);
   return (
     <main>
-      <StyledHeadlineSection>
-        <StyledHeadlineWithoutBorder>Friends</StyledHeadlineWithoutBorder>
-        <StyledBackButtonLink href={"/activities"}>
-          <StyledBackIcon icon={faArrowLeft} />
-        </StyledBackButtonLink>
-      </StyledHeadlineSection>
+      <StyledBackButtonLink href={"/activities"}>
+        <StyledBackIcon icon={faArrowLeft} />
+      </StyledBackButtonLink>
       <section>
         {currentActivities.map((currentActivity) => (
           <section key={currentId}>
@@ -161,29 +158,11 @@ const StyledThirdHeadling = styled.h3`
   font-weight: normal;
 `;
 
-const StyledHeadlineSection = styled.section`
-  display: grid;
-  grid-template-columns: 0.3fr 1fr 0.3fr;
-  grid-template-rows: 0.5fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  align-items: center;
-  text-align: center;
-  border-bottom: 2px solid black;
-`;
-
-const StyledHeadlineWithoutBorder = styled.h1`
-  text-align: center;
-  grid-area: 1 / 2 / 2 / 3;
-`;
-
 const StyledBackButtonLink = styled(Link)`
-  grid-area: 1 / 1 / 2 / 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  justify-content: left;
   color: black;
+  width: 40px;
+  height: 40px;
 
   &:active {
     background-color: var(--secondary-color);
