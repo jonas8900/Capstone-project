@@ -3,10 +3,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
-import useLocalStorageState from "use-local-storage-state";
 
-export default function ActivityPlan({ activityCards }) {
-  const [dates, setDates] = useLocalStorageState("dates", { defaultValue: [] });
+export default function ActivityPlan({ activityCards, dates, setDates }) {
   const router = useRouter();
   const currentId = router.query.activityPlan;
   const currentActivities = activityCards.filter(
@@ -23,7 +21,7 @@ export default function ActivityPlan({ activityCards }) {
   );
 
   const newObject = comparedActivities.find((date) => date);
-  console.log(dates);
+
   function handleSubmitDates(event) {
     event.preventDefault();
 
@@ -51,22 +49,18 @@ export default function ActivityPlan({ activityCards }) {
     const sortedArray = [...allDates].sort();
     for (let i = 0; i < sortedArray.length; i++) {
       if (sortedArray[i + 1] === sortedArray[i] && sortedArray[i] !== "") {
-        return alert("You can't confirm the same dates");
+        return alert("Sie können nicht zwei gleiche Daten angeben");
       }
     }
     setDates([...dates, dateObject]);
-    alert("Congratulations, you have started a vote!");
+    alert("Glückwunsch ! Sie haben eine Abstimmung gestartet.");
   }
   // when we already have an submitevent with an object, the button and the dates get disabled
-
   return (
     <main>
-      <StyledHeadlineSection>
-        <StyledHeadlineWithoutBorder>Friends</StyledHeadlineWithoutBorder>
-        <StyledBackButtonLink href={"/activities"}>
-          <StyledBackIcon icon={faArrowLeft} />
-        </StyledBackButtonLink>
-      </StyledHeadlineSection>
+      <StyledBackButtonLink href={"/activities"}>
+        <StyledBackIcon icon={faArrowLeft} />
+      </StyledBackButtonLink>
       <section>
         {currentActivities.map((currentActivity) => (
           <section key={currentId}>
@@ -160,29 +154,11 @@ const StyledThirdHeadling = styled.h3`
   font-weight: normal;
 `;
 
-const StyledHeadlineSection = styled.section`
-  display: grid;
-  grid-template-columns: 0.3fr 1fr 0.3fr;
-  grid-template-rows: 0.5fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-  align-items: center;
-  text-align: center;
-  border-bottom: 2px solid black;
-`;
-
-const StyledHeadlineWithoutBorder = styled.h1`
-  text-align: center;
-  grid-area: 1 / 2 / 2 / 3;
-`;
-
 const StyledBackButtonLink = styled(Link)`
-  grid-area: 1 / 1 / 2 / 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  justify-content: left;
   color: black;
+  width: 40px;
+  height: 40px;
 
   &:active {
     background-color: var(--secondary-color);

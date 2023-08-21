@@ -1,15 +1,14 @@
 import styled from "styled-components";
-import { StyledHeadline } from "./Dashboard";
 import Form from "./Form";
 import { uid } from "uid";
-
-import { useRouter } from "next/router";
 import Link from "next/link";
 
-export default function Activitylist({ activityCards, setActivityCards }) {
-  // the defaultValue is connected to the dummyList. This is helpful in the future for the mongoDB connection
-  const router = useRouter();
-
+export default function Activitylist({
+  activityCards,
+  setActivityCards,
+  setDates,
+  dates,
+}) {
   function handleSubmitActivity(event) {
     event.preventDefault();
 
@@ -30,15 +29,17 @@ export default function Activitylist({ activityCards, setActivityCards }) {
       "Do you really want to delete the activity?"
     );
     if (areYouSureToDelete) {
-      setActivityCards(
-        activityCards.filter((activityCard) => activityCard.id !== id)
+      const setFilterWithoutDeletedOne = activityCards.filter(
+        (activityCard) => activityCard.id !== id
       );
+      const setFilterDates = dates.filter((date) => date.id !== id);
+      setActivityCards(setFilterWithoutDeletedOne);
+      setDates(setFilterDates);
     }
   }
 
   return (
     <main>
-      <StyledHeadline>Friends</StyledHeadline>
       <StyledActivitySection>
         <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
         <StyledList>
