@@ -14,20 +14,30 @@ export default function Votecard({ dates, setDates }) {
     const formData = new FormData(event.target);
     const checkBoxData = Object.fromEntries(formData);
 
-    setMatchedID({
-      ...matchedID,
-      date1IsTrue: checkBoxData.date1,
-      date2IsTrue: checkBoxData.date2,
-      date3IsTrue: checkBoxData.date3,
-      date4IsTrue: checkBoxData.date4,
-      noDateMatches: checkBoxData.noDate,
-    });
+    const updateTheDatesWithSameId = dates.find(
+      (date) => date.id === matchedID.id
+    );
+
+    const findDateWithoutMatchedID = dates.filter(
+      (date) => date.id !== matchedID.id
+    );
+
+    setDates([
+      ...findDateWithoutMatchedID,
+      {
+        ...updateTheDatesWithSameId,
+        date1IsTrue: checkBoxData.date1,
+        date2IsTrue: checkBoxData.date2,
+        date3IsTrue: checkBoxData.date3,
+        date4IsTrue: checkBoxData.date4,
+        noDateMatches: checkBoxData.noDate,
+      },
+    ]);
   }
   function handleFindId(id) {
     setMatchedID(dates.find((date) => date.id === id));
   }
-
-  console.log(matchedID);
+  console.log(dates);
   return (
     <>
       {dates.map((date) => (
