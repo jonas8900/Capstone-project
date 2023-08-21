@@ -1,6 +1,4 @@
-import { uid } from "uid";
 import { styled } from "styled-components";
-import { useState } from "react";
 import useLocalStorageState from "use-local-storage-state";
 
 export default function Votecard({ dates, setDates }) {
@@ -37,6 +35,7 @@ export default function Votecard({ dates, setDates }) {
   function handleFindId(id) {
     setMatchedID(dates.find((date) => date.id === id));
   }
+
   console.log(dates);
   return (
     <>
