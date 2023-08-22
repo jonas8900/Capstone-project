@@ -8,31 +8,44 @@ export default function DashboardCard({ voteDoneArray }) {
   return (
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
-      <StyledUl>
-        <li>
-          <StyledHeadline3>Aktivitäten</StyledHeadline3>
-          <StyledDetailText>
-            {nextActivity.objectWithTheSameID.veranstaltung}
-          </StyledDetailText>
-        </li>
-        <li>
-          <StyledHeadline3>Datum</StyledHeadline3>
-          <StyledDetailText>
-            {moment(nextActivity.finalDate).format("lll")}
-          </StyledDetailText>
-        </li>
-        <li>
-          <StyledHeadline3>Ort</StyledHeadline3>
-          <StyledDetailText>
-            {nextActivity.objectWithTheSameID.ort}
-          </StyledDetailText>
-        </li>
-        <li>
-          <StyledHeadline3>was bringst du mit</StyledHeadline3>
-          <StyledDetailText>Popcorn</StyledDetailText>
-          <StyledDetailText>Eistee</StyledDetailText>
-        </li>
-      </StyledUl>
+      {voteDoneArray.length === 0 && (
+        <StyledUl>
+          <li>
+            <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
+            <br />
+            <StyledDetailText>
+              Starte ein Event um das nächste Event zu sehen!
+            </StyledDetailText>
+          </li>
+        </StyledUl>
+      )}
+      {voteDoneArray.length > 0 && (
+        <StyledUl>
+          <li>
+            <StyledHeadline3>Aktivitäten</StyledHeadline3>
+            <StyledDetailText>
+              {nextActivity.objectWithTheSameID.veranstaltung}
+            </StyledDetailText>
+          </li>
+          <li>
+            <StyledHeadline3>Datum</StyledHeadline3>
+            <StyledDetailText>
+              {moment(nextActivity.finalDate).format("lll")}
+            </StyledDetailText>
+          </li>
+          <li>
+            <StyledHeadline3>Ort</StyledHeadline3>
+            <StyledDetailText>
+              {nextActivity.objectWithTheSameID.ort}
+            </StyledDetailText>
+          </li>
+          <li>
+            <StyledHeadline3>was bringst du mit</StyledHeadline3>
+            <StyledDetailText>Popcorn</StyledDetailText>
+            <StyledDetailText>Eistee</StyledDetailText>
+          </li>
+        </StyledUl>
+      )}
     </StyledSection>
   );
 }
