@@ -33,6 +33,7 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
     const dateObject = {
       id: currentActivitieObject.id,
       veranstaltung: currentActivitieObject.name,
+      vote: false,
       date1: data.date1,
       date2: data.date2,
       date3: data.date3,
