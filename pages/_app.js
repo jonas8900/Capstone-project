@@ -13,6 +13,22 @@ export default function App({ Component, pageProps }) {
 
   const [dates, setDates] = useLocalStorageState("dates", { defaultValue: [] });
 
+  const voteDoneArray = dates.filter((date) =>
+  date.hasOwnProperty("finalDateID")
+);
+
+function compareDatesToSort(a, b) {
+  if (a.finalDate < b.finalDate) {
+    return -1;
+  }
+  if (a.finaleDate > b.finalDate) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+voteDoneArray.sort(compareDatesToSort);
+
   return (
     <>
       <GlobalStyle />
@@ -23,6 +39,7 @@ export default function App({ Component, pageProps }) {
         setActivityCards={setActivityCards}
         dates={dates}
         setDates={setDates}
+        voteDoneArray={voteDoneArray}
       />
       <NavigationBar />
     </>

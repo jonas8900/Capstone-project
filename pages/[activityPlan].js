@@ -13,7 +13,13 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
   const currentActivitieObject = activityCards.find(
     (activityCard) => activityCard.id === currentId
   );
-  const minDateToday = new Date().toISOString().slice(0, 10);
+
+  let minDateToday = new Date();
+  minDateToday.setMinutes(
+    minDateToday.getMinutes() - minDateToday.getTimezoneOffset()
+  );
+
+  const minDateInRightFormat = minDateToday.toISOString().slice(0, 16);
 
   // to check if we already had a submitevent with generate an object
   const comparedActivities = dates.filter(
@@ -34,6 +40,7 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
       id: currentActivitieObject.id,
       veranstaltung: currentActivitieObject.name,
       vote: false,
+      ort: data.ort,
       date1: data.date1,
       date2: data.date2,
       date3: data.date3,
@@ -76,12 +83,25 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
 
               <StyledForm onSubmit={handleSubmitDates}>
                 <StyledLabels htmlFor="date1">
+                  Ort:
+                  <StyledInputDateField
+                    type="text"
+                    id="ort"
+                    name="ort"
+                    disabled={comparedActivities.length > 0 ? true : false}
+                    {...(comparedActivities.length > 0
+                      ? { value: newObject.ort }
+                      : "")}
+                    required
+                  />
+                </StyledLabels>
+                <StyledLabels htmlFor="date1">
                   Datum 1
                   <StyledInputDateField
-                    type="date"
+                    type="datetime-local"
                     id="date1"
                     name="date1"
-                    min={minDateToday}
+                    min={minDateInRightFormat}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date1 }
@@ -92,10 +112,10 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                 <StyledLabels htmlFor="date2">
                   Datum 2
                   <StyledInputDateField
-                    type="date"
+                    type="datetime-local"
                     id="date2"
                     name="date2"
-                    min={minDateToday}
+                    min={minDateInRightFormat}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date2 }
@@ -106,10 +126,10 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                 <StyledLabels htmlFor="date3">
                   Datum 3
                   <StyledInputDateField
-                    type="date"
+                    type="datetime-local"
                     id="date3"
                     name="date3"
-                    min={minDateToday}
+                    min={minDateInRightFormat}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date3 }
@@ -119,10 +139,10 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                 <StyledLabels htmlFor="date4">
                   Datum 4
                   <StyledInputDateField
-                    type="date"
+                    type="datetime-local"
                     id="date4"
                     name="date4"
-                    min={minDateToday}
+                    min={minDateInRightFormat}
                     disabled={comparedActivities.length > 0 ? true : false}
                     {...(comparedActivities.length > 0
                       ? { value: newObject.date4 }
@@ -186,16 +206,20 @@ const StyledForm = styled.form`
 `;
 
 const StyledInputDateField = styled.input`
-  margin-left: 4rem;
+  margin-left: 5rem;
   border-radius: 10px;
   border: 1px solid #e3e5e8;
   padding: 0.5rem;
+  margin-left: 0.5rem;
 `;
 
 const StyledLabels = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: var(--font-size-details);
   color: var(--grey-topics);
-  margin: 1rem auto 1rem 1.5rem;
+  margin: 1rem 0 1rem 1.5rem;
 `;
 
 const StyledFormButton = styled.button`

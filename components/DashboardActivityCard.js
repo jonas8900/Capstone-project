@@ -1,21 +1,31 @@
 import styled from "styled-components";
+import "moment/locale/de";
+import moment from "moment";
 
-export default function DashboardCard() {
+export default function DashboardCard({ voteDoneArray }) {
+  const nextActivity = voteDoneArray[0];
+
   return (
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
       <StyledUl>
         <li>
           <StyledHeadline3>Aktivitäten</StyledHeadline3>
-          <StyledDetailText>Filme Abend</StyledDetailText>
+          <StyledDetailText>
+            {nextActivity.objectWithTheSameID.veranstaltung}
+          </StyledDetailText>
         </li>
         <li>
           <StyledHeadline3>Datum</StyledHeadline3>
-          <StyledDetailText>21.01.2023</StyledDetailText>
+          <StyledDetailText>
+            {moment(nextActivity.finalDate).format("lll")}
+          </StyledDetailText>
         </li>
         <li>
           <StyledHeadline3>Ort</StyledHeadline3>
-          <StyledDetailText>Max Zuhause</StyledDetailText>
+          <StyledDetailText>
+            {nextActivity.objectWithTheSameID.ort}
+          </StyledDetailText>
         </li>
         <li>
           <StyledHeadline3>was bringst du mit</StyledHeadline3>
@@ -34,18 +44,18 @@ export const StyledHeadline2 = styled.h2`
   margin-bottom: 0px;
 `;
 
-const StyledHeadline3 = styled.h3`
+export const StyledHeadline3 = styled.h3`
   font-size: var(--font-size-details);
   color: var(--grey-topics);
   font-weight: var(--font-weight-light);
 `;
 
-const StyledDetailText = styled.p`
+export const StyledDetailText = styled.p`
   font-size: var(--font-size-details);
   margin-top: -10px;
 `;
 
-const StyledSection = styled.section`
+export const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   margin: 2rem;
@@ -55,7 +65,7 @@ const StyledSection = styled.section`
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
 `;
 
-const StyledUl = styled.ul`
+export const StyledUl = styled.ul`
   display: flex;
   flex-direction: column;
   list-style: none;
