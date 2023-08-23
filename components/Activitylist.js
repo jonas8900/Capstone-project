@@ -104,7 +104,7 @@ export const StyledHeadlineForSubpages = styled.h2`
   margin-bottom: 0px;
 `;
 
-const StyledDeleteButton = styled.button`
+export const StyledDeleteButton = styled.button`
   background-color: white;
   border: none;
   width: 30px;
