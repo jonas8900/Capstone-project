@@ -3,12 +3,13 @@ import { styled } from "styled-components";
 import { uid } from "uid";
 import useLocalStorageState from "use-local-storage-state";
 import "moment/locale/de";
+import { useRouter } from "next/router";
 
 export default function Votecard({ dates, setDates }) {
+  const router = useRouter();
   const [matchedID, setMatchedID] = useLocalStorageState("matchedID", {
     defaultValue: { value: "value" },
   });
-
 
   const objectWithTheSameID = dates.find((date) => date.id === matchedID.id);
   const findDateWithoutMatchedID = dates.filter(
@@ -20,21 +21,34 @@ export default function Votecard({ dates, setDates }) {
 
     const formData = new FormData(event.target);
     const checkBoxData = Object.fromEntries(formData);
-
-    setDates([
-      ...findDateWithoutMatchedID,
-      {
-        ...objectWithTheSameID,
-        date1IsTrue: checkBoxData.date1,
-        date2IsTrue: checkBoxData.date2,
-        date3IsTrue: checkBoxData.date3,
-        date4IsTrue: checkBoxData.date4,
-        noDateMatches: checkBoxData.noDate,
-        vote: true,
-      },
-    ]);
+    //submit dates to the object with the boolean true or false
+    const updateSingleDate = {
+      ...objectWithTheSameID,
+      ...(checkBoxData.date1 == "on" && { date1IsTrue: true }),
+      ...(checkBoxData.date2 == "on" && { date2IsTrue: true }),
+      ...(checkBoxData.date3 == "on" && { date3IsTrue: true }),
+      ...(checkBoxData.date4 == "on" && { date4IsTrue: true }),
+      ...(checkBoxData.noDate == "on" && { noDateMatches: true }),
+      vote: true,
+    };
+    const lengthOfDummyDates = Object.keys(updateSingleDate).length;
+    if (lengthOfDummyDates > 8) {
+      if (
+        updateSingleDate.hasOwnProperty("noDateMatches") &&
+        lengthOfDummyDates > 9
+      ) {
+        alert(
+          "Du kannst entweder ein Datum oder keins passt auswählen nicht beides"
+        );
+      } else {
+        setDates([...findDateWithoutMatchedID, updateSingleDate]);
+      }
+    } else {
+      alert("Du musst etwas auswählen!");
+    }
   }
 
+  //find the ID which matches with the card i clicked on and set it to the matchedID state
   function handleFindId(id) {
     setMatchedID(dates.find((date) => date.id === id));
   }
@@ -46,7 +60,7 @@ export default function Votecard({ dates, setDates }) {
     const selectData = Object.fromEntries(formData);
 
     const areYouSureToDelete = window.confirm(
-      "Do you really want to delete the activity?"
+      "Überprüfe die Eingabe bevor du ein Finales Datum setzt!"
     );
     if (areYouSureToDelete) {
       setDates([
@@ -57,20 +71,22 @@ export default function Votecard({ dates, setDates }) {
           finalDateID: uid(),
         },
       ]);
+      router.push("/veranstaltungen");
     }
   }
-
 
   return (
     <>
       {dates.map((date) => (
-        <StyledVoteCardSection key={date.id}>
-          {date.vote === true && (
+        <StyledVoteCardWrapper
+          key={date.id === undefined ? date.id : date.finalDateID}
+        >
+          {date.vote && (
             <StyledSectionForLastDate>
               <StyledVoteCardHeadline>
                 Veranstaltungsabstimmung
               </StyledVoteCardHeadline>
-              <StyledVoteCardWrapper>
+              <StyledVoteLastDateCardWrapper>
                 <StyledVoteCardArticle>
                   <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
                   <StyledSubParagraph>{date.veranstaltung}</StyledSubParagraph>
@@ -135,13 +151,12 @@ export default function Votecard({ dates, setDates }) {
                         {moment(date.date4).format("lll")} Uhr
                       </option>
                     )}
-                    <option>Event absagen</option>
                   </select>
                   <StyledVoteCardButtonClose type="submit">
                     Abstimmung abschließen
                   </StyledVoteCardButtonClose>
                 </StyledVoteCardFormFinalDatePick>
-              </StyledVoteCardWrapper>
+              </StyledVoteLastDateCardWrapper>
             </StyledSectionForLastDate>
           )}
           {date.vote === false && (
@@ -155,7 +170,7 @@ export default function Votecard({ dates, setDates }) {
                   <p>{date.veranstaltung}</p>
                 </StyledVoteCardArticle>
                 <StyledNoDateMatch htmlFor="noDate">
-                  Keins passt{" "}
+                  Keins passt
                   <input type="checkbox" name="noDate" id="noDate" />
                 </StyledNoDateMatch>
                 {date.date1 !== "" && (
@@ -190,7 +205,12 @@ export default function Votecard({ dates, setDates }) {
                     <StyledDateHeadline>Datum 4</StyledDateHeadline>
                     <StyledDateFourLabel htmlFor="date4">
                       {moment(date.date4).format("lll")}
-                      <input type="checkbox" id="date4" name="date4" />
+                      <input
+                        type="checkbox"
+                        id="date4"
+                        name="date4"
+                        value={date.date4}
+                      />
                     </StyledDateFourLabel>
                   </article>
                 )}
@@ -203,13 +223,13 @@ export default function Votecard({ dates, setDates }) {
               </StyledVoteCardForm>
             </section>
           )}
-        </StyledVoteCardSection>
+        </StyledVoteCardWrapper>
       ))}
-      </>
+    </>
   );
 }
 
-const StyledVoteCardSection = styled.section`
+const StyledVoteCardWrapper = styled.section`
   display: flex;
   flex-direction: column;
   margin: 2rem;
@@ -259,7 +279,7 @@ const StyledVoteCardForm = styled.form`
   grid-area: 3 / 1 / 4 / 2;
 `;
 
-const StyledVoteCardWrapper = styled.section`
+const StyledVoteLastDateCardWrapper = styled.section`
   display: grid;
   align-items: center;
   grid-template-columns: 1fr;
