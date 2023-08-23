@@ -26,7 +26,7 @@ export default function Activitylist({
 
   function handleDelete(id) {
     const areYouSureToDelete = window.confirm(
-      "Do you really want to delete the activity?"
+      "Bist du dir sicher, dass du diese Aktivität löschen möchtest?"
     );
     if (areYouSureToDelete) {
       const setFilterWithoutDeletedOne = activityCards.filter(

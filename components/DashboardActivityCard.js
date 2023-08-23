@@ -3,6 +3,7 @@ import "moment/locale/de";
 import moment from "moment";
 
 export default function DashboardCard({ voteDoneArray }) {
+  //voteDoneArray sorted the array by date, so we can get access for the next activity:
   const nextActivity = voteDoneArray[0];
 
   return (

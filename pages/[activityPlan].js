@@ -18,15 +18,16 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
   minDateToday.setMinutes(
     minDateToday.getMinutes() - minDateToday.getTimezoneOffset()
   );
-
+  //convert the date into german date
   const minDateInRightFormat = minDateToday.toISOString().slice(0, 16);
 
   // to check if we already had a submitevent with generate an object
-  const comparedActivities = dates.filter(
+  const currentActivityObjectConvertToArray = dates.filter(
     (date) => date.id === currentActivitieObject.id
   );
-
-  const newObject = comparedActivities.find((date) => date);
+  const currentActivityObjectUpdated = currentActivityObjectConvertToArray.find(
+    (date) => date
+  );
 
   function handleSubmitDates(event) {
     event.preventDefault();
@@ -62,6 +63,7 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
     }
     setDates([...dates, dateObject]);
     alert("Glückwunsch ! Sie haben eine Abstimmung gestartet.");
+    router.push("/");
   }
   // when we already have an submitevent with an object, the button and the dates get disabled
   return (
@@ -88,10 +90,16 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                     type="text"
                     id="ort"
                     name="ort"
-                    disabled={comparedActivities.length > 0 ? true : false}
-                    {...(comparedActivities.length > 0
-                      ? { value: newObject.ort }
-                      : "")}
+                    disabled={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? true
+                        : false
+                    }
+                    defaultValue={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? currentActivityObjectUpdated.ort
+                        : ""
+                    }
                     required
                   />
                 </StyledLabels>
@@ -102,10 +110,16 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                     id="date1"
                     name="date1"
                     min={minDateInRightFormat}
-                    disabled={comparedActivities.length > 0 ? true : false}
-                    {...(comparedActivities.length > 0
-                      ? { value: newObject.date1 }
-                      : "")}
+                    disabled={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? true
+                        : false
+                    }
+                    defaultValue={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? currentActivityObjectUpdated.date1
+                        : ""
+                    }
                     required
                   />
                 </StyledLabels>
@@ -116,10 +130,16 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                     id="date2"
                     name="date2"
                     min={minDateInRightFormat}
-                    disabled={comparedActivities.length > 0 ? true : false}
-                    {...(comparedActivities.length > 0
-                      ? { value: newObject.date2 }
-                      : "")}
+                    disabled={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? true
+                        : false
+                    }
+                    defaultValue={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? currentActivityObjectUpdated.date2
+                        : ""
+                    }
                     required
                   />
                 </StyledLabels>
@@ -130,10 +150,16 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                     id="date3"
                     name="date3"
                     min={minDateInRightFormat}
-                    disabled={comparedActivities.length > 0 ? true : false}
-                    {...(comparedActivities.length > 0
-                      ? { value: newObject.date3 }
-                      : "")}
+                    disabled={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? true
+                        : false
+                    }
+                    defaultValue={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? currentActivityObjectUpdated.date3
+                        : ""
+                    }
                   />
                 </StyledLabels>
                 <StyledLabels htmlFor="date4">
@@ -143,14 +169,24 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                     id="date4"
                     name="date4"
                     min={minDateInRightFormat}
-                    disabled={comparedActivities.length > 0 ? true : false}
-                    {...(comparedActivities.length > 0
-                      ? { value: newObject.date4 }
-                      : "")}
+                    disabled={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? true
+                        : false
+                    }
+                    defaultValue={
+                      currentActivityObjectConvertToArray.length > 0
+                        ? currentActivityObjectUpdated.date4
+                        : ""
+                    }
                   />
                 </StyledLabels>
                 <StyledFormButton
-                  disabled={comparedActivities.length > 0 ? true : false}
+                  disabled={
+                    currentActivityObjectConvertToArray.length > 0
+                      ? true
+                      : false
+                  }
                   type="submit"
                 >
                   Bestätigen
