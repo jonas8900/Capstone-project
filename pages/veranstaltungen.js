@@ -9,8 +9,7 @@ import {
 import moment from "moment";
 import "moment/locale/de";
 
-export default function Events({  voteDoneArray }) {
-
+export default function Events({ voteDoneArray }) {
   return (
     <>
       <StyledHeadlineForSubpages>Events</StyledHeadlineForSubpages>
