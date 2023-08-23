@@ -1,10 +1,9 @@
 import DashboardActivityCard from "./DashboardActivityCard";
 
-export default function Dashboard() {
+export default function Dashboard({ dates, voteDoneArray }) {
   return (
     <>
-      <DashboardActivityCard />
+      <DashboardActivityCard dates={dates} voteDoneArray={voteDoneArray} />
     </>
   );
 }
-

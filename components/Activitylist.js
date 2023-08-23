@@ -98,7 +98,7 @@ const StyledActivitySection = styled.section`
   padding-bottom: 2rem;
 `;
 
-const StyledHeadlineForSubpages = styled.h2`
+export const StyledHeadlineForSubpages = styled.h2`
   font-size: var(--font-size-headline);
   margin-left: 40px;
   margin-bottom: 0px;
