@@ -1,7 +1,4 @@
-import {
-  StyledDeleteButton,
-  StyledHeadlineForSubpages,
-} from "@/components/Activitylist";
+import { StyledDeleteButton } from "@/components/Activitylist";
 import {
   StyledDetailText,
   StyledHeadline2,
@@ -9,7 +6,7 @@ import {
   StyledSection,
   StyledUl,
 } from "@/components/DashboardActivityCard";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import "moment/locale/de";
@@ -26,11 +23,9 @@ export default function Events({ dates, setDates }) {
     }
   }
 
-  console.log(dates);
-
   return (
     <>
-      <StyledHeadlineForSubpages>Events</StyledHeadlineForSubpages>
+      <h2>Events</h2>
       {dates.map((date) => (
         <StyledSection key={date.finalDateID}>
           <StyledSectionHeadlineAndButton>
@@ -38,7 +33,7 @@ export default function Events({ dates, setDates }) {
               Veranstaltung {date.objectWithTheSameID.veranstaltung}
             </StyledHeadline2>
             <StyledDeleteButton onClick={() => handleDelete(date.finalDateID)}>
-              X
+              <StyledTrashIcon icon={faTrash} />
             </StyledDeleteButton>
           </StyledSectionHeadlineAndButton>
           <StyledUl>
@@ -82,18 +77,22 @@ const StyledIcon = styled(FontAwesomeIcon)`
   height: 1.5rem;
 `;
 
+const StyledTrashIcon = styled(FontAwesomeIcon)`
+  color: var(--grey-topics);
+`;
+
 const StyledLink = styled(Link)`
   background-color: var(--secondary-color);
-  width: 2rem;
-  height: 2rem;
   border-radius: 4px;
   gap: 4rem;
-  padding: 1rem;
+  padding: 0.3rem;
   border: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
   position: fixed;
   right: 1rem;
   bottom: 5rem;
+  transition: all 200ms;
+  &:hover {
+    background-color: var(--third-color);
+  }
 `;

@@ -25,11 +25,19 @@ export default createGlobalStyle`
     font-family: ${roboto.style.fontFamily};
     margin: 0;
     font-family: system-ui;
+    font-size: 100%;
     width: 100%;
     height: 100%;
     max-width: 420px;
     margin-inline: auto;
   }
+
+  h2 {
+    font-size: var(--font-size-headline);
+    margin-left: 40px;
+    margin-bottom: 0px;
+  }
+
+
+
 `;
-
-

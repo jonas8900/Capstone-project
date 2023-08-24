@@ -74,7 +74,7 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
       <section>
         {currentActivities.map((currentActivity) => (
           <section key={currentId}>
-            <StyledSecondHeadline>Welches Datum passt?</StyledSecondHeadline>
+            <h2>Welches Datum passt?</h2>
             <StyledThirdHeadling>
               Plane die nächste Veranstaltung:
             </StyledThirdHeadling>
@@ -200,11 +200,6 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
   );
 }
 
-const StyledSecondHeadline = styled.h2`
-  font-size: 1rem;
-  margin: 2rem;
-`;
-
 const StyledThirdHeadling = styled.h3`
   font-size: 15px;
   margin: 2rem;
@@ -214,8 +209,8 @@ const StyledThirdHeadling = styled.h3`
 export const StyledBackButtonLink = styled(Link)`
   justify-content: left;
   color: black;
-  width: 40px;
-  height: 40px;
+  width: 2rem;
+  height: 2rem;
 
   &:active {
     background-color: var(--secondary-color);
@@ -276,6 +271,6 @@ export const StyledFormButton = styled.button`
 `;
 
 export const StyledBackIcon = styled(FontAwesomeIcon)`
-  width: 30px;
-  height: 30px;
+  width: 2rem;
+  height: 2rem;
 `;

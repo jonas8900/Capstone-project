@@ -50,9 +50,7 @@ export default function Addevent({ dates, setDates }) {
       <StyledBackButtonLink href={"/veranstaltungen"}>
         <StyledBackIcon icon={faArrowLeft} />
       </StyledBackButtonLink>
-      <StyledHeadlineForSubpages>
-        Veranstaltung hinzufügen:
-      </StyledHeadlineForSubpages>
+      <h2>Veranstaltung hinzufügen:</h2>
       <StyledAddEventForm onSubmit={handleSubmitAddEvent}>
         <StyledLabels htmlFor="veranstaltung">
           <p>Veranstaltung:</p>
@@ -85,6 +83,5 @@ const StyledAddEventForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 2rem;
-  margin-left: 2rem;
+  margin: 2rem 0 0 2rem;
 `;
