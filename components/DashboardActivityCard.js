@@ -54,8 +54,6 @@ export default function DashboardCard({ voteDoneArray }) {
 export const StyledHeadline2 = styled.h2`
   font-size: var(--font-size-headline);
   color: var(--secondary-color);
-  margin-left: 40px;
-  margin-bottom: 0px;
 `;
 
 export const StyledHeadline3 = styled.h3`

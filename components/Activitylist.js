@@ -2,6 +2,8 @@ import styled from "styled-components";
 import Form from "./Form";
 import { uid } from "uid";
 import Link from "next/link";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function Activitylist({
   activityCards,
@@ -41,13 +43,13 @@ export default function Activitylist({
   return (
     <main>
       <StyledActivitySection>
-        <StyledHeadlineForSubpages>Aktivitäten</StyledHeadlineForSubpages>
+        <h2>Aktivitäten</h2>
         <StyledList>
           {activityCards.map((activity) => (
             <StyledListItem key={activity.id}>
               <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
               <StyledDeleteButton onClick={() => handleDelete(activity.id)}>
-                X
+                <StyledTrashIcon icon={faTrash} />
               </StyledDeleteButton>
               <StyledActivityLink href={`/${activity.id}`}>
                 <StyledPlanButton>planen</StyledPlanButton>
@@ -71,6 +73,9 @@ export const StyledList = styled.ul`
   margin: 2rem 2rem 2rem 2rem;
   padding: 0;
   text-align: center;
+`;
+const StyledTrashIcon = styled(FontAwesomeIcon)`
+  color: var(--grey-topics);
 `;
 
 const StyledListItem = styled.li`
@@ -98,17 +103,11 @@ const StyledActivitySection = styled.section`
   padding-bottom: 2rem;
 `;
 
-export const StyledHeadlineForSubpages = styled.h2`
-  font-size: var(--font-size-headline);
-  margin-left: 40px;
-  margin-bottom: 0px;
-`;
-
-const StyledDeleteButton = styled.button`
+export const StyledDeleteButton = styled.button`
   background-color: white;
   border: none;
-  width: 30px;
-  height: 30px;
+  width: fit-content;
+  height: fit-content;
   font-size: 1rem;
   grid-area: 1 / 1 / 2 / 2;
 

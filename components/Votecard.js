@@ -247,8 +247,6 @@ const StyledSectionForLastDate = styled.section`
 const StyledVoteCardHeadline = styled.h2`
   margin: 2rem auto;
   margin-left: 2.5rem;
-  font-size: var(--font-size-headline);
-  color: var(--secondary-color);
 `;
 
 const StyledVoteCardHeadline3 = styled.h3`
