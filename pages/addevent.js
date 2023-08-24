@@ -58,11 +58,12 @@ export default function Addevent({ dates, setDates }) {
             type="text"
             id="veranstaltung"
             name="veranstaltung"
+            required
           />
         </StyledLabels>
         <StyledLabels htmlFor="ort">
           Veranstaltungsort:
-          <StyledInputDateField type="text" id="ort" name="ort" />
+          <StyledInputDateField type="text" id="ort" name="ort" required />
         </StyledLabels>
         <StyledLabels htmlFor="finalDate">
           Datum:
@@ -71,6 +72,7 @@ export default function Addevent({ dates, setDates }) {
             id="finalDate"
             name="finalDate"
             min={minDateInRightFormat}
+            required
           />
         </StyledLabels>
         <StyledFormButton type="submit">Hinzufügen</StyledFormButton>
