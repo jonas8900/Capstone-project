@@ -37,7 +37,7 @@ export default function App({ Component, pageProps }) {
       <StyledHeadline>
         <StyledImage
           alt="Friends-Logo"
-          src="/Logo Files/For Web/logo2-nobackground-200.png"
+          src="/logo2-nobackground-200.png"
           width={120}
           height={120}
           priority={false}
