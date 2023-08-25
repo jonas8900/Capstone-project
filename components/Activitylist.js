@@ -8,7 +8,6 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
 
 export default function Activitylist({
   activityCards,
@@ -16,8 +15,7 @@ export default function Activitylist({
   setDates,
   dates,
 }) {
-  const userID = "13493212512";
-  const userName = "Jonas";
+  const userID = "Jonas-818924";
 
   function handleSubmitActivity(event) {
     event.preventDefault();
@@ -28,7 +26,7 @@ export default function Activitylist({
     const newActivity = {
       name: data.activityName,
       id: uid(),
-      userData: [],
+      likedByUser: [],
     };
     setActivityCards([...activityCards, newActivity]);
 
@@ -54,25 +52,35 @@ export default function Activitylist({
 
     if (activitySuggestionCard) {
       setActivityCards(
-        activityCards.map((card) =>
-          card.id === id
-            ? {
+        activityCards.map((card) => {
+          if (card.id === id) {
+            const isAlreadylikedByUser = card.likedByUser.some(
+              (user) => user.userID === userID
+            );
+
+            if (isAlreadylikedByUser) {
+              const unLike = card.likedByUser.filter(
+                (user) => user.userID !== userID
+              );
+              return {
                 ...card,
-                userData: card.userData.some((user) => user.userID === userID)
-                  ? card.userData.filter((user) => user.userID !== userID)
-                  : [
-                      ...card.userData,
-                      {
-                        userID: userID,
-                        userName: userName,
-                      },
-                    ],
-              }
-            : card
-        )
+                likedByUser: unLike,
+              };
+            } else {
+              const newUserObject = {
+                userID: userID,
+              };
+              const Like = [...card.likedByUser, newUserObject];
+              return {
+                ...card,
+                likedByUser: Like,
+              };
+            }
+          } else {
+            return card;
+          }
+        })
       );
-    } else {
-      setActivityCards([...activityCards]);
     }
   }
 
@@ -90,13 +98,12 @@ export default function Activitylist({
               <StyledFavoriteButton
                 onClick={() => handleAddFavoriteButton(activity.id)}
               >
-                {activity.userData.some((user) => user.userID === userID) && (
+                {activity.likedByUser.some((user) => user.userID === userID) ? (
                   <StyledFavoriteIconSolid icon={faHeartSolid} />
-                )}
-                {!activity.userData.some((user) => user.userID === userID) && (
+                ) : (
                   <StyledFavoriteIconRegular icon={faHeartRegular} />
                 )}
-                <p>{activity.userData.length}</p>
+                <p>{activity.likedByUser.length}</p>
               </StyledFavoriteButton>
               <StyledActivityLink href={`/${activity.id}`}>
                 <StyledPlanButton>planen</StyledPlanButton>
