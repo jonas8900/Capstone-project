@@ -2,8 +2,12 @@ import styled from "styled-components";
 import Form from "./Form";
 import { uid } from "uid";
 import Link from "next/link";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faHeart as faHeartSolid,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 
 export default function Activitylist({
   activityCards,
@@ -11,6 +15,8 @@ export default function Activitylist({
   setDates,
   dates,
 }) {
+  const userID = "Jonas-818924";
+
   function handleSubmitActivity(event) {
     event.preventDefault();
 
@@ -20,6 +26,7 @@ export default function Activitylist({
     const newActivity = {
       name: data.activityName,
       id: uid(),
+      likedByUser: [],
     };
     setActivityCards([...activityCards, newActivity]);
 
@@ -40,6 +47,43 @@ export default function Activitylist({
     }
   }
 
+  function handleAddFavoriteButton(id) {
+    const activitySuggestionCard = activityCards.find((card) => card.id === id);
+
+    if (activitySuggestionCard) {
+      setActivityCards(
+        activityCards.map((card) => {
+          if (card.id === id) {
+            const isAlreadylikedByUser = card.likedByUser.some(
+              (user) => user.userID === userID
+            );
+
+            if (isAlreadylikedByUser) {
+              const unLike = card.likedByUser.filter(
+                (user) => user.userID !== userID
+              );
+              return {
+                ...card,
+                likedByUser: unLike,
+              };
+            } else {
+              const newUserObject = {
+                userID: userID,
+              };
+              const Like = [...card.likedByUser, newUserObject];
+              return {
+                ...card,
+                likedByUser: Like,
+              };
+            }
+          } else {
+            return card;
+          }
+        })
+      );
+    }
+  }
+
   return (
     <main>
       <StyledActivitySection>
@@ -51,6 +95,16 @@ export default function Activitylist({
               <StyledDeleteButton onClick={() => handleDelete(activity.id)}>
                 <StyledTrashIcon icon={faTrash} />
               </StyledDeleteButton>
+              <StyledFavoriteButton
+                onClick={() => handleAddFavoriteButton(activity.id)}
+              >
+                {activity.likedByUser.some((user) => user.userID === userID) ? (
+                  <StyledFavoriteIconSolid icon={faHeartSolid} />
+                ) : (
+                  <StyledFavoriteIconRegular icon={faHeartRegular} />
+                )}
+                <p>{activity.likedByUser.length}</p>
+              </StyledFavoriteButton>
               <StyledActivityLink href={`/${activity.id}`}>
                 <StyledPlanButton>planen</StyledPlanButton>
               </StyledActivityLink>
@@ -76,6 +130,7 @@ export const StyledList = styled.ul`
 `;
 const StyledTrashIcon = styled(FontAwesomeIcon)`
   color: var(--grey-topics);
+  margin: 5px;
 `;
 
 const StyledListItem = styled.li`
@@ -133,4 +188,23 @@ const StyledPlanButton = styled.button`
 
 const StyledActivityLink = styled(Link)`
   grid-area: 2 / 3 / 3 / 4;
+`;
+
+const StyledFavoriteIconRegular = styled(FontAwesomeIcon)`
+  width: 1.5rem;
+  height: 1.5rem;
+`;
+
+const StyledFavoriteIconSolid = styled(FontAwesomeIcon)`
+  width: 1.5rem;
+  height: 1.5rem;
+  color: red;
+`;
+
+const StyledFavoriteButton = styled.button`
+  grid-area: 1 / 4 / 3 / 5;
+  align-self: center;
+  margin-left: 2rem;
+  background-color: transparent;
+  border: none;
 `;

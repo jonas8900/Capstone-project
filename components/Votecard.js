@@ -78,9 +78,7 @@ export default function Votecard({ dates, setDates }) {
   return (
     <>
       {dates.map((date) => (
-        <StyledVoteCardWrapper
-          key={date.id === undefined ? date.id : date.finalDateID}
-        >
+        <StyledVoteCardWrapper key={date.id || date.finalDateID}>
           {date.vote && (
             <StyledSectionForLastDate>
               <StyledVoteCardHeadline>

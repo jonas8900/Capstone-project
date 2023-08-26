@@ -27,36 +27,42 @@ export default function Events({ dates, setDates }) {
     <>
       <h2>Events</h2>
       {dates.map((date) => (
-        <StyledSection key={date.finalDateID}>
-          <StyledSectionHeadlineAndButton>
-            <StyledHeadline2>
-              Veranstaltung {date.objectWithTheSameID.veranstaltung}
-            </StyledHeadline2>
-            <StyledDeleteButton onClick={() => handleDelete(date.finalDateID)}>
-              <StyledTrashIcon icon={faTrash} />
-            </StyledDeleteButton>
-          </StyledSectionHeadlineAndButton>
-          <StyledUl>
-            <li>
-              <StyledHeadline3>Veranstaltung:</StyledHeadline3>
-              <StyledDetailText>
-                {date.objectWithTheSameID.veranstaltung}
-              </StyledDetailText>
-            </li>
-            <li>
-              <StyledHeadline3>Datum der Veranstaltung:</StyledHeadline3>
-              <StyledDetailText>
-                {moment(date.finalDate).format("lll")}
-              </StyledDetailText>
-            </li>
-            <li>
-              <StyledHeadline3>Ort der Veranstaltung:</StyledHeadline3>
-              <StyledDetailText>
-                {date.objectWithTheSameID.ort}
-              </StyledDetailText>
-            </li>
-          </StyledUl>
-        </StyledSection>
+        <section key={date.finalDateID}>
+          {date.objectWithTheSameID && (
+            <StyledSection>
+              <StyledSectionHeadlineAndButton>
+                <StyledHeadline2>
+                  Veranstaltung {date.objectWithTheSameID.veranstaltung}
+                </StyledHeadline2>
+                <StyledDeleteButton
+                  onClick={() => handleDelete(date.finalDateID)}
+                >
+                  <StyledTrashIcon icon={faTrash} />
+                </StyledDeleteButton>
+              </StyledSectionHeadlineAndButton>
+              <StyledUl>
+                <li>
+                  <StyledHeadline3>Veranstaltung:</StyledHeadline3>
+                  <StyledDetailText>
+                    {date.objectWithTheSameID.veranstaltung}
+                  </StyledDetailText>
+                </li>
+                <li>
+                  <StyledHeadline3>Datum der Veranstaltung:</StyledHeadline3>
+                  <StyledDetailText>
+                    {moment(date.finalDate).format("lll")}
+                  </StyledDetailText>
+                </li>
+                <li>
+                  <StyledHeadline3>Ort der Veranstaltung:</StyledHeadline3>
+                  <StyledDetailText>
+                    {date.objectWithTheSameID.ort}
+                  </StyledDetailText>
+                </li>
+              </StyledUl>
+            </StyledSection>
+          )}
+        </section>
       ))}
 
       <StyledLink href={"/addevent"}>
