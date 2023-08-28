@@ -9,7 +9,6 @@ export default function DashboardCard({ voteDoneArray }) {
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
   const nextActivity = voteDoneArray[0];
 
-
   return (
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
@@ -25,35 +24,37 @@ export default function DashboardCard({ voteDoneArray }) {
         </StyledUl>
       )}
       {voteDoneArray.length > 0 && (
-        <StyledUl>
-          <li>
-            <StyledHeadline3>Aktivitäten</StyledHeadline3>
-            <StyledDetailText>
-              {nextActivity.objectWithTheSameID.veranstaltung}
-            </StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>Datum</StyledHeadline3>
-            <StyledDetailText>
-              {moment(nextActivity.finalDate).format("lll")}
-            </StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>Ort</StyledHeadline3>
-            <StyledDetailText>
-              {nextActivity.objectWithTheSameID.ort}
-            </StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>was bringst du mit</StyledHeadline3>
-            <StyledDetailText>Popcorn</StyledDetailText>
-            <StyledDetailText>Eistee</StyledDetailText>
-          </li>
-        </StyledUl>
+        <StyledSectionForUlAndLink>
+          <StyledUl>
+            <li>
+              <StyledHeadline3>Aktivitäten</StyledHeadline3>
+              <StyledDetailText>
+                {nextActivity.objectWithTheSameID.veranstaltung}
+              </StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>Datum</StyledHeadline3>
+              <StyledDetailText>
+                {moment(nextActivity.finalDate).format("lll")}
+              </StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>Ort</StyledHeadline3>
+              <StyledDetailText>
+                {nextActivity.objectWithTheSameID.ort}
+              </StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>was bringst du mit</StyledHeadline3>
+              <StyledDetailText>Popcorn</StyledDetailText>
+              <StyledDetailText>Eistee</StyledDetailText>
+            </li>
+          </StyledUl>
+          <StyledIconLink href={`/planner/${nextActivity.finalDateID}`}>
+            <StyledCheckListIcon icon={faListCheck} />
+          </StyledIconLink>
+        </StyledSectionForUlAndLink>
       )}
-      <StyledIconLink href={`/planner/${nextActivity.finalDateID}`}>
-        <StyledCheckListIcon icon={faListCheck} />
-      </StyledIconLink>
     </StyledSection>
   );
 }
@@ -91,7 +92,7 @@ export const StyledUl = styled.ul`
 `;
 
 const StyledIconLink = styled(Link)`
-  align-self: flex-end;
+  align-self: flex-start;
   margin: auto 1rem 1rem auto;
 `;
 
@@ -99,4 +100,8 @@ const StyledCheckListIcon = styled(FontAwesomeIcon)`
   width: 2rem;
   height: 2rem;
   color: var(--grey-topics);
+`;
+
+const StyledSectionForUlAndLink = styled.section`
+  display: flex;
 `;
