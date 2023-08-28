@@ -5,12 +5,47 @@ import Link from "next/link";
 import { styled } from "styled-components";
 import "moment/locale/de";
 import Form from "./Form";
+import { useRouter } from "next/router";
+import { uid } from "uid";
 
 export default function PartyPlannerCard({ dates, setDates }) {
+  const router = useRouter();
+  const currentEventID = router.query.partyPlanner;
+  const onclickedEvent = dates.find(
+    (date) => date.finalDateID === currentEventID
+  );
+  const allObjectsWithoutTheClickedID = dates.filter(
+    (date) => date.finalDateID !== currentEventID
+  );
+
   function handleSubmitPlanning(event) {
     event.preventDefault();
-  }
 
+    const formData = new FormData(event.target);
+    const productInput = Object.fromEntries(formData);
+
+    if (onclickedEvent.products) {
+      onclickedEvent.products = [
+        ...onclickedEvent.products,
+        {
+          userID: "Jonas-818924",
+          product: productInput.product,
+          productID: uid(),
+        },
+      ];
+    } else {
+      onclickedEvent.products = [
+        {
+          userID: "Jonas-818924",
+          product: productInput.product,
+          productID: uid(),
+        },
+      ];
+    }
+
+    setDates([...allObjectsWithoutTheClickedID, onclickedEvent]);
+    event.target.reset();
+  }
   return (
     <main>
       <StyledBackLink href={"/veranstaltungen"}>
@@ -23,40 +58,48 @@ export default function PartyPlannerCard({ dates, setDates }) {
       </StyledThirdEventHeadline>
 
       <StyledPlannerSectionWrapper>
-        {dates.map((date) => (
-          <StyledFormCardWrapper key={date.finalDateID}>
-            <StyledShowActivityWrapper>
-              <StyledFourthHeadline>Aktivität:</StyledFourthHeadline>
-              <StyledParagraphForDetails>
-                {date.objectWithTheSameID.veranstaltung}
-              </StyledParagraphForDetails>
-            </StyledShowActivityWrapper>
-            <StyledShowLocationWrapper>
-              <StyledFourthHeadline>Ort:</StyledFourthHeadline>
-              <StyledParagraphForDetails>
-                {date.objectWithTheSameID.ort}
-              </StyledParagraphForDetails>
-            </StyledShowLocationWrapper>
-            <StyledShowDateWrapper>
-              <StyledFourthHeadline>Datum:</StyledFourthHeadline>
-              <StyledParagraphForDetails>
-                {" "}
-                {moment(date.finalDate).format("lll")}
-              </StyledParagraphForDetails>
-            </StyledShowDateWrapper>
-          </StyledFormCardWrapper>
-        ))}
+        <StyledFormCardWrapper key={onclickedEvent.finalDateID}>
+          <StyledShowActivityWrapper>
+            <StyledFourthHeadline>Aktivität:</StyledFourthHeadline>
+            <StyledParagraphForDetails>
+              {onclickedEvent.objectWithTheSameID.veranstaltung}
+            </StyledParagraphForDetails>
+          </StyledShowActivityWrapper>
+          <StyledShowLocationWrapper>
+            <StyledFourthHeadline>Ort:</StyledFourthHeadline>
+            <StyledParagraphForDetails>
+              {onclickedEvent.objectWithTheSameID.ort}
+            </StyledParagraphForDetails>
+          </StyledShowLocationWrapper>
+          <StyledShowDateWrapper>
+            <StyledFourthHeadline>Datum:</StyledFourthHeadline>
+            <StyledParagraphForDetails>
+              {" "}
+              {moment(onclickedEvent.finalDate).format("lll")}
+            </StyledParagraphForDetails>
+          </StyledShowDateWrapper>
+        </StyledFormCardWrapper>
 
-        <h4>Wer holt was:</h4>
+        <StyledThirdEventHeadline>Wer holt was:</StyledThirdEventHeadline>
         <StyledDisplayFormArticle>
           <StyledFourthHeadline>Name</StyledFourthHeadline>
-          <StyledUlForNames></StyledUlForNames>
+
           <StyledFourthHeadline2>nimmt mit</StyledFourthHeadline2>
-          <StyledUlForProducts></StyledUlForProducts>
+          <StyledUlForNames>
+            {onclickedEvent.products &&
+              onclickedEvent.products.map((product) => (
+                <StyledListItemArticle key={product.productID}>
+                  <StyledListItemUserID>{product.userID}</StyledListItemUserID>
+                  <StyledListItemProduct>
+                    {product.product}
+                  </StyledListItemProduct>
+                </StyledListItemArticle>
+              ))}
+          </StyledUlForNames>
         </StyledDisplayFormArticle>
       </StyledPlannerSectionWrapper>
       <Form
-        name={"eventname"}
+        name={"product"}
         type={"text"}
         onSubmit={handleSubmitPlanning}
         placeholder={"hier aktivität eingeben..."}
@@ -133,20 +176,33 @@ const StyledParagraphForDetails = styled.p`
 const StyledDisplayFormArticle = styled.article`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: 0.2fr 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
   margin-left: 1rem;
 `;
 
 const StyledUlForNames = styled.ul`
-  grid-area: 2 / 1 / 3 / 2;
-  display: flex;
-  flex-direction: column;
-`;
-
-const StyledUlForProducts = styled.ul`
   grid-area: 2 / 1 / 3 / 3;
   display: flex;
   flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1rem;
+`;
+
+const StyledListItemArticle = styled.article`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: 0.3fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+`;
+
+const StyledListItemUserID = styled.li`
+  grid-area: 1 / 1 / 2 / 2;
+`;
+const StyledListItemProduct = styled.li`
+  grid-area: 1 / 2 / 2 / 3;
 `;

@@ -1,10 +1,14 @@
 import styled from "styled-components";
 import "moment/locale/de";
 import moment from "moment";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faListCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function DashboardCard({ voteDoneArray }) {
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
   const nextActivity = voteDoneArray[0];
+
 
   return (
     <StyledSection>
@@ -47,6 +51,9 @@ export default function DashboardCard({ voteDoneArray }) {
           </li>
         </StyledUl>
       )}
+      <StyledIconLink href={`/planner/${nextActivity.finalDateID}`}>
+        <StyledCheckListIcon icon={faListCheck} />
+      </StyledIconLink>
     </StyledSection>
   );
 }
@@ -81,4 +88,15 @@ export const StyledUl = styled.ul`
   display: flex;
   flex-direction: column;
   list-style: none;
+`;
+
+const StyledIconLink = styled(Link)`
+  align-self: flex-end;
+  margin: auto 1rem 1rem auto;
+`;
+
+const StyledCheckListIcon = styled(FontAwesomeIcon)`
+  width: 2rem;
+  height: 2rem;
+  color: var(--grey-topics);
 `;
