@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import "moment/locale/de";
 import moment from "moment";
+import Link from "next/link";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faListCheck } from "@fortawesome/free-solid-svg-icons";
 
 export default function DashboardCard({ voteDoneArray }) {
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
@@ -21,31 +24,36 @@ export default function DashboardCard({ voteDoneArray }) {
         </StyledUl>
       )}
       {voteDoneArray.length > 0 && (
-        <StyledUl>
-          <li>
-            <StyledHeadline3>Aktivitäten</StyledHeadline3>
-            <StyledDetailText>
-              {nextActivity.objectWithTheSameID.veranstaltung}
-            </StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>Datum</StyledHeadline3>
-            <StyledDetailText>
-              {moment(nextActivity.finalDate).format("lll")}
-            </StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>Ort</StyledHeadline3>
-            <StyledDetailText>
-              {nextActivity.objectWithTheSameID.ort}
-            </StyledDetailText>
-          </li>
-          <li>
-            <StyledHeadline3>was bringst du mit</StyledHeadline3>
-            <StyledDetailText>Popcorn</StyledDetailText>
-            <StyledDetailText>Eistee</StyledDetailText>
-          </li>
-        </StyledUl>
+        <StyledSectionForUlAndLink>
+          <StyledUl>
+            <li>
+              <StyledHeadline3>Aktivitäten</StyledHeadline3>
+              <StyledDetailText>
+                {nextActivity.objectWithTheSameID.veranstaltung}
+              </StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>Datum</StyledHeadline3>
+              <StyledDetailText>
+                {moment(nextActivity.finalDate).format("lll")}
+              </StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>Ort</StyledHeadline3>
+              <StyledDetailText>
+                {nextActivity.objectWithTheSameID.ort}
+              </StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>was bringst du mit</StyledHeadline3>
+              <StyledDetailText>Popcorn</StyledDetailText>
+              <StyledDetailText>Eistee</StyledDetailText>
+            </li>
+          </StyledUl>
+          <StyledIconLink href={`/planner/${nextActivity.finalDateID}`}>
+            <StyledCheckListIcon icon={faListCheck} />
+          </StyledIconLink>
+        </StyledSectionForUlAndLink>
       )}
     </StyledSection>
   );
@@ -81,4 +89,19 @@ export const StyledUl = styled.ul`
   display: flex;
   flex-direction: column;
   list-style: none;
+`;
+
+const StyledIconLink = styled(Link)`
+  align-self: flex-start;
+  margin: auto 1rem 1rem auto;
+`;
+
+const StyledCheckListIcon = styled(FontAwesomeIcon)`
+  width: 2rem;
+  height: 2rem;
+  color: var(--grey-topics);
+`;
+
+const StyledSectionForUlAndLink = styled.section`
+  display: flex;
 `;
