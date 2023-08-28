@@ -6,7 +6,11 @@ import {
   StyledSection,
   StyledUl,
 } from "@/components/DashboardActivityCard";
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faListCheck,
+  faPlus,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import "moment/locale/de";
@@ -60,6 +64,9 @@ export default function Events({ dates, setDates }) {
                   </StyledDetailText>
                 </li>
               </StyledUl>
+              <StyledIconLink href={`/planner/${date.finalDateID}`}>
+                <StyledCheckListIcon icon={faListCheck} />
+              </StyledIconLink>
             </StyledSection>
           )}
         </section>
@@ -101,4 +108,15 @@ const StyledLink = styled(Link)`
   &:hover {
     background-color: var(--third-color);
   }
+`;
+
+const StyledCheckListIcon = styled(FontAwesomeIcon)`
+  width: 2rem;
+  height: 2rem;
+  color: var(--grey-topics);
+`;
+
+const StyledIconLink = styled(Link)`
+  align-self: flex-end;
+  margin: auto 1rem 1rem auto;
 `;
