@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const activitySuggestionSchema = new Schema({
   name: { type: String, required: true },
-  likedByUser: { type: [String], required: false },
+  likedByUser: { type: [{ userID: String }] },
 });
 
 const ActivitySuggestion =

@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import useSWR from "swr";
+import { useState } from "react";
 
 export default function Activitylist({ activityCards, setActivityCards }) {
   const {
@@ -67,40 +68,52 @@ export default function Activitylist({ activityCards, setActivityCards }) {
     }
   }
 
-  function handleAddFavoriteButton(id) {
-    const activitySuggestionCard = activityCards.find((card) => card.id === id);
+  async function handleAddFavoriteButton(id) {
+    const activitySuggestionCard = activitySuggestionList.find(
+      (card) => card._id === id
+    );
 
     if (activitySuggestionCard) {
-      setActivityCards(
-        activityCards.map((card) => {
-          if (card.id === id) {
-            const isAlreadylikedByUser = card.likedByUser.some(
-              (user) => user.userID === userID
-            );
+      const updatedFavoriteActivity = activitySuggestionList.map((card) => {
+        if (card._id === id) {
+          const isAlreadylikedByUser = card.likedByUser.some(
+            (user) => user.userID === userID
+          );
 
-            if (isAlreadylikedByUser) {
-              const unLike = card.likedByUser.filter(
-                (user) => user.userID !== userID
-              );
-              return {
-                ...card,
-                likedByUser: unLike,
-              };
-            } else {
-              const newUserObject = {
-                userID: userID,
-              };
-              const Like = [...card.likedByUser, newUserObject];
-              return {
-                ...card,
-                likedByUser: Like,
-              };
-            }
+          if (isAlreadylikedByUser) {
+            const unLike = card.likedByUser.filter(
+              (user) => user.userID !== userID
+            );
+            console.log(unLike);
+            return {
+              ...card,
+              likedByUser: unLike,
+            };
           } else {
-            return card;
+            const newUserObject = {
+              userID: userID,
+            };
+            const Like = [...card.likedByUser, newUserObject];
+            return {
+              ...card,
+              likedByUser: Like,
+            };
           }
-        })
-      );
+        } else {
+          return card;
+        }
+      });
+      console.log(updatedFavoriteActivity);
+      const response = await fetch(`/api/activitySuggestion`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ updatedFavoriteActivity, id }),
+      });
+      if (response.ok) {
+        mutate();
+      }
     }
   }
 

@@ -48,9 +48,6 @@ export default function ActivityPlan({}) {
     (date) => date
   );
 
-  const dateformat = currentActivityObjectUpdated.date1.slice(0, -8);
-  console.log(currentActivity);
-
   async function handleSubmitDates(event) {
     event.preventDefault();
 

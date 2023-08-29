@@ -33,4 +33,17 @@ export default async function getActivitySuggestions(request, response) {
       .status(200)
       .json({ status: `activity with id: ${id} successfully deleted.` });
   }
+
+  if (request.method === "PUT") {
+    try {
+      ActivitySuggestion.findByIdAndUpdate(id, {
+        $set: request.body.updatedFavoriteActivity,
+      });
+
+      response.status(200).json({ status: `activity ${id} updated!` });
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message });
+    }
+  }
 }
