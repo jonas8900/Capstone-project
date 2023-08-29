@@ -3,6 +3,9 @@ import GlobalStyle from "../styles";
 import useLocalStorageState from "use-local-storage-state";
 import { styled } from "styled-components";
 import Image from "next/image";
+import { SWRConfig } from "swr/_internal";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function App({ Component, pageProps }) {
   const [activityCards, setActivityCards] = useLocalStorageState(
@@ -43,14 +46,16 @@ export default function App({ Component, pageProps }) {
           priority={false}
         />
       </StyledHeadline>
-      <Component
-        {...pageProps}
-        activityCards={activityCards}
-        setActivityCards={setActivityCards}
-        dates={dates}
-        setDates={setDates}
-        voteDoneArray={voteDoneArray}
-      />
+      <SWRConfig value={{ fetcher }}>
+        <Component
+          {...pageProps}
+          activityCards={activityCards}
+          setActivityCards={setActivityCards}
+          dates={dates}
+          setDates={setDates}
+          voteDoneArray={voteDoneArray}
+        />
+      </SWRConfig>
       <NavigationBar />
     </>
   );

@@ -5,19 +5,30 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart as faHeartSolid,
+  faSpinner,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+import useSWR from "swr";
 
-export default function Activitylist({
-  activityCards,
-  setActivityCards,
-  setDates,
-  dates,
-}) {
+export default function Activitylist({ activityCards, setActivityCards }) {
+  const {
+    data: activitySuggestionList,
+    isLoading,
+    mutate,
+  } = useSWR("api/activitySuggestion");
+
   const userID = "Jonas-818924";
 
-  function handleSubmitActivity(event) {
+  if (isLoading) {
+    return (
+      <h1>
+        <FontAwesomeIcon icon={faSpinner} spin />
+      </h1>
+    );
+  }
+
+  async function handleSubmitActivity(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -25,25 +36,34 @@ export default function Activitylist({
 
     const newActivity = {
       name: data.activityName,
-      id: uid(),
       likedByUser: [],
     };
-    setActivityCards([...activityCards, newActivity]);
+    const response = await fetch("api/activitySuggestion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newActivity),
+    });
 
+    if (response.ok) {
+      mutate();
+    }
     event.target.reset();
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
     const areYouSureToDelete = window.confirm(
       "Bist du dir sicher, dass du diese Aktivität löschen möchtest?"
     );
     if (areYouSureToDelete) {
-      const setFilterWithoutDeletedOne = activityCards.filter(
-        (activityCard) => activityCard.id !== id
-      );
-      const setFilterDates = dates.filter((date) => date.id !== id);
-      setActivityCards(setFilterWithoutDeletedOne);
-      setDates(setFilterDates);
+      await fetch(`/api/activitySuggestion/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
     }
   }
 
@@ -89,14 +109,14 @@ export default function Activitylist({
       <StyledActivitySection>
         <h2>Aktivitäten</h2>
         <StyledList>
-          {activityCards.map((activity) => (
-            <StyledListItem key={activity.id}>
+          {activitySuggestionList.map((activity) => (
+            <StyledListItem key={activity._id}>
               <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
-              <StyledDeleteButton onClick={() => handleDelete(activity.id)}>
+              <StyledDeleteButton onClick={() => handleDelete(activity._id)}>
                 <StyledTrashIcon icon={faTrash} />
               </StyledDeleteButton>
               <StyledFavoriteButton
-                onClick={() => handleAddFavoriteButton(activity.id)}
+                onClick={() => handleAddFavoriteButton(activity._id)}
               >
                 {activity.likedByUser.some((user) => user.userID === userID) ? (
                   <StyledFavoriteIconSolid icon={faHeartSolid} />
@@ -105,7 +125,7 @@ export default function Activitylist({
                 )}
                 <p>{activity.likedByUser.length}</p>
               </StyledFavoriteButton>
-              <StyledActivityLink href={`/${activity.id}`}>
+              <StyledActivityLink href={`/${activity._id}`}>
                 <StyledPlanButton>planen</StyledPlanButton>
               </StyledActivityLink>
             </StyledListItem>

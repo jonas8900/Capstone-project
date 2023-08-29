@@ -18,10 +18,13 @@
     "eslint-config-next": "13.4.8",
     "is-promise": "^2.1.0",
     "moment": "^2.29.4",
+    "mongodb": "^6.0.0",
+    "mongoose": "^7.4.5",
     "next": "13.4.8",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "styled-components": "^6.0.2",
+    "swr": "^2.2.2",
     "uid": "^2.0.2",
     "use-local-storage-state": "^18.3.3"
   },

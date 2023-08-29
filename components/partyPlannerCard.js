@@ -21,7 +21,7 @@ export default function PartyPlannerCard({ dates, setDates }) {
   const allObjectsWithoutTheClickedID = dates.filter(
     (date) => date.finalDateID !== currentEventID
   );
-  console.log(onclickedEvent);
+
   function handleSubmitPlanning(event) {
     event.preventDefault();
 
