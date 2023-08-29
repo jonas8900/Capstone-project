@@ -36,8 +36,10 @@ export default async function getActivitySuggestions(request, response) {
 
   if (request.method === "PUT") {
     try {
-      ActivitySuggestion.findByIdAndUpdate(id, {
-        $set: request.body.updatedFavoriteActivity,
+      await ActivitySuggestion.findByIdAndUpdate(id, {
+        $set: {
+          likedByUser: request.body.updatedFavoriteActivity[0].likedByUser,
+        },
       });
 
       response.status(200).json({ status: `activity ${id} updated!` });

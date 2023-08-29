@@ -19,7 +19,7 @@ export default function Activitylist({ activityCards, setActivityCards }) {
     mutate,
   } = useSWR("api/activitySuggestion");
 
-  const userID = "Jonas-818924";
+  const userID = "Marvin-818924";
 
   if (isLoading) {
     return (
@@ -37,7 +37,7 @@ export default function Activitylist({ activityCards, setActivityCards }) {
 
     const newActivity = {
       name: data.activityName,
-      likedByUser: [],
+      likedByUser: [{ userID: "Tim-1225412" }],
     };
     const response = await fetch("api/activitySuggestion", {
       method: "POST",
@@ -69,12 +69,12 @@ export default function Activitylist({ activityCards, setActivityCards }) {
   }
 
   async function handleAddFavoriteButton(id) {
-    const activitySuggestionCard = activitySuggestionList.find(
+    const activitySuggestionCard = activitySuggestionList.filter(
       (card) => card._id === id
     );
 
     if (activitySuggestionCard) {
-      const updatedFavoriteActivity = activitySuggestionList.map((card) => {
+      const updatedFavoriteActivity = activitySuggestionCard.map((card) => {
         if (card._id === id) {
           const isAlreadylikedByUser = card.likedByUser.some(
             (user) => user.userID === userID
@@ -84,7 +84,6 @@ export default function Activitylist({ activityCards, setActivityCards }) {
             const unLike = card.likedByUser.filter(
               (user) => user.userID !== userID
             );
-            console.log(unLike);
             return {
               ...card,
               likedByUser: unLike,
@@ -103,19 +102,20 @@ export default function Activitylist({ activityCards, setActivityCards }) {
           return card;
         }
       });
-      console.log(updatedFavoriteActivity);
+
       const response = await fetch(`/api/activitySuggestion`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ updatedFavoriteActivity, id }),
+        body: JSON.stringify({ updatedFavoriteActivity, id, userID }),
       });
       if (response.ok) {
         mutate();
       }
     }
   }
+  console.log(activitySuggestionList);
 
   return (
     <main>
