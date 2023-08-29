@@ -28,10 +28,15 @@ export default async function getActivitySuggestions(request, response) {
   }
 
   if (request.method === "DELETE") {
-    await ActivitySuggestion.findByIdAndDelete(id);
-    response
-      .status(200)
-      .json({ status: `activity with id: ${id} successfully deleted.` });
+    try {
+      await ActivitySuggestion.findByIdAndDelete(id);
+      response
+        .status(200)
+        .json({ status: `activity with id: ${id} successfully deleted.` });
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message });
+    }
   }
 
   if (request.method === "PUT") {

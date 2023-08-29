@@ -12,7 +12,7 @@ import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import useSWR from "swr";
 import { useState } from "react";
 
-export default function Activitylist({ activityCards, setActivityCards }) {
+export default function Activitylist({}) {
   const {
     data: activitySuggestionList,
     isLoading,
@@ -23,9 +23,9 @@ export default function Activitylist({ activityCards, setActivityCards }) {
 
   if (isLoading) {
     return (
-      <h1>
-        <FontAwesomeIcon icon={faSpinner} spin />
-      </h1>
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
     );
   }
 
@@ -240,4 +240,16 @@ const StyledFavoriteButton = styled.button`
   margin-left: 2rem;
   background-color: transparent;
   border: none;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
 `;

@@ -17,9 +17,9 @@ export default function ActivityPlan({}) {
   const router = useRouter();
   if (isLoading) {
     return (
-      <h1>
-        <FontAwesomeIcon icon={faSpinner} spin />
-      </h1>
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
     );
   }
 
@@ -309,4 +309,16 @@ export const StyledFormButton = styled.button`
 export const StyledBackIcon = styled(FontAwesomeIcon)`
   width: 2rem;
   height: 2rem;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
 `;
