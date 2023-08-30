@@ -9,6 +9,7 @@ import {
 import {
   faListCheck,
   faPlus,
+  faSpinner,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -19,7 +20,16 @@ import { styled } from "styled-components";
 import useSWR from "swr";
 
 export default function Events({}) {
-  const { data: allEvents } = useSWR("api/finalEvents/");
+  const { data: allEvents, isLoading } = useSWR("api/finalEvents/");
+
+  if (isLoading) {
+    return (
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
+    );
+  }
+
 
   async function handleDelete(id) {
     const alertWindow = window.confirm(
@@ -35,6 +45,8 @@ export default function Events({}) {
       });
     }
   }
+
+
 
   return (
     <>
@@ -123,4 +135,16 @@ const StyledCheckListIcon = styled(FontAwesomeIcon)`
 const StyledIconLink = styled(Link)`
   align-self: flex-end;
   margin: auto 1rem 1rem auto;
+`;
+
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

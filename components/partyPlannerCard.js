@@ -1,4 +1,4 @@
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import Link from "next/link";
@@ -11,11 +11,21 @@ import useSWR from "swr";
 
 export default function PartyPlannerCard({}) {
   const router = useRouter();
-  const { data: finalEvent, mutate } = useSWR(
-    `/api/planner/${router.query.partyPlanner}`
-  );
+  const {
+    data: finalEvent,
+    mutate,
+    isLoading,
+  } = useSWR(`/api/planner/${router.query.partyPlanner}`);
+
+  if (isLoading) {
+    return (
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
+    );
+  }
+
   const userID = "Marvin-818924";
-  console.log("test:", finalEvent);
 
   const onclickedEvent = finalEvent;
 
@@ -123,6 +133,18 @@ const StyledThirdEventHeadline = styled.h3`
   font-size: 15px;
   margin: 2rem;
   font-weight: normal;
+`;
+
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const StyledBackLink = styled(Link)`
