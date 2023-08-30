@@ -10,7 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import useSWR from "swr";
-import { useState } from "react";
+
 
 export default function Activitylist({}) {
   const {
@@ -108,14 +108,14 @@ export default function Activitylist({}) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ updatedFavoriteActivity, id, userID }),
+        body: JSON.stringify({ updatedFavoriteActivity, id }),
       });
       if (response.ok) {
         mutate();
       }
     }
   }
-  console.log(activitySuggestionList);
+
 
   return (
     <main>

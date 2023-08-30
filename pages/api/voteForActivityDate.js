@@ -25,4 +25,25 @@ export default async function voteForActivityDate(request, response) {
       response.status(400).json({ error: error.message });
     }
   }
+
+  if (request.method === "PUT") {
+    const id = request.body.updateSingleDate._id;
+    try {
+      await VoteForActivityDate.findByIdAndUpdate(id, {
+        $set: {
+          isInVotingProcess: request.body.updateSingleDate.isInVotingProcess,
+          date1IsTrue: request.body.updateSingleDate.date1IsTrue,
+          date2IsTrue: request.body.updateSingleDate.date2IsTrue,
+          date3IsTrue: request.body.updateSingleDate.date3IsTrue,
+          date4IsTrue: request.body.updateSingleDate.date4IsTrue,
+          noDateMatches: request.body.updateSingleDate.noDateMatches,
+        },
+      });
+      console.log("Update data:", request.body.updateSingleDate);
+      response.status(200).json({ status: `voting ${id} send!` });
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message`${id}` });
+    }
+  }
 }
