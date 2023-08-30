@@ -1,7 +1,5 @@
 import moment from "moment";
 import { styled } from "styled-components";
-import { uid } from "uid";
-import useLocalStorageState from "use-local-storage-state";
 import "moment/locale/de";
 import { useRouter } from "next/router";
 import useSWR from "swr";
@@ -13,13 +11,11 @@ export default function Votecard({ dates, setDates }) {
   const { data: listOfAllVotesInProgress, mutate } = useSWR(
     "api/voteForActivityDate"
   );
+  const { data: finalEvents } = useSWR("api/finalEvents");
   const [matchedID, setMatchedID] = useState({});
 
   const objectWithTheSameID = listOfAllVotesInProgress.find(
     (voting) => voting._id === matchedID._id
-  );
-  const findDateWithoutMatchedID = listOfAllVotesInProgress.filter(
-    (voting) => voting._id !== matchedID._id
   );
 
   async function handleSubmitCheckboxes(event) {
@@ -95,7 +91,7 @@ export default function Votecard({ dates, setDates }) {
     setMatchedID(listOfAllVotesInProgress.find((voting) => voting._id === id));
   }
 
-  function handleSubmitFinalDate(event) {
+  async function handleSubmitFinalDate(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -105,18 +101,35 @@ export default function Votecard({ dates, setDates }) {
       "Überprüfe die Eingabe bevor du ein Finales Datum setzt!"
     );
     if (areYouSureToDelete) {
-      setDates([
-        ...findDateWithoutMatchedID,
-        {
-          objectWithTheSameID,
-          finalDate: selectData.dateSelect,
-          finalDateID: uid(),
+      const finalEventObject = {
+        finalDate: selectData.dateSelect,
+        veranstaltung: objectWithTheSameID.veranstaltung,
+        ort: objectWithTheSameID.ort,
+        isInVotingProcess: false,
+        parentId: objectWithTheSameID.parentId,
+      };
+
+      const response = await fetch("api/finalEvents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ]);
-      router.push("/veranstaltungen");
+        body: JSON.stringify(finalEventObject),
+      });
+      await fetch(`/api/voteForActivityDate/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ objectWithTheSameID }),
+      });
+
+      if (response.ok) {
+        mutate();
+        router.push("/veranstaltungen");
+      }
     }
   }
-
   return (
     <>
       {listOfAllVotesInProgress.map((date) => (
@@ -137,31 +150,37 @@ export default function Votecard({ dates, setDates }) {
                   </StyledParagraphInList>
 
                   <StyledVoteCardLi>
-                    {moment(date.date1).format("lll")} Uhr <p>1</p>
+                    {moment(date.date1).format("lll")} Uhr{" "}
+                    <p>Personen: {date.date1IsTrue.length}</p>
                   </StyledVoteCardLi>
 
                   <StyledVoteCardLi>
-                    {moment(date.date2).format("lll")} Uhr <p>1</p>
+                    {moment(date.date2).format("lll")} Uhr{" "}
+                    <p>Personen: {date.date2IsTrue.length}</p>
                   </StyledVoteCardLi>
 
                   {date.date3 !== null && (
                     <StyledVoteCardLi>
-                      {moment(date.date3).format("lll")} Uhr <p>0</p>
+                      {moment(date.date3).format("lll")} Uhr{" "}
+                      <p>Personen: {date.date3IsTrue.length}</p>
                     </StyledVoteCardLi>
                   )}
                   {date.date4 !== null && (
                     <StyledVoteCardLi>
-                      {moment(date.date4).format("lll")} Uhr <p>0</p>
+                      {moment(date.date4).format("lll")} Uhr{" "}
+                      <p>Personen: {date.date4IsTrue.length}</p>
                     </StyledVoteCardLi>
                   )}
-                  <StyledVoteCardLi>keins passt</StyledVoteCardLi>
+                  <StyledVoteCardLi>
+                    keins passt {date.noDateMatches.length}
+                  </StyledVoteCardLi>
                 </StyledVoteCardUl>
 
                 <StyledVoteCardNoVoteSection>
                   <StyledVoteCardHeadline3>
                     Keine Abstimmung von:
                   </StyledVoteCardHeadline3>
-                  <StyledSubParagraph>3</StyledSubParagraph>
+                  <StyledSubParagraph>Personen: 3</StyledSubParagraph>
                 </StyledVoteCardNoVoteSection>
                 <StyledVoteCardFormFinalDatePick
                   onSubmit={handleSubmitFinalDate}
@@ -189,7 +208,10 @@ export default function Votecard({ dates, setDates }) {
                       </option>
                     )}
                   </select>
-                  <StyledVoteCardButtonClose type="submit">
+                  <StyledVoteCardButtonClose
+                    type="submit"
+                    onClick={() => handleFindId(date._id)}
+                  >
                     Abstimmung abschließen
                   </StyledVoteCardButtonClose>
                 </StyledVoteCardFormFinalDatePick>
@@ -388,8 +410,7 @@ const StyledVoteCardLi = styled.li`
   margin-bottom: 10px;
   font-size: var(--font-size-details);
   padding: 0.5rem;
-  border-radius: 10px;
-  box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid black;
 `;
 
 const StyledVoteCardNoVoteSection = styled.section`

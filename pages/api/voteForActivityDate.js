@@ -39,11 +39,23 @@ export default async function voteForActivityDate(request, response) {
           noDateMatches: request.body.updateSingleDate.noDateMatches,
         },
       });
-      console.log("Update data:", request.body.updateSingleDate);
       response.status(200).json({ status: `voting ${id} send!` });
     } catch (error) {
       console.log(error);
       response.status(400).json({ error: error.message`${id}` });
+    }
+  }
+
+  if (request.method === "DELETE") {
+    const id = request.body.objectWithTheSameID._id;
+    try {
+      await VoteForActivityDate.findByIdAndDelete(id);
+      response
+        .status(200)
+        .json({ status: `Voting with id: ${id} successfully deleted.` });
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message });
     }
   }
 }

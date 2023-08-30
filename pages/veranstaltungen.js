@@ -16,61 +16,65 @@ import moment from "moment";
 import "moment/locale/de";
 import Link from "next/link";
 import { styled } from "styled-components";
+import useSWR from "swr";
 
-export default function Events({ dates, setDates }) {
-  function handleDelete(id) {
+export default function Events({}) {
+  const { data: allEvents } = useSWR("api/finalEvents/");
+
+  async function handleDelete(id) {
     const alertWindow = window.confirm(
       "Bist du dir sicher, dass du das Event löschen möchtest?"
     );
     if (alertWindow) {
-      setDates(dates.filter((date) => date.finalDateID !== id));
+      await fetch(`/api/finalEvents/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
     }
   }
 
   return (
     <>
       <h2>Events</h2>
-      {dates.map((date) => (
-        <section key={date.finalDateID}>
-          {date.objectWithTheSameID && (
-            <StyledSection>
-              <StyledSectionHeadlineAndButton>
-                <StyledHeadline2>
-                  Veranstaltung {date.objectWithTheSameID.veranstaltung}
-                </StyledHeadline2>
-                <StyledDeleteButton
-                  onClick={() => handleDelete(date.finalDateID)}
-                >
-                  <StyledTrashIcon icon={faTrash} />
-                </StyledDeleteButton>
-              </StyledSectionHeadlineAndButton>
-              <StyledUl>
-                <li>
-                  <StyledHeadline3>Veranstaltung:</StyledHeadline3>
-                  <StyledDetailText>
-                    {date.objectWithTheSameID.veranstaltung}
-                  </StyledDetailText>
-                </li>
-                <li>
-                  <StyledHeadline3>Datum der Veranstaltung:</StyledHeadline3>
-                  <StyledDetailText>
-                    {moment(date.finalDate).format("lll")}
-                  </StyledDetailText>
-                </li>
-                <li>
-                  <StyledHeadline3>Ort der Veranstaltung:</StyledHeadline3>
-                  <StyledDetailText>
-                    {date.objectWithTheSameID.ort}
-                  </StyledDetailText>
-                </li>
-              </StyledUl>
-              <StyledIconLink href={`/planner/${date.finalDateID}`}>
-                <StyledCheckListIcon icon={faListCheck} />
-              </StyledIconLink>
-            </StyledSection>
-          )}
-        </section>
-      ))}
+      {allEvents &&
+        allEvents.map((date) => (
+          <section key={date._id}>
+            {date.finalDate && (
+              <StyledSection>
+                <StyledSectionHeadlineAndButton>
+                  <StyledHeadline2>
+                    Veranstaltung {date.veranstaltung}
+                  </StyledHeadline2>
+                  <StyledDeleteButton onClick={() => handleDelete(date._id)}>
+                    <StyledTrashIcon icon={faTrash} />
+                  </StyledDeleteButton>
+                </StyledSectionHeadlineAndButton>
+                <StyledUl>
+                  <li>
+                    <StyledHeadline3>Veranstaltung:</StyledHeadline3>
+                    <StyledDetailText>{date.veranstaltung}</StyledDetailText>
+                  </li>
+                  <li>
+                    <StyledHeadline3>Datum der Veranstaltung:</StyledHeadline3>
+                    <StyledDetailText>
+                      {moment(date.finalDate).format("lll")}
+                    </StyledDetailText>
+                  </li>
+                  <li>
+                    <StyledHeadline3>Ort der Veranstaltung:</StyledHeadline3>
+                    <StyledDetailText>{date.ort}</StyledDetailText>
+                  </li>
+                </StyledUl>
+                <StyledIconLink href={`planner/${date._id}`}>
+                  <StyledCheckListIcon icon={faListCheck} />
+                </StyledIconLink>
+              </StyledSection>
+            )}
+          </section>
+        ))}
 
       <StyledLink href={"/addevent"}>
         <StyledIcon icon={faPlus} />

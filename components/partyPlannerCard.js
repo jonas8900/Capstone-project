@@ -7,48 +7,40 @@ import "moment/locale/de";
 import Form from "./Form";
 import { useRouter } from "next/router";
 import { uid } from "uid";
+import useSWR from "swr";
 
-export default function PartyPlannerCard({ dates, setDates }) {
+export default function PartyPlannerCard({}) {
   const router = useRouter();
-  const currentEventID = router.query.partyPlanner;
-  if (!currentEventID) {
-    return null;
-  }
-
-  const onclickedEvent = dates.find(
-    (date) => date.finalDateID === currentEventID
+  const { data: finalEvent, mutate } = useSWR(
+    `/api/planner/${router.query.partyPlanner}`
   );
-  const allObjectsWithoutTheClickedID = dates.filter(
-    (date) => date.finalDateID !== currentEventID
-  );
+  const userID = "Marvin-818924";
+  console.log("test:", finalEvent);
 
-  function handleSubmitPlanning(event) {
+  const onclickedEvent = finalEvent;
+
+  async function handleSubmitPlanning(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const productInput = Object.fromEntries(formData);
+    const typedProducts = {
+      userID: userID,
+      product: productInput.product,
+    };
 
-    if (onclickedEvent.products) {
-      onclickedEvent.products = [
-        ...onclickedEvent.products,
-        {
-          userID: "Jonas-818924",
-          product: productInput.product,
-          productID: uid(),
-        },
-      ];
-    } else {
-      onclickedEvent.products = [
-        {
-          userID: "Jonas-818924",
-          product: productInput.product,
-          productID: uid(),
-        },
-      ];
+    const response = await fetch(`/api/planner/${router.query.partyPlanner}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ typedProducts }),
+    });
+
+    if (response.ok) {
+      mutate();
+      event.target.reset();
     }
-
-    setDates([...allObjectsWithoutTheClickedID, onclickedEvent]);
-    event.target.reset();
   }
   return (
     <main>
@@ -73,17 +65,17 @@ export default function PartyPlannerCard({ dates, setDates }) {
           </StyledThirdEventHeadline>
 
           <StyledPlannerSectionWrapper>
-            <StyledFormCardWrapper key={onclickedEvent.finalDateID}>
+            <StyledFormCardWrapper key={onclickedEvent._id}>
               <StyledShowActivityWrapper>
                 <StyledFourthHeadline>Aktivität:</StyledFourthHeadline>
                 <StyledParagraphForDetails>
-                  {onclickedEvent.objectWithTheSameID.veranstaltung}
+                  {onclickedEvent.veranstaltung}
                 </StyledParagraphForDetails>
               </StyledShowActivityWrapper>
               <StyledShowLocationWrapper>
                 <StyledFourthHeadline>Ort:</StyledFourthHeadline>
                 <StyledParagraphForDetails>
-                  {onclickedEvent.objectWithTheSameID.ort}
+                  {onclickedEvent.ort}
                 </StyledParagraphForDetails>
               </StyledShowLocationWrapper>
               <StyledShowDateWrapper>
@@ -103,7 +95,7 @@ export default function PartyPlannerCard({ dates, setDates }) {
               <StyledUlForNames>
                 {onclickedEvent.products &&
                   onclickedEvent.products.map((product) => (
-                    <StyledListItemArticle key={product.productID}>
+                    <StyledListItemArticle key={product._id}>
                       <StyledListItemUserID>
                         {product.userID}
                       </StyledListItemUserID>
