@@ -8,6 +8,7 @@ import {
 } from "@/components/DashboardActivityCard";
 import {
   faListCheck,
+  faPenToSquare,
   faPlus,
   faSpinner,
   faTrash,
@@ -16,18 +17,24 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import "moment/locale/de";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { styled } from "styled-components";
 import useSWR from "swr";
 
 export default function Events({}) {
   const { data: allEvents, isLoading } = useSWR("api/finalEvents/");
   const userID = "Marvin-818924";
+  const router = useRouter();
   if (isLoading) {
     return (
       <StyledLoadingError>
         <StyledLoadingErrorIcon icon={faSpinner} spin />
       </StyledLoadingError>
     );
+  }
+
+  async function handleEdit(id) {
+    router.push(`/eventeditor/${id}`);
   }
 
   async function handleDelete(id) {
@@ -44,10 +51,6 @@ export default function Events({}) {
       });
     }
   }
-  const nextActivity = allEvents !== undefined && allEvents[0];
-
-  const productsOfNextActivity =
-    nextActivity !== undefined && nextActivity.products;
   return (
     <>
       <h2>Events</h2>
@@ -60,6 +63,10 @@ export default function Events({}) {
                   <StyledHeadline2>
                     Veranstaltung {date.veranstaltung}
                   </StyledHeadline2>
+
+                  <StyledEditButton onClick={() => handleEdit(date._id)}>
+                    <FontAwesomeIcon icon={faPenToSquare} />
+                  </StyledEditButton>
                   <StyledDeleteButton onClick={() => handleDelete(date._id)}>
                     <StyledTrashIcon icon={faTrash} />
                   </StyledDeleteButton>
@@ -78,17 +85,6 @@ export default function Events({}) {
                   <li>
                     <StyledHeadline3>Ort der Veranstaltung:</StyledHeadline3>
                     <StyledDetailText>{date.ort}</StyledDetailText>
-                  </li>
-                  <li>
-                    <StyledHeadline3>das bringst du mit:</StyledHeadline3>
-                    {productsOfNextActivity.map(
-                      (product) =>
-                        product.userID === userID && (
-                          <StyledDetailText key={product._id}>
-                            {product.product}
-                          </StyledDetailText>
-                        )
-                    )}
                   </li>
                 </StyledUl>
                 <StyledIconLink href={`planner/${date._id}`}>
@@ -135,6 +131,15 @@ const StyledLink = styled(Link)`
   &:hover {
     background-color: var(--third-color);
   }
+`;
+
+const StyledEditButton = styled.button`
+  background-color: white;
+  border: none;
+  width: fit-content;
+  height: fit-content;
+  font-size: 1rem;
+  grid-area: 1 / 1 / 2 / 2;
 `;
 
 const StyledCheckListIcon = styled(FontAwesomeIcon)`

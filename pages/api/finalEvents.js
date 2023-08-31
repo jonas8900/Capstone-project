@@ -38,6 +38,21 @@ export default async function getFinalEvent(request, response) {
       response.status(400).json({ error: error.message });
     }
   }
-
-
+  if (request.method === "PUT") {
+    const id = request.body.addEventObject;
+    try {
+      const fetchById = await FinalEvent.findByIdAndUpdate(id, {
+        $set: {
+          finalDate: request.body.addEventObject.finalDate,
+          ort: request.body.addEventObject.ort,
+          veranstaltung: request.body.addEventObject.veranstaltung,
+        },
+      });
+      console.log(id);
+      response.status(200).json({ status: `voting ${id} send!` });
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message`${id}` });
+    }
+  }
 }
