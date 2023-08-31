@@ -9,8 +9,7 @@ import useSWR from "swr";
 export default function DashboardCard({}) {
   const { data: allEvents, isLoading } = useSWR("api/finalEvents");
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
-  console.log(allEvents);
-
+  const userID = "Marvin-818924";
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -31,55 +30,57 @@ export default function DashboardCard({}) {
   }
   const nextActivity = allEvents !== undefined && allEvents[0];
 
+  const productsOfNextActivity =
+    nextActivity !== undefined && nextActivity.products;
+
   if (allEvents !== undefined) {
     allEvents.sort(compareDatesToSort);
   }
   return (
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
-      {allEvents === undefined ||
-        (allEvents.length === undefined && (
+      {allEvents.length <= 0 && (
+        <StyledUl>
+          <li>
+            <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
+            <br />
+            <StyledDetailText>
+              Starte ein Event um das nächste Event zu sehen!
+            </StyledDetailText>
+          </li>
+        </StyledUl>
+      )}
+      {allEvents.length > 0 && (
+        <StyledSectionForUlAndLink>
           <StyledUl>
             <li>
-              <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
-              <br />
+              <StyledHeadline3>Aktivitäten</StyledHeadline3>
+              <StyledDetailText>{nextActivity.veranstaltung}</StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>Datum</StyledHeadline3>
               <StyledDetailText>
-                Starte ein Event um das nächste Event zu sehen!
+                {moment(nextActivity.finalDate).format("lll")}
               </StyledDetailText>
             </li>
+            <li>
+              <StyledHeadline3>Ort</StyledHeadline3>
+              <StyledDetailText>{nextActivity.ort}</StyledDetailText>
+            </li>
+            <li>
+              <StyledHeadline3>was bringst du mit</StyledHeadline3>
+              {productsOfNextActivity.map((product) => product.userID === userID &&(
+                <StyledDetailText key={product._id}>
+                  {product.product}
+                </StyledDetailText>
+              ))}
+            </li>
           </StyledUl>
-        ))}
-      {allEvents === undefined ||
-        (allEvents.length > 0 && (
-          <StyledSectionForUlAndLink>
-            <StyledUl>
-              <li>
-                <StyledHeadline3>Aktivitäten</StyledHeadline3>
-                <StyledDetailText>
-                  {nextActivity.veranstaltung}
-                </StyledDetailText>
-              </li>
-              <li>
-                <StyledHeadline3>Datum</StyledHeadline3>
-                <StyledDetailText>
-                  {moment(nextActivity.finalDate).format("lll")}
-                </StyledDetailText>
-              </li>
-              <li>
-                <StyledHeadline3>Ort</StyledHeadline3>
-                <StyledDetailText>{nextActivity.ort}</StyledDetailText>
-              </li>
-              <li>
-                <StyledHeadline3>was bringst du mit</StyledHeadline3>
-                <StyledDetailText>Popcorn</StyledDetailText>
-                <StyledDetailText>Eistee</StyledDetailText>
-              </li>
-            </StyledUl>
-            <StyledIconLink href={`/planner/${nextActivity._id}`}>
-              <StyledCheckListIcon icon={faListCheck} />
-            </StyledIconLink>
-          </StyledSectionForUlAndLink>
-        ))}
+          <StyledIconLink href={`/planner/${nextActivity._id}`}>
+            <StyledCheckListIcon icon={faListCheck} />
+          </StyledIconLink>
+        </StyledSectionForUlAndLink>
+      )}
     </StyledSection>
   );
 }

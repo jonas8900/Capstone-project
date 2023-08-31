@@ -1,6 +1,6 @@
 import moment from "moment";
-import { styled } from "styled-components";
 import "moment/locale/de";
+import { styled } from "styled-components";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useState } from "react";
@@ -150,24 +150,24 @@ export default function Votecard({ dates, setDates }) {
                   </StyledParagraphInList>
 
                   <StyledVoteCardLi>
-                    {moment(date.date1).format("lll")} Uhr{" "}
+                    {moment(date.date1).format("lll")} Uhr
                     <p>Personen: {date.date1IsTrue.length}</p>
                   </StyledVoteCardLi>
 
                   <StyledVoteCardLi>
-                    {moment(date.date2).format("lll")} Uhr{" "}
+                    {moment(date.date2).format("lll")} Uhr
                     <p>Personen: {date.date2IsTrue.length}</p>
                   </StyledVoteCardLi>
 
                   {date.date3 !== null && (
                     <StyledVoteCardLi>
-                      {moment(date.date3).format("lll")} Uhr{" "}
+                      {moment(date.date3).format("lll")} Uhr
                       <p>Personen: {date.date3IsTrue.length}</p>
                     </StyledVoteCardLi>
                   )}
                   {date.date4 !== null && (
                     <StyledVoteCardLi>
-                      {moment(date.date4).format("lll")} Uhr{" "}
+                      {moment(date.date4).format("lll")} Uhr
                       <p>Personen: {date.date4IsTrue.length}</p>
                     </StyledVoteCardLi>
                   )}
@@ -175,13 +175,6 @@ export default function Votecard({ dates, setDates }) {
                     keins passt {date.noDateMatches.length}
                   </StyledVoteCardLi>
                 </StyledVoteCardUl>
-
-                <StyledVoteCardNoVoteSection>
-                  <StyledVoteCardHeadline3>
-                    Keine Abstimmung von:
-                  </StyledVoteCardHeadline3>
-                  <StyledSubParagraph>Personen: 3</StyledSubParagraph>
-                </StyledVoteCardNoVoteSection>
                 <StyledVoteCardFormFinalDatePick
                   onSubmit={handleSubmitFinalDate}
                 >

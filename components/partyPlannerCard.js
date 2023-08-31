@@ -1,4 +1,8 @@
-import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowLeft,
+  faSpinner,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import Link from "next/link";
@@ -6,8 +10,8 @@ import { styled } from "styled-components";
 import "moment/locale/de";
 import Form from "./Form";
 import { useRouter } from "next/router";
-import { uid } from "uid";
 import useSWR from "swr";
+import { uid } from "uid";
 
 export default function PartyPlannerCard({}) {
   const router = useRouter();
@@ -37,6 +41,7 @@ export default function PartyPlannerCard({}) {
     const typedProducts = {
       userID: userID,
       product: productInput.product,
+      productId: uid(),
     };
 
     const response = await fetch(`/api/planner/${router.query.partyPlanner}`, {
@@ -52,6 +57,28 @@ export default function PartyPlannerCard({}) {
       event.target.reset();
     }
   }
+
+  async function handleDelete(id) {
+    const areYouSureToDelete = window.confirm(
+      "Bist du dir sicher, dass du diese Aktivität löschen möchtest?"
+    );
+    if (areYouSureToDelete) {
+      const response = await fetch(
+        `/api/planner/${router.query.partyPlanner}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id }),
+        }
+      );
+      if (response.ok) {
+        mutate();
+      }
+    }
+  }
+
   return (
     <main>
       {onclickedEvent === undefined && (
@@ -112,6 +139,11 @@ export default function PartyPlannerCard({}) {
                       <StyledListItemProduct>
                         {product.product}
                       </StyledListItemProduct>
+                      <StyledDeleteProductButton
+                        onClick={() => handleDelete(product.productId)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </StyledDeleteProductButton>
                     </StyledListItemArticle>
                   ))}
               </StyledUlForNames>
@@ -227,8 +259,8 @@ const StyledUlForNames = styled.ul`
 
 const StyledListItemArticle = styled.article`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: 0.3fr;
+  grid-template-columns: 1fr 0.8fr 0.25fr;
+  grid-template-rows: 0.5fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
 `;
@@ -238,4 +270,9 @@ const StyledListItemUserID = styled.li`
 `;
 const StyledListItemProduct = styled.li`
   grid-area: 1 / 2 / 2 / 3;
+`;
+const StyledDeleteProductButton = styled.button`
+  grid-area: 1 / 3 / 2 / 4;
+  background-color: white;
+  border: none;
 `;

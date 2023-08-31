@@ -8,7 +8,10 @@ const finalEventSchema = new Schema({
   ort: { type: String, required: true },
   finalDate: { type: Date, required: true },
   parentId: { type: String, required: true },
-  products: { type: [{ userID: String, product: String }], required: false },
+  products: {
+    type: [{ userID: String, product: String, productId: String }],
+    required: false,
+  },
 });
 
 const FinalEvent =

@@ -1,17 +1,11 @@
 import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import {
-  StyledBackButtonLink,
-  StyledBackIcon,
-  StyledForm,
-  StyledFormButton,
-  StyledInputDateField,
-  StyledLabels,
-} from "./[activityPlan]";
+import { StyledBackIcon } from "./[activityPlan]";
 import { StyledHeadlineForSubpages } from "@/components/Activitylist";
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 
 export default function Addevent({}) {
   const router = useRouter();
@@ -63,26 +57,32 @@ export default function Addevent({}) {
 
   return (
     <main>
-      <StyledBackButtonLink href={"/veranstaltungen"}>
-        <StyledBackIcon icon={faArrowLeft} />
-      </StyledBackButtonLink>
-      <h2>Veranstaltung hinzufügen:</h2>
+      <StyledSectionForHeadlineAndBackButton>
+        <StyledBackButtonLink href={"/veranstaltungen"}>
+          <StyledBackIcon icon={faArrowLeft} />
+        </StyledBackButtonLink>
+        <StyledHeadlineForEvents>
+          Veranstaltung hinzufügen:
+        </StyledHeadlineForEvents>
+      </StyledSectionForHeadlineAndBackButton>
       <StyledAddEventForm onSubmit={handleSubmitAddEvent}>
-        <StyledLabels htmlFor="veranstaltung">
-          <p>Veranstaltung:</p>
+        <StyledArticleForFormItems>
+          <StyledLabels htmlFor="veranstaltung">
+            <p>Veranstaltung:</p>
+          </StyledLabels>
           <StyledInputDateField
             type="text"
             id="veranstaltung"
             name="veranstaltung"
             required
           />
-        </StyledLabels>
-        <StyledLabels htmlFor="ort">
-          Veranstaltungsort:
+        </StyledArticleForFormItems>
+        <StyledArticleForFormItems>
+          <StyledLabels htmlFor="ort">Veranstaltungsort:</StyledLabels>
           <StyledInputDateField type="text" id="ort" name="ort" required />
-        </StyledLabels>
-        <StyledLabels htmlFor="finalDate">
-          Datum:
+        </StyledArticleForFormItems>
+        <StyledArticleForFormItems>
+          <StyledLabels htmlFor="finalDate">Datum:</StyledLabels>
           <StyledInputDateField
             type="datetime-local"
             id="finalDate"
@@ -90,8 +90,10 @@ export default function Addevent({}) {
             min={minDateInRightFormat}
             required
           />
-        </StyledLabels>
-        <StyledFormButton type="submit">Hinzufügen</StyledFormButton>
+        </StyledArticleForFormItems>
+        <StyledArticleForFormItemsButton>
+          <StyledFormButton type="submit">Hinzufügen</StyledFormButton>
+        </StyledArticleForFormItemsButton>
       </StyledAddEventForm>
     </main>
   );
@@ -100,8 +102,11 @@ export default function Addevent({}) {
 const StyledAddEventForm = styled.form`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin: 2rem 0 0 2rem;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  margin-top: 2rem;
 `;
 
 const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
@@ -114,4 +119,82 @@ const StyledLoadingError = styled.h1`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const StyledLabels = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-details);
+  color: var(--grey-topics);
+  margin: 1rem 2rem 1rem 2rem;
+`;
+
+const StyledInputDateField = styled.input`
+  align-self: right;
+  justify-content: right;
+  border-radius: 10px;
+  border: 1px solid #e3e5e8;
+  padding: 0.5rem;
+  width: 12rem;
+  height: 2rem;
+  margin-right: 2rem;
+`;
+
+const StyledArticleForFormItems = styled.article`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
+  margin: 1rem;
+`;
+
+const StyledArticleForFormItemsButton = styled.article`
+  align-self: center;
+  justify-self: center;
+  margin: 0px;
+  margin-top: 2rem;
+`;
+
+const StyledFormButton = styled.button`
+  background-color: #7ae249;
+  color: black;
+  width: 6rem;
+  height: 3rem;
+  border-radius: 10px;
+  border: none;
+
+  background-color: ${({ disabled }) =>
+    disabled == true ? "green" : "#7ae249"};
+
+  &:active {
+    background-color: green;
+  }
+`;
+
+const StyledBackButtonLink = styled(Link)`
+  color: black;
+  width: 100%;
+  height: 2rem;
+  margin-top: 0;
+  grid-area: 1 / 1 / 2 / 2;
+
+  &:active {
+    background-color: var(--secondary-color);
+  }
+`;
+
+const StyledSectionForHeadlineAndBackButton = styled.section`
+  display: grid;
+  grid-template-columns: 0.25fr 1fr 0.25fr;
+  grid-template-rows: 0.5fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+`;
+
+const StyledHeadlineForEvents = styled.h2`
+  font-size: var(--font-size-headline);
+  margin-left: 40px;
+  grid-area: 1 / 2 / 2 / 3;
+  align-content: center;
 `;

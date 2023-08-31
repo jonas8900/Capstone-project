@@ -15,7 +15,7 @@ export default function ActivityPlan({}) {
   const { data: activitiesBeforeVoting } = useSWR("api/activitySuggestion");
 
   const router = useRouter();
-  
+
   if (isLoading) {
     return (
       <StyledLoadingError>

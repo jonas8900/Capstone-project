@@ -21,7 +21,7 @@ import useSWR from "swr";
 
 export default function Events({}) {
   const { data: allEvents, isLoading } = useSWR("api/finalEvents/");
-
+  const userID = "Marvin-818924";
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -29,7 +29,6 @@ export default function Events({}) {
       </StyledLoadingError>
     );
   }
-
 
   async function handleDelete(id) {
     const alertWindow = window.confirm(
@@ -45,9 +44,10 @@ export default function Events({}) {
       });
     }
   }
+  const nextActivity = allEvents !== undefined && allEvents[0];
 
-
-
+  const productsOfNextActivity =
+    nextActivity !== undefined && nextActivity.products;
   return (
     <>
       <h2>Events</h2>
@@ -78,6 +78,17 @@ export default function Events({}) {
                   <li>
                     <StyledHeadline3>Ort der Veranstaltung:</StyledHeadline3>
                     <StyledDetailText>{date.ort}</StyledDetailText>
+                  </li>
+                  <li>
+                    <StyledHeadline3>das bringst du mit:</StyledHeadline3>
+                    {productsOfNextActivity.map(
+                      (product) =>
+                        product.userID === userID && (
+                          <StyledDetailText key={product._id}>
+                            {product.product}
+                          </StyledDetailText>
+                        )
+                    )}
                   </li>
                 </StyledUl>
                 <StyledIconLink href={`planner/${date._id}`}>
