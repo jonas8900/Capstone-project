@@ -37,6 +37,7 @@ export default async function voteForActivityDate(request, response) {
           date3IsTrue: request.body.updateSingleDate.date3IsTrue,
           date4IsTrue: request.body.updateSingleDate.date4IsTrue,
           noDateMatches: request.body.updateSingleDate.noDateMatches,
+          votedUser: request.body.updateSingleDate.votedUser,
         },
       });
       response.status(200).json({ status: `voting ${id} send!` });

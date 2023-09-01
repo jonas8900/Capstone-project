@@ -8,12 +8,12 @@ import { useSession } from "next-auth/react";
 
 export default function Votecard({}) {
   const { data: session } = useSession();
-  const userID = session.user.email;
+  const userID = session && session.user.email;
+
   const router = useRouter();
   const { data: listOfAllVotesInProgress, mutate } = useSWR(
     "api/voteForActivityDate"
   );
-  const { data: finalEvents } = useSWR("api/finalEvents");
   const [matchedID, setMatchedID] = useState({});
 
   const objectWithTheSameID = listOfAllVotesInProgress.find(
@@ -29,15 +29,25 @@ export default function Votecard({}) {
     const updateSingleDate = {
       ...objectWithTheSameID,
       ...(checkBoxData.date1 == "on" && {
-        date1IsTrue: [{ userID: userID }, { userID: "Tim-223523" }],
+        date1IsTrue: [...objectWithTheSameID.date1IsTrue, { userID: userID }],
       }),
-      ...(checkBoxData.date2 == "on" && { date2IsTrue: [{ userID: userID }] }),
-      ...(checkBoxData.date3 == "on" && { date3IsTrue: [{ userID: userID }] }),
-      ...(checkBoxData.date4 == "on" && { date4IsTrue: [{ userID: userID }] }),
+      ...(checkBoxData.date2 == "on" && {
+        date2IsTrue: [...objectWithTheSameID.date2IsTrue, { userID: userID }],
+      }),
+      ...(checkBoxData.date3 == "on" && {
+        date3IsTrue: [...objectWithTheSameID.date3IsTrue, { userID: userID }],
+      }),
+      ...(checkBoxData.date4 == "on" && {
+        date4IsTrue: [...objectWithTheSameID.date4IsTrue, { userID: userID }],
+      }),
       ...(checkBoxData.noDate == "on" && {
-        noDateMatches: [{ userID: userID }],
+        noDateMatches: [
+          ...objectWithTheSameID.noDateMatches,
+          { userID: userID },
+        ],
       }),
       isInVotingProcess: true,
+      votedUser: [...objectWithTheSameID.votedUser, { userID: userID }],
     };
 
     const checkIfMultipleCheckboxClickedDate1 =
@@ -136,7 +146,7 @@ export default function Votecard({}) {
     <>
       {listOfAllVotesInProgress.map((date) => (
         <StyledVoteCardWrapper key={date._id || date.finalDateID}>
-          {date.isInVotingProcess && (
+          {date.votedUser.find((user) => user.userID === userID) ? (
             <StyledSectionForLastDate>
               <StyledVoteCardHeadline>
                 Veranstaltungsabstimmung
@@ -212,8 +222,8 @@ export default function Votecard({}) {
                 </StyledVoteCardFormFinalDatePick>
               </StyledVoteLastDateCardWrapper>
             </StyledSectionForLastDate>
-          )}
-          {date.isInVotingProcess === false && (
+          ) : (
+            //when you don't voted at all, the voting statistic will disappear
             <section>
               <StyledVoteCardHeadline>
                 Veranstaltungsabstimmung
@@ -301,6 +311,7 @@ const StyledSectionForLastDate = styled.section`
 const StyledVoteCardHeadline = styled.h2`
   margin: 2rem auto;
   margin-left: 2.5rem;
+  color: var(--secondary-color);
 `;
 
 const StyledVoteCardHeadline3 = styled.h3`

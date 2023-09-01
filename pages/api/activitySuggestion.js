@@ -46,6 +46,7 @@ export default async function getActivitySuggestions(request, response) {
           likedByUser: request.body.updatedFavoriteActivity[0].likedByUser,
         },
       });
+      console.log(request.body.updatedFavoriteActivity);
 
       response.status(200).json({ status: `activity ${id} updated!` });
     } catch (error) {

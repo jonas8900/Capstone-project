@@ -25,7 +25,7 @@ import { useSession } from "next-auth/react";
 export default function Events({}) {
   const { data: allEvents, isLoading, mutate } = useSWR("api/finalEvents/");
   const { data: session } = useSession();
-  const userID = session.user.email;
+  const userID = session && session.user.email;
   const router = useRouter();
   if (isLoading) {
     return (

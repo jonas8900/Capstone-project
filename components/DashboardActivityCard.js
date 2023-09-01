@@ -11,7 +11,7 @@ export default function DashboardCard({}) {
   const { data: allEvents, isLoading } = useSWR("api/finalEvents");
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
   const { data: session } = useSession();
-  const userID = session.user.name;
+  const userID = session && session.user.name;
   if (isLoading) {
     return (
       <StyledLoadingError>

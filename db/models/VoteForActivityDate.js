@@ -16,6 +16,7 @@ const voteForActivityDateSchema = new Schema({
   date3IsTrue: { type: [{ userID: String }] },
   date4IsTrue: { type: [{ userID: String }] },
   noDateMatches: { type: [{ userID: String }] },
+  votedUser: { type: [{ userID: String }] },
 });
 
 const VoteForActivityDate =

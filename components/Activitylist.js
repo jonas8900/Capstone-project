@@ -18,8 +18,7 @@ export default function Activitylist({}) {
     mutate,
   } = useSWR("api/activitySuggestion");
   const { data: session } = useSession();
-  const userID = session.user.email;
-
+  const userID = session && session.user.email;
   if (isLoading) {
     return (
       <StyledLoadingError>

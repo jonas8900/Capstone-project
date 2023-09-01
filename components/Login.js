@@ -1,6 +1,5 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
 
@@ -8,14 +7,6 @@ export default function Login() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  function handleRouter() {
-    router.push("/index");
-  }
-
-  function handleSignOutAndRouter() {
-    handleRouter();
-    signOut();
-  }
   return (
     <StyledLoginSection>
       {session ? (
@@ -28,7 +19,13 @@ export default function Login() {
             height={30}
           />
 
-          <StyledLoginButton onClick={handleSignOutAndRouter}>
+          <StyledLoginButton
+            onClick={() => {
+              signOut({ redirect: false }).then(() => {
+                router.push("/");
+              });
+            }} //diese Funktion habe ich von google übernommen, hier wird die Startseite angezeigt nach dem logout
+          >
             Logout
           </StyledLoginButton>
         </StyledLoggedInSection>
