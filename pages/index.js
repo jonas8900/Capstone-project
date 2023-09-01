@@ -1,4 +1,5 @@
 import Dashboard from "@/components/Dashboard";
+import Login from "@/components/Login";
 import Votecard from "@/components/Votecard";
 import useSWR from "swr";
 

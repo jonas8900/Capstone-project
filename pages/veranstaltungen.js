@@ -16,13 +16,14 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import "moment/locale/de";
+import { IM_Fell_French_Canon } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
 import useSWR from "swr";
 
 export default function Events({}) {
-  const { data: allEvents, isLoading } = useSWR("api/finalEvents/");
+  const { data: allEvents, isLoading, mutate } = useSWR("api/finalEvents/");
   const userID = "Marvin-818924";
   const router = useRouter();
   if (isLoading) {
@@ -42,13 +43,16 @@ export default function Events({}) {
       "Bist du dir sicher, dass du das Event löschen möchtest?"
     );
     if (alertWindow) {
-      await fetch(`/api/finalEvents/`, {
+      const response = await fetch(`/api/finalEvents/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id }),
       });
+      if (response.ok) {
+        mutate();
+      }
     }
   }
   return (

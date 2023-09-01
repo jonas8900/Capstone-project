@@ -10,7 +10,6 @@ import {
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import useSWR from "swr";
 
-
 export default function Activitylist({}) {
   const {
     data: activitySuggestionList,
@@ -57,13 +56,16 @@ export default function Activitylist({}) {
       "Bist du dir sicher, dass du diese Aktivität löschen möchtest?"
     );
     if (areYouSureToDelete) {
-      await fetch(`/api/activitySuggestion/`, {
+      const response = await fetch(`/api/activitySuggestion/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id }),
       });
+      if (response.ok) {
+        mutate();
+      }
     }
   }
 
@@ -114,7 +116,6 @@ export default function Activitylist({}) {
       }
     }
   }
-
 
   return (
     <main>

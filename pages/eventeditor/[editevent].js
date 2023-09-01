@@ -9,6 +9,7 @@ import CreateAndEditForm from "@/components/CreateAndEditForm";
 import { StyledBackIcon } from "../[activityPlan]";
 import moment from "moment";
 import "moment/locale/de";
+import Headline from "@/components/Headline";
 
 export default function Addevent({}) {
   const router = useRouter();
