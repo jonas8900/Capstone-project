@@ -3,16 +3,43 @@ import "moment/locale/de";
 import moment from "moment";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faListCheck } from "@fortawesome/free-solid-svg-icons";
+import { faListCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import useSWR from "swr";
 
-export default function DashboardCard({ voteDoneArray }) {
+export default function DashboardCard({}) {
+  const { data: allEvents, isLoading } = useSWR("api/finalEvents");
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
-  const nextActivity = voteDoneArray[0];
+  const userID = "Marvin-818924";
+  if (isLoading) {
+    return (
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
+    );
+  }
 
+  function compareDatesToSort(a, b) {
+    if (a.finalDate < b.finalDate) {
+      return -1;
+    }
+    if (a.finaleDate > b.finalDate) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+  const nextActivity = allEvents !== undefined && allEvents[0];
+
+  const productsOfNextActivity =
+    nextActivity !== undefined && nextActivity.products;
+
+  if (allEvents !== undefined) {
+    allEvents.sort(compareDatesToSort);
+  }
   return (
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
-      {voteDoneArray.length === 0 && (
+      {allEvents.length <= 0 && (
         <StyledUl>
           <li>
             <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
@@ -23,14 +50,12 @@ export default function DashboardCard({ voteDoneArray }) {
           </li>
         </StyledUl>
       )}
-      {voteDoneArray.length > 0 && (
+      {allEvents.length > 0 && (
         <StyledSectionForUlAndLink>
           <StyledUl>
             <li>
               <StyledHeadline3>Aktivitäten</StyledHeadline3>
-              <StyledDetailText>
-                {nextActivity.objectWithTheSameID.veranstaltung}
-              </StyledDetailText>
+              <StyledDetailText>{nextActivity.veranstaltung}</StyledDetailText>
             </li>
             <li>
               <StyledHeadline3>Datum</StyledHeadline3>
@@ -40,17 +65,18 @@ export default function DashboardCard({ voteDoneArray }) {
             </li>
             <li>
               <StyledHeadline3>Ort</StyledHeadline3>
-              <StyledDetailText>
-                {nextActivity.objectWithTheSameID.ort}
-              </StyledDetailText>
+              <StyledDetailText>{nextActivity.ort}</StyledDetailText>
             </li>
             <li>
               <StyledHeadline3>was bringst du mit</StyledHeadline3>
-              <StyledDetailText>Popcorn</StyledDetailText>
-              <StyledDetailText>Eistee</StyledDetailText>
+              {productsOfNextActivity.map((product) => product.userID === userID &&(
+                <StyledDetailText key={product._id}>
+                  {product.product}
+                </StyledDetailText>
+              ))}
             </li>
           </StyledUl>
-          <StyledIconLink href={`/planner/${nextActivity.finalDateID}`}>
+          <StyledIconLink href={`/planner/${nextActivity._id}`}>
             <StyledCheckListIcon icon={faListCheck} />
           </StyledIconLink>
         </StyledSectionForUlAndLink>
@@ -104,4 +130,16 @@ const StyledCheckListIcon = styled(FontAwesomeIcon)`
 
 const StyledSectionForUlAndLink = styled.section`
   display: flex;
+`;
+
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

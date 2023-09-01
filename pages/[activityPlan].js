@@ -1,17 +1,36 @@
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
+import useSWR from "swr";
 
-export default function ActivityPlan({ activityCards, dates, setDates }) {
+export default function ActivityPlan({}) {
+  const {
+    data: votedActivitys,
+    isLoading,
+    mutate,
+  } = useSWR("api/voteForActivityDate");
+
+  const { data: activitiesBeforeVoting } = useSWR("api/activitySuggestion");
+
   const router = useRouter();
+
+  if (isLoading) {
+    return (
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
+    );
+  }
+
   const currentId = router.query.activityPlan;
-  const currentActivities = activityCards.filter(
-    (activityCard) => activityCard.id === currentId
+
+  const currentActivity = activitiesBeforeVoting.filter(
+    (activityCard) => activityCard._id === currentId
   );
-  const currentActivitieObject = activityCards.find(
-    (activityCard) => activityCard.id === currentId
+  const currentActivitieObject = activitiesBeforeVoting.find(
+    (activityCard) => activityCard._id === currentId
   );
 
   let minDateToday = new Date();
@@ -22,14 +41,15 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
   const minDateInRightFormat = minDateToday.toISOString().slice(0, 16);
 
   // to check if we already had a submitevent with generate an object
-  const currentActivityObjectConvertToArray = dates.filter(
-    (date) => date.id === currentActivitieObject.id
+  const currentActivityObjectConvertToArray = votedActivitys.filter(
+    (date) => date.parentId === currentActivitieObject._id
   );
+
   const currentActivityObjectUpdated = currentActivityObjectConvertToArray.find(
     (date) => date
   );
 
-  function handleSubmitDates(event) {
+  async function handleSubmitDates(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -38,15 +58,16 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
     let count = 0;
     const allDates = [];
     const dateObject = {
-      id: currentActivitieObject.id,
+      parentId: currentActivitieObject._id,
       veranstaltung: currentActivitieObject.name,
-      vote: false,
+      isInVotingProcess: false,
       ort: data.ort,
       date1: data.date1,
       date2: data.date2,
       date3: data.date3,
       date4: data.date4,
     };
+
     //to check if we have the same date twice by clicking submit, i put the dates in a array, sort the array, and loop over it to check if there's a same date
     for (let key in dateObject) {
       ++count;
@@ -61,10 +82,20 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
         return alert("Sie können nicht zwei gleiche Daten angeben");
       }
     }
-    setDates([...dates, dateObject]);
+    const response = await fetch("api/voteForActivityDate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dateObject),
+    });
+    if (response.ok) {
+      mutate();
+    }
     alert("Glückwunsch ! Sie haben eine Abstimmung gestartet.");
     router.push("/");
   }
+
   // when we already have an submitevent with an object, the button and the dates get disabled
   return (
     <main>
@@ -72,7 +103,7 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
         <StyledBackIcon icon={faArrowLeft} />
       </StyledBackButtonLink>
       <section>
-        {currentActivities.map((currentActivity) => (
+        {currentActivity.map((currentActivity) => (
           <section key={currentId}>
             <h2>Welches Datum passt?</h2>
             <StyledThirdHeadling>
@@ -117,7 +148,7 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                     }
                     defaultValue={
                       currentActivityObjectConvertToArray.length > 0
-                        ? currentActivityObjectUpdated.date1
+                        ? currentActivityObjectUpdated.date1.slice(0, -8)
                         : ""
                     }
                     required
@@ -137,7 +168,7 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                     }
                     defaultValue={
                       currentActivityObjectConvertToArray.length > 0
-                        ? currentActivityObjectUpdated.date2
+                        ? currentActivityObjectUpdated.date2.slice(0, -8)
                         : ""
                     }
                     required
@@ -156,8 +187,11 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                         : false
                     }
                     defaultValue={
-                      currentActivityObjectConvertToArray.length > 0
-                        ? currentActivityObjectUpdated.date3
+                      currentActivityObjectConvertToArray.length > 0 &&
+                      currentActivityObjectConvertToArray.hasOwnProperty(
+                        "date3"
+                      )
+                        ? currentActivityObjectUpdated.date3.slice(0, -8)
                         : ""
                     }
                   />
@@ -175,8 +209,11 @@ export default function ActivityPlan({ activityCards, dates, setDates }) {
                         : false
                     }
                     defaultValue={
-                      currentActivityObjectConvertToArray.length > 0
-                        ? currentActivityObjectUpdated.date4
+                      currentActivityObjectConvertToArray.length > 0 &&
+                      currentActivityObjectConvertToArray.hasOwnProperty(
+                        "date4"
+                      )
+                        ? currentActivityObjectUpdated.date4.slice(0, -8)
                         : ""
                     }
                   />
@@ -273,4 +310,16 @@ export const StyledFormButton = styled.button`
 export const StyledBackIcon = styled(FontAwesomeIcon)`
   width: 2rem;
   height: 2rem;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
 `;

@@ -3,33 +3,14 @@ import GlobalStyle from "../styles";
 import useLocalStorageState from "use-local-storage-state";
 import { styled } from "styled-components";
 import Image from "next/image";
+import { SWRConfig } from "swr/_internal";
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function App({ Component, pageProps }) {
-  const [activityCards, setActivityCards] = useLocalStorageState(
-    "activityList",
-    {
-      defaultValue: [],
-    }
-  );
 
-  const [dates, setDates] = useLocalStorageState("dates", { defaultValue: [] });
 
-  const voteDoneArray = dates.filter((date) =>
-    date.hasOwnProperty("finalDateID")
-  );
 
-  function compareDatesToSort(a, b) {
-    if (a.finalDate < b.finalDate) {
-      return -1;
-    }
-    if (a.finaleDate > b.finalDate) {
-      return 1;
-    } else {
-      return 0;
-    }
-  }
-
-  voteDoneArray.sort(compareDatesToSort);
 
   return (
     <>
@@ -43,14 +24,11 @@ export default function App({ Component, pageProps }) {
           priority={false}
         />
       </StyledHeadline>
-      <Component
-        {...pageProps}
-        activityCards={activityCards}
-        setActivityCards={setActivityCards}
-        dates={dates}
-        setDates={setDates}
-        voteDoneArray={voteDoneArray}
-      />
+      <SWRConfig value={{ fetcher }}>
+        <Component
+          {...pageProps}
+        />
+      </SWRConfig>
       <NavigationBar />
     </>
   );

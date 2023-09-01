@@ -1,89 +1,105 @@
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-import {
-  StyledBackButtonLink,
-  StyledBackIcon,
-  StyledForm,
-  StyledFormButton,
-  StyledInputDateField,
-  StyledLabels,
-} from "./[activityPlan]";
+import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { StyledBackIcon } from "./[activityPlan]";
 import { StyledHeadlineForSubpages } from "@/components/Activitylist";
 import { styled } from "styled-components";
-import { uid } from "uid";
 import { useRouter } from "next/router";
+import useSWR from "swr";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
+import CreateAndEditForm from "@/components/CreateAndEditForm";
 
-export default function Addevent({ dates, setDates }) {
+export default function Addevent({}) {
   const router = useRouter();
-  let minDateToday = new Date();
-  minDateToday.setMinutes(
-    minDateToday.getMinutes() - minDateToday.getTimezoneOffset()
-  );
-  //convert the date into german date
-  const minDateInRightFormat = minDateToday.toISOString().slice(0, 16);
-  function handleSubmitAddEvent(event) {
+  const { mutate, isLoading } = useSWR("api/finalEvents");
+
+  if (isLoading) {
+    return (
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
+    );
+  }
+
+  async function handleSubmitAddEvent(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const addEventData = Object.fromEntries(formData);
 
     const addEventObject = {
-      objectWithTheSameID: {
-        date1: "",
-        date2: "",
-        date3: "",
-        date4: "",
-        id: uid(),
-        ort: addEventData.ort,
-        veranstaltung: addEventData.veranstaltung,
-        vote: true,
-      },
       finalDate: addEventData.finalDate,
-      finalDateID: uid(),
+      isInVotingProcess: false,
+      ort: addEventData.ort,
+      parentId: "newCreated",
+      products: [],
+      veranstaltung: addEventData.veranstaltung,
     };
-    setDates([...dates, addEventObject]);
+    const response = await fetch("api/finalEvents", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(addEventObject),
+    });
+
+    if (response.ok) {
+      mutate();
+    }
     alert("Du hast eine neues Event hinzugefügt!");
     router.push("/veranstaltungen");
+    event.target.reset();
   }
 
   return (
     <main>
-      <StyledBackButtonLink href={"/veranstaltungen"}>
-        <StyledBackIcon icon={faArrowLeft} />
-      </StyledBackButtonLink>
-      <h2>Veranstaltung hinzufügen:</h2>
-      <StyledAddEventForm onSubmit={handleSubmitAddEvent}>
-        <StyledLabels htmlFor="veranstaltung">
-          <p>Veranstaltung:</p>
-          <StyledInputDateField
-            type="text"
-            id="veranstaltung"
-            name="veranstaltung"
-            required
-          />
-        </StyledLabels>
-        <StyledLabels htmlFor="ort">
-          Veranstaltungsort:
-          <StyledInputDateField type="text" id="ort" name="ort" required />
-        </StyledLabels>
-        <StyledLabels htmlFor="finalDate">
-          Datum:
-          <StyledInputDateField
-            type="datetime-local"
-            id="finalDate"
-            name="finalDate"
-            min={minDateInRightFormat}
-            required
-          />
-        </StyledLabels>
-        <StyledFormButton type="submit">Hinzufügen</StyledFormButton>
-      </StyledAddEventForm>
+      <StyledSectionForHeadlineAndBackButton>
+        <StyledBackButtonLink href={"/veranstaltungen"}>
+          <StyledBackIcon icon={faArrowLeft} />
+        </StyledBackButtonLink>
+        <StyledHeadlineForEvents>
+          Veranstaltung hinzufügen:
+        </StyledHeadlineForEvents>
+      </StyledSectionForHeadlineAndBackButton>
+      <CreateAndEditForm onSubmit={handleSubmitAddEvent}  />
     </main>
   );
 }
 
-const StyledAddEventForm = styled.form`
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 2rem 0 0 2rem;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledBackButtonLink = styled(Link)`
+  color: black;
+  width: 100%;
+  height: 2rem;
+  margin-top: 0;
+  grid-area: 1 / 1 / 2 / 2;
+
+  &:active {
+    background-color: var(--secondary-color);
+  }
+`;
+
+const StyledSectionForHeadlineAndBackButton = styled.section`
+  display: grid;
+  grid-template-columns: 0.25fr 1fr 0.25fr;
+  grid-template-rows: 0.5fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+`;
+
+const StyledHeadlineForEvents = styled.h2`
+  font-size: var(--font-size-headline);
+  margin-left: 40px;
+  grid-area: 1 / 2 / 2 / 3;
+  align-content: center;
 `;

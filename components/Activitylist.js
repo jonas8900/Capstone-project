@@ -1,23 +1,34 @@
 import styled from "styled-components";
 import Form from "./Form";
-import { uid } from "uid";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHeart as faHeartSolid,
+  faSpinner,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+import useSWR from "swr";
 
-export default function Activitylist({
-  activityCards,
-  setActivityCards,
-  setDates,
-  dates,
-}) {
-  const userID = "Jonas-818924";
 
-  function handleSubmitActivity(event) {
+export default function Activitylist({}) {
+  const {
+    data: activitySuggestionList,
+    isLoading,
+    mutate,
+  } = useSWR("api/activitySuggestion");
+
+  const userID = "Marvin-818924";
+
+  if (isLoading) {
+    return (
+      <StyledLoadingError>
+        <StyledLoadingErrorIcon icon={faSpinner} spin />
+      </StyledLoadingError>
+    );
+  }
+
+  async function handleSubmitActivity(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -25,78 +36,99 @@ export default function Activitylist({
 
     const newActivity = {
       name: data.activityName,
-      id: uid(),
-      likedByUser: [],
+      likedByUser: [{ userID: "Tim-1225412" }],
     };
-    setActivityCards([...activityCards, newActivity]);
+    const response = await fetch("api/activitySuggestion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newActivity),
+    });
 
+    if (response.ok) {
+      mutate();
+    }
     event.target.reset();
   }
 
-  function handleDelete(id) {
+  async function handleDelete(id) {
     const areYouSureToDelete = window.confirm(
       "Bist du dir sicher, dass du diese Aktivität löschen möchtest?"
     );
     if (areYouSureToDelete) {
-      const setFilterWithoutDeletedOne = activityCards.filter(
-        (activityCard) => activityCard.id !== id
-      );
-      const setFilterDates = dates.filter((date) => date.id !== id);
-      setActivityCards(setFilterWithoutDeletedOne);
-      setDates(setFilterDates);
+      await fetch(`/api/activitySuggestion/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
     }
   }
 
-  function handleAddFavoriteButton(id) {
-    const activitySuggestionCard = activityCards.find((card) => card.id === id);
+  async function handleAddFavoriteButton(id) {
+    const activitySuggestionCard = activitySuggestionList.filter(
+      (card) => card._id === id
+    );
 
     if (activitySuggestionCard) {
-      setActivityCards(
-        activityCards.map((card) => {
-          if (card.id === id) {
-            const isAlreadylikedByUser = card.likedByUser.some(
-              (user) => user.userID === userID
-            );
+      const updatedFavoriteActivity = activitySuggestionCard.map((card) => {
+        if (card._id === id) {
+          const isAlreadylikedByUser = card.likedByUser.some(
+            (user) => user.userID === userID
+          );
 
-            if (isAlreadylikedByUser) {
-              const unLike = card.likedByUser.filter(
-                (user) => user.userID !== userID
-              );
-              return {
-                ...card,
-                likedByUser: unLike,
-              };
-            } else {
-              const newUserObject = {
-                userID: userID,
-              };
-              const Like = [...card.likedByUser, newUserObject];
-              return {
-                ...card,
-                likedByUser: Like,
-              };
-            }
+          if (isAlreadylikedByUser) {
+            const unLike = card.likedByUser.filter(
+              (user) => user.userID !== userID
+            );
+            return {
+              ...card,
+              likedByUser: unLike,
+            };
           } else {
-            return card;
+            const newUserObject = {
+              userID: userID,
+            };
+            const Like = [...card.likedByUser, newUserObject];
+            return {
+              ...card,
+              likedByUser: Like,
+            };
           }
-        })
-      );
+        } else {
+          return card;
+        }
+      });
+
+      const response = await fetch(`/api/activitySuggestion`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ updatedFavoriteActivity, id }),
+      });
+      if (response.ok) {
+        mutate();
+      }
     }
   }
+
 
   return (
     <main>
       <StyledActivitySection>
         <h2>Aktivitäten</h2>
         <StyledList>
-          {activityCards.map((activity) => (
-            <StyledListItem key={activity.id}>
+          {activitySuggestionList.map((activity) => (
+            <StyledListItem key={activity._id}>
               <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
-              <StyledDeleteButton onClick={() => handleDelete(activity.id)}>
+              <StyledDeleteButton onClick={() => handleDelete(activity._id)}>
                 <StyledTrashIcon icon={faTrash} />
               </StyledDeleteButton>
               <StyledFavoriteButton
-                onClick={() => handleAddFavoriteButton(activity.id)}
+                onClick={() => handleAddFavoriteButton(activity._id)}
               >
                 {activity.likedByUser.some((user) => user.userID === userID) ? (
                   <StyledFavoriteIconSolid icon={faHeartSolid} />
@@ -105,7 +137,7 @@ export default function Activitylist({
                 )}
                 <p>{activity.likedByUser.length}</p>
               </StyledFavoriteButton>
-              <StyledActivityLink href={`/${activity.id}`}>
+              <StyledActivityLink href={`/${activity._id}`}>
                 <StyledPlanButton>planen</StyledPlanButton>
               </StyledActivityLink>
             </StyledListItem>
@@ -207,4 +239,16 @@ const StyledFavoriteButton = styled.button`
   margin-left: 2rem;
   background-color: transparent;
   border: none;
+`;
+
+const StyledLoadingError = styled.h1`
+  margin-top: 32vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
+  width: 4rem;
+  height: 4rem;
 `;

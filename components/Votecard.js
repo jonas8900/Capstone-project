@@ -1,22 +1,24 @@
 import moment from "moment";
-import { styled } from "styled-components";
-import { uid } from "uid";
-import useLocalStorageState from "use-local-storage-state";
 import "moment/locale/de";
+import { styled } from "styled-components";
 import { useRouter } from "next/router";
+import useSWR from "swr";
+import { useState } from "react";
 
 export default function Votecard({ dates, setDates }) {
+  const userID = "Marvin-818924";
   const router = useRouter();
-  const [matchedID, setMatchedID] = useLocalStorageState("matchedID", {
-    defaultValue: { value: "value" },
-  });
+  const { data: listOfAllVotesInProgress, mutate } = useSWR(
+    "api/voteForActivityDate"
+  );
+  const { data: finalEvents } = useSWR("api/finalEvents");
+  const [matchedID, setMatchedID] = useState({});
 
-  const objectWithTheSameID = dates.find((date) => date.id === matchedID.id);
-  const findDateWithoutMatchedID = dates.filter(
-    (date) => date.id !== matchedID.id
+  const objectWithTheSameID = listOfAllVotesInProgress.find(
+    (voting) => voting._id === matchedID._id
   );
 
-  function handleSubmitCheckboxes(event) {
+  async function handleSubmitCheckboxes(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -24,24 +26,60 @@ export default function Votecard({ dates, setDates }) {
     //submit dates to the object with the boolean true or false
     const updateSingleDate = {
       ...objectWithTheSameID,
-      ...(checkBoxData.date1 == "on" && { date1IsTrue: true }),
-      ...(checkBoxData.date2 == "on" && { date2IsTrue: true }),
-      ...(checkBoxData.date3 == "on" && { date3IsTrue: true }),
-      ...(checkBoxData.date4 == "on" && { date4IsTrue: true }),
-      ...(checkBoxData.noDate == "on" && { noDateMatches: true }),
-      vote: true,
+      ...(checkBoxData.date1 == "on" && {
+        date1IsTrue: [{ userID: userID }, { userID: "Tim-223523" }],
+      }),
+      ...(checkBoxData.date2 == "on" && { date2IsTrue: [{ userID: userID }] }),
+      ...(checkBoxData.date3 == "on" && { date3IsTrue: [{ userID: userID }] }),
+      ...(checkBoxData.date4 == "on" && { date4IsTrue: [{ userID: userID }] }),
+      ...(checkBoxData.noDate == "on" && {
+        noDateMatches: [{ userID: userID }],
+      }),
+      isInVotingProcess: true,
     };
-    const lengthOfDummyDates = Object.keys(updateSingleDate).length;
-    if (lengthOfDummyDates > 8) {
+
+    const checkIfMultipleCheckboxClickedDate1 =
+      updateSingleDate.date1IsTrue.filter((user) => userID === user.userID);
+    const checkIfMultipleCheckboxClickedDate2 =
+      updateSingleDate.date2IsTrue.filter((user) => userID === user.userID);
+    const checkIfMultipleCheckboxClickedDate3 =
+      updateSingleDate.date3IsTrue.filter((user) => userID === user.userID);
+    const checkIfMultipleCheckboxClickedDate4 =
+      updateSingleDate.date4IsTrue.filter((user) => userID === user.userID);
+    const checkIfMultipleCheckboxClickedNoMatch =
+      updateSingleDate.noDateMatches.filter((user) => userID === user.userID);
+
+    if (
+      checkIfMultipleCheckboxClickedDate1.length > 0 ||
+      checkIfMultipleCheckboxClickedDate2.length > 0 ||
+      checkIfMultipleCheckboxClickedDate3.length > 0 ||
+      checkIfMultipleCheckboxClickedDate4.length > 0 ||
+      checkIfMultipleCheckboxClickedNoMatch.length > 0
+    ) {
       if (
-        updateSingleDate.hasOwnProperty("noDateMatches") &&
-        lengthOfDummyDates > 9
+        (checkIfMultipleCheckboxClickedNoMatch.length > 0 &&
+          checkIfMultipleCheckboxClickedDate1.length > 0) ||
+        (checkIfMultipleCheckboxClickedNoMatch.length > 0 &&
+          checkIfMultipleCheckboxClickedDate2.length > 0) ||
+        (checkIfMultipleCheckboxClickedNoMatch.length > 0 &&
+          checkIfMultipleCheckboxClickedDate3.length > 0) ||
+        (checkIfMultipleCheckboxClickedNoMatch.length > 0 &&
+          checkIfMultipleCheckboxClickedDate4.length > 0)
       ) {
         alert(
           "Du kannst entweder ein Datum oder keins passt auswählen nicht beides"
         );
       } else {
-        setDates([...findDateWithoutMatchedID, updateSingleDate]);
+        const response = await fetch("api/voteForActivityDate", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ updateSingleDate }),
+        });
+        if (response.ok) {
+          mutate();
+        }
       }
     } else {
       alert("Du musst etwas auswählen!");
@@ -50,10 +88,10 @@ export default function Votecard({ dates, setDates }) {
 
   //find the ID which matches with the card i clicked on and set it to the matchedID state
   function handleFindId(id) {
-    setMatchedID(dates.find((date) => date.id === id));
+    setMatchedID(listOfAllVotesInProgress.find((voting) => voting._id === id));
   }
 
-  function handleSubmitFinalDate(event) {
+  async function handleSubmitFinalDate(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -63,23 +101,40 @@ export default function Votecard({ dates, setDates }) {
       "Überprüfe die Eingabe bevor du ein Finales Datum setzt!"
     );
     if (areYouSureToDelete) {
-      setDates([
-        ...findDateWithoutMatchedID,
-        {
-          objectWithTheSameID,
-          finalDate: selectData.dateSelect,
-          finalDateID: uid(),
+      const finalEventObject = {
+        finalDate: selectData.dateSelect,
+        veranstaltung: objectWithTheSameID.veranstaltung,
+        ort: objectWithTheSameID.ort,
+        isInVotingProcess: false,
+        parentId: objectWithTheSameID.parentId,
+      };
+
+      const response = await fetch("api/finalEvents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      ]);
-      router.push("/veranstaltungen");
+        body: JSON.stringify(finalEventObject),
+      });
+      await fetch(`/api/voteForActivityDate/`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ objectWithTheSameID }),
+      });
+
+      if (response.ok) {
+        mutate();
+        router.push("/veranstaltungen");
+      }
     }
   }
-
   return (
     <>
-      {dates.map((date) => (
-        <StyledVoteCardWrapper key={date.id || date.finalDateID}>
-          {date.vote && (
+      {listOfAllVotesInProgress.map((date) => (
+        <StyledVoteCardWrapper key={date._id || date.finalDateID}>
+          {date.isInVotingProcess && (
             <StyledSectionForLastDate>
               <StyledVoteCardHeadline>
                 Veranstaltungsabstimmung
@@ -93,35 +148,33 @@ export default function Votecard({ dates, setDates }) {
                   <StyledParagraphInList>
                     Bisherige Auswertung:
                   </StyledParagraphInList>
-                  {date.date1 !== "" && (
-                    <StyledVoteCardLi>
-                      {moment(date.date1).format("lll")} Uhr <p>1</p>
-                    </StyledVoteCardLi>
-                  )}
-                  {date.date2 !== "" && (
-                    <StyledVoteCardLi>
-                      {moment(date.date2).format("lll")} Uhr <p>1</p>
-                    </StyledVoteCardLi>
-                  )}
-                  {date.date3 !== "" && (
-                    <StyledVoteCardLi>
-                      {moment(date.date3).format("lll")} Uhr <p>0</p>
-                    </StyledVoteCardLi>
-                  )}
-                  {date.date4 !== "" && (
-                    <StyledVoteCardLi>
-                      {moment(date.date4).format("lll")} Uhr <p>0</p>
-                    </StyledVoteCardLi>
-                  )}
-                  <StyledVoteCardLi>keins passt</StyledVoteCardLi>
-                </StyledVoteCardUl>
 
-                <StyledVoteCardNoVoteSection>
-                  <StyledVoteCardHeadline3>
-                    Keine Abstimmung von:
-                  </StyledVoteCardHeadline3>
-                  <StyledSubParagraph>3</StyledSubParagraph>
-                </StyledVoteCardNoVoteSection>
+                  <StyledVoteCardLi>
+                    {moment(date.date1).format("lll")} Uhr
+                    <p>Personen: {date.date1IsTrue.length}</p>
+                  </StyledVoteCardLi>
+
+                  <StyledVoteCardLi>
+                    {moment(date.date2).format("lll")} Uhr
+                    <p>Personen: {date.date2IsTrue.length}</p>
+                  </StyledVoteCardLi>
+
+                  {date.date3 !== null && (
+                    <StyledVoteCardLi>
+                      {moment(date.date3).format("lll")} Uhr
+                      <p>Personen: {date.date3IsTrue.length}</p>
+                    </StyledVoteCardLi>
+                  )}
+                  {date.date4 !== null && (
+                    <StyledVoteCardLi>
+                      {moment(date.date4).format("lll")} Uhr
+                      <p>Personen: {date.date4IsTrue.length}</p>
+                    </StyledVoteCardLi>
+                  )}
+                  <StyledVoteCardLi>
+                    keins passt {date.noDateMatches.length}
+                  </StyledVoteCardLi>
+                </StyledVoteCardUl>
                 <StyledVoteCardFormFinalDatePick
                   onSubmit={handleSubmitFinalDate}
                 >
@@ -129,35 +182,36 @@ export default function Votecard({ dates, setDates }) {
                     Wähle das finale Datum:
                   </StyledFinalDateLabel>
                   <select id="dateSelect" name="dateSelect">
-                    {date.date1 !== "" && (
-                      <option value={date.date1}>
-                        {moment(date.date1).format("lll")} Uhr
-                      </option>
-                    )}
-                    {date.date2 !== "" && (
-                      <option value={date.date2}>
-                        {moment(date.date2).format("lll")} Uhr
-                      </option>
-                    )}
-                    {date.date3 !== "" && (
+                    <option value={date.date1}>
+                      {moment(date.date1).format("lll")} Uhr
+                    </option>
+
+                    <option value={date.date2}>
+                      {moment(date.date2).format("lll")} Uhr
+                    </option>
+
+                    {date.date3 !== null && (
                       <option value={date.date3}>
                         {moment(date.date3).format("lll")} Uhr
                       </option>
                     )}
-                    {date.date4 !== "" && (
+                    {date.date4 !== null && (
                       <option value={date.date4}>
                         {moment(date.date4).format("lll")} Uhr
                       </option>
                     )}
                   </select>
-                  <StyledVoteCardButtonClose type="submit">
+                  <StyledVoteCardButtonClose
+                    type="submit"
+                    onClick={() => handleFindId(date._id)}
+                  >
                     Abstimmung abschließen
                   </StyledVoteCardButtonClose>
                 </StyledVoteCardFormFinalDatePick>
               </StyledVoteLastDateCardWrapper>
             </StyledSectionForLastDate>
           )}
-          {date.vote === false && (
+          {date.isInVotingProcess === false && (
             <section>
               <StyledVoteCardHeadline>
                 Veranstaltungsabstimmung
@@ -171,7 +225,7 @@ export default function Votecard({ dates, setDates }) {
                   Keins passt
                   <input type="checkbox" name="noDate" id="noDate" />
                 </StyledNoDateMatch>
-                {date.date1 !== "" && (
+                {date.date1 !== null && (
                   <article>
                     <StyledDateHeadline>Datum 1</StyledDateHeadline>
                     <StyledDateOneLabel htmlFor="date1">
@@ -180,7 +234,7 @@ export default function Votecard({ dates, setDates }) {
                     </StyledDateOneLabel>
                   </article>
                 )}
-                {date.date2 !== "" && (
+                {date.date2 !== null && (
                   <article>
                     <StyledDateHeadline>Datum 2</StyledDateHeadline>
                     <StyledDateTwoLabel htmlFor="date2">
@@ -189,7 +243,7 @@ export default function Votecard({ dates, setDates }) {
                     </StyledDateTwoLabel>
                   </article>
                 )}
-                {date.date3 !== "" && (
+                {date.date3 !== null && (
                   <article>
                     <StyledDateHeadline>Datum 3</StyledDateHeadline>
                     <StyledDateThreeLabel htmlFor="date3">
@@ -198,7 +252,7 @@ export default function Votecard({ dates, setDates }) {
                     </StyledDateThreeLabel>
                   </article>
                 )}
-                {date.date4 !== "" && (
+                {date.date4 !== null && (
                   <article>
                     <StyledDateHeadline>Datum 4</StyledDateHeadline>
                     <StyledDateFourLabel htmlFor="date4">
@@ -214,7 +268,7 @@ export default function Votecard({ dates, setDates }) {
                 )}
                 <StyledVoteCardButton
                   type="submit"
-                  onClick={() => handleFindId(date.id)}
+                  onClick={() => handleFindId(date._id)}
                 >
                   Bestätigen
                 </StyledVoteCardButton>
@@ -349,8 +403,7 @@ const StyledVoteCardLi = styled.li`
   margin-bottom: 10px;
   font-size: var(--font-size-details);
   padding: 0.5rem;
-  border-radius: 10px;
-  box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid black;
 `;
 
 const StyledVoteCardNoVoteSection = styled.section`
