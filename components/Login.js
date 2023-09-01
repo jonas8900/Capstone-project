@@ -1,16 +1,37 @@
 import { useSession, signIn, signOut } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import { styled } from "styled-components";
 
 export default function Login() {
   const { data: session } = useSession();
+  const router = useRouter();
 
+  function handleRouter() {
+    router.push("/index");
+  }
+
+  function handleSignOutAndRouter() {
+    handleRouter();
+    signOut();
+  }
   return (
     <StyledLoginSection>
       {session ? (
-        <>
-          <StyledLoginButton onClick={signOut}>Logout</StyledLoginButton>
-          <p>Hi {session.user.email}!</p>
-        </>
+        <StyledLoggedInSection>
+          <StyledParagrah>Hi {session.user.name}!</StyledParagrah>
+          <StyledImage
+            src={session.user.image}
+            alt="Dein Google Profilbild"
+            width={30}
+            height={30}
+          />
+
+          <StyledLoginButton onClick={handleSignOutAndRouter}>
+            Logout
+          </StyledLoginButton>
+        </StyledLoggedInSection>
       ) : (
         <StyledLoginButton onClick={() => signIn()}>Login</StyledLoginButton>
       )}
@@ -29,4 +50,23 @@ const StyledLoginButton = styled.button`
 const StyledLoginSection = styled.section`
   grid-area: 1 / 3 / 2 / 4;
   align-self: center;
+`;
+
+const StyledLoggedInSection = styled.section`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 0.5fr;
+  grid-column-gap: 30px;
+  grid-row-gap: 0px;
+  margin-left: 3rem;
+  align-items: center;
+`;
+
+const StyledParagrah = styled.p`
+  font-size: var(--font-size-details);
+  color: var(--grey-topics);
+`;
+
+const StyledImage = styled(Image)`
+  border-radius: 9px;
 `;

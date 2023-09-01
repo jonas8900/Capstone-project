@@ -4,9 +4,11 @@ import { styled } from "styled-components";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
-export default function Votecard({ dates, setDates }) {
-  const userID = "Marvin-818924";
+export default function Votecard({}) {
+  const { data: session } = useSession();
+  const userID = session.user.email;
   const router = useRouter();
   const { data: listOfAllVotesInProgress, mutate } = useSWR(
     "api/voteForActivityDate"

@@ -17,9 +17,9 @@ export default function App({ Component, pageProps, session }) {
         <SessionProvider session={session}>
           <Headline />
           <Component {...pageProps} />
+          <NavigationBar />
         </SessionProvider>
       </SWRConfig>
-      <NavigationBar />
     </>
   );
 }

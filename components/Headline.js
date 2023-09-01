@@ -35,7 +35,7 @@ const StyledHeadline = styled.section`
   width: 100%;
 
   padding: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 1rem;
 `;
 
 const StyledImage = styled(Image)`

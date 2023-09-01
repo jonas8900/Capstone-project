@@ -5,11 +5,13 @@ import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import useSWR from "swr";
+import { useSession } from "next-auth/react";
 
 export default function DashboardCard({}) {
   const { data: allEvents, isLoading } = useSWR("api/finalEvents");
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
-  const userID = "Marvin-818924";
+  const { data: session } = useSession();
+  const userID = session.user.name;
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -69,11 +71,14 @@ export default function DashboardCard({}) {
             </li>
             <li>
               <StyledHeadline3>was bringst du mit</StyledHeadline3>
-              {productsOfNextActivity.map((product) => product.userID === userID &&(
-                <StyledDetailText key={product._id}>
-                  {product.product}
-                </StyledDetailText>
-              ))}
+              {productsOfNextActivity.map(
+                (product) =>
+                  product.userID === userID && (
+                    <StyledDetailText key={product._id}>
+                      {product.product}
+                    </StyledDetailText>
+                  )
+              )}
             </li>
           </StyledUl>
           <StyledIconLink href={`/planner/${nextActivity._id}`}>
@@ -105,7 +110,7 @@ export const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   margin: 2rem;
-  margin-top: 4rem;
+  margin-top: 1rem;
   margin-bottom: 6rem;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);

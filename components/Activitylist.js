@@ -9,6 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import useSWR from "swr";
+import { useSession } from "next-auth/react";
 
 export default function Activitylist({}) {
   const {
@@ -16,8 +17,8 @@ export default function Activitylist({}) {
     isLoading,
     mutate,
   } = useSWR("api/activitySuggestion");
-
-  const userID = "Marvin-818924";
+  const { data: session } = useSession();
+  const userID = session.user.email;
 
   if (isLoading) {
     return (
@@ -118,40 +119,50 @@ export default function Activitylist({}) {
   }
 
   return (
-    <main>
-      <StyledActivitySection>
-        <h2>Aktivitäten</h2>
-        <StyledList>
-          {activitySuggestionList.map((activity) => (
-            <StyledListItem key={activity._id}>
-              <StyledListItemHeadline>{activity.name}</StyledListItemHeadline>
-              <StyledDeleteButton onClick={() => handleDelete(activity._id)}>
-                <StyledTrashIcon icon={faTrash} />
-              </StyledDeleteButton>
-              <StyledFavoriteButton
-                onClick={() => handleAddFavoriteButton(activity._id)}
-              >
-                {activity.likedByUser.some((user) => user.userID === userID) ? (
-                  <StyledFavoriteIconSolid icon={faHeartSolid} />
-                ) : (
-                  <StyledFavoriteIconRegular icon={faHeartRegular} />
-                )}
-                <p>{activity.likedByUser.length}</p>
-              </StyledFavoriteButton>
-              <StyledActivityLink href={`/${activity._id}`}>
-                <StyledPlanButton>planen</StyledPlanButton>
-              </StyledActivityLink>
-            </StyledListItem>
-          ))}
-        </StyledList>
-      </StyledActivitySection>
-      <Form
-        name={"activityName"}
-        type={"text"}
-        onSubmit={handleSubmitActivity}
-        placeholder={"hier aktivität eingeben..."}
-      />
-    </main>
+    <>
+      {session && (
+        <main>
+          <StyledActivitySection>
+            <h2>Aktivitäten</h2>
+            <StyledList>
+              {activitySuggestionList.map((activity) => (
+                <StyledListItem key={activity._id}>
+                  <StyledListItemHeadline>
+                    {activity.name}
+                  </StyledListItemHeadline>
+                  <StyledDeleteButton
+                    onClick={() => handleDelete(activity._id)}
+                  >
+                    <StyledTrashIcon icon={faTrash} />
+                  </StyledDeleteButton>
+                  <StyledFavoriteButton
+                    onClick={() => handleAddFavoriteButton(activity._id)}
+                  >
+                    {activity.likedByUser.some(
+                      (user) => user.userID === userID
+                    ) ? (
+                      <StyledFavoriteIconSolid icon={faHeartSolid} />
+                    ) : (
+                      <StyledFavoriteIconRegular icon={faHeartRegular} />
+                    )}
+                    <p>{activity.likedByUser.length}</p>
+                  </StyledFavoriteButton>
+                  <StyledActivityLink href={`/${activity._id}`}>
+                    <StyledPlanButton>planen</StyledPlanButton>
+                  </StyledActivityLink>
+                </StyledListItem>
+              ))}
+            </StyledList>
+          </StyledActivitySection>
+          <Form
+            name={"activityName"}
+            type={"text"}
+            onSubmit={handleSubmitActivity}
+            placeholder={"hier aktivität eingeben..."}
+          />
+        </main>
+      )}
+    </>
   );
 }
 

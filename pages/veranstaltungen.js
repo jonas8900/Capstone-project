@@ -16,15 +16,16 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import "moment/locale/de";
-import { IM_Fell_French_Canon } from "next/font/google";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
 import useSWR from "swr";
+import { useSession } from "next-auth/react";
 
 export default function Events({}) {
   const { data: allEvents, isLoading, mutate } = useSWR("api/finalEvents/");
-  const userID = "Marvin-818924";
+  const { data: session } = useSession();
+  const userID = session.user.email;
   const router = useRouter();
   if (isLoading) {
     return (

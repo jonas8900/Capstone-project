@@ -12,6 +12,7 @@ import Form from "./Form";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { uid } from "uid";
+import { useSession } from "next-auth/react";
 
 export default function PartyPlannerCard({}) {
   const router = useRouter();
@@ -20,7 +21,8 @@ export default function PartyPlannerCard({}) {
     mutate,
     isLoading,
   } = useSWR(`/api/planner/${router.query.partyPlanner}`);
-
+  const { data: session } = useSession();
+  const userID = session.user.name;
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -28,8 +30,6 @@ export default function PartyPlannerCard({}) {
       </StyledLoadingError>
     );
   }
-
-  const userID = "Marvin-818924";
 
   const onclickedEvent = finalEvent;
 
