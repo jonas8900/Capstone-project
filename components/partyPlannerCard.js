@@ -22,7 +22,7 @@ export default function PartyPlannerCard({}) {
     isLoading,
   } = useSWR(`/api/planner/${router.query.partyPlanner}`);
   const { data: session } = useSession();
-  const userID = session.user.name;
+  const userID = session && session.user.name;
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -153,7 +153,7 @@ export default function PartyPlannerCard({}) {
             name={"product"}
             type={"text"}
             onSubmit={handleSubmitPlanning}
-            placeholder={"hier aktivität eingeben..."}
+            placeholder={"Was bringst du mit..."}
           />
         </section>
       )}
@@ -197,6 +197,7 @@ const StyledPlannerSectionWrapper = styled.section`
   margin: 2rem;
   margin-top: 0px;
   border-radius: 9px;
+  margin-bottom: 10rem;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
 `;
 

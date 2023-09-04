@@ -70,7 +70,7 @@ export default function DashboardCard({}) {
               <StyledDetailText>{nextActivity.ort}</StyledDetailText>
             </li>
             <li>
-              <StyledHeadline3>was bringst du mit</StyledHeadline3>
+              <StyledHeadline3>Was bringst du mit</StyledHeadline3>
               {productsOfNextActivity.map(
                 (product) =>
                   product.userID === userID && (
