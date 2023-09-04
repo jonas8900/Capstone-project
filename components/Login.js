@@ -1,11 +1,14 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { styled } from "styled-components";
 
 export default function Login() {
   const { data: session } = useSession();
   const router = useRouter();
+
+
 
   return (
     <StyledLoginSection>
@@ -30,7 +33,15 @@ export default function Login() {
           </StyledLoginButton>
         </StyledLoggedInSection>
       ) : (
-        <StyledLoginButton onClick={() => signIn()}>Login</StyledLoginButton>
+        <StyledLoginButton
+          onClick={() => {
+            signIn("google", {
+              callbackUrl: "http://localhost:3000//validateafterlogin",
+            });
+          }}
+        >
+          Login
+        </StyledLoginButton>
       )}
     </StyledLoginSection>
   );

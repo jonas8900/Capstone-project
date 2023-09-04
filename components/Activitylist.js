@@ -27,6 +27,8 @@ export default function Activitylist({}) {
     );
   }
 
+  
+
   async function handleSubmitActivity(event) {
     event.preventDefault();
 

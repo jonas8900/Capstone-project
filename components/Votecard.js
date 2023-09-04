@@ -10,6 +10,7 @@ export default function Votecard({}) {
   const { data: session } = useSession();
   const userID = session && session.user.email;
 
+
   const router = useRouter();
   const { data: listOfAllVotesInProgress, mutate } = useSWR(
     "api/voteForActivityDate"

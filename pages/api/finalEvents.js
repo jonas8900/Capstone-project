@@ -48,7 +48,7 @@ export default async function getFinalEvent(request, response) {
           veranstaltung: request.body.addEventObject.veranstaltung,
         },
       });
-      console.log(id);
+
       response.status(200).json({ status: `voting ${id} send!` });
     } catch (error) {
       console.log(error);

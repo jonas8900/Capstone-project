@@ -42,6 +42,3 @@ export const StyledHeadline = styled.h1`
   margin-bottom: 3rem;
 `;
 
-const StyledImage = styled(Image)`
-  margin-bottom: -3rem;
-`;

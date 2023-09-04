@@ -21,7 +21,6 @@ export default function Addevent({}) {
   const findEventToEdit =
     allEvents !== undefined &&
     allEvents.find((finalEvent) => finalEvent._id === currentEventId);
-  console.log(findEventToEdit);
   if (isLoading) {
     return (
       <StyledLoadingError>
