@@ -85,14 +85,14 @@ export default function PartyPlannerCard({}) {
         <section>
           <h2>dieses Event existiert nicht...</h2>
           <p>zurück zu den Events:</p>
-          <StyledBackLink href={"/veranstaltungen"}>
+          <StyledBackLink href={"/eventcollection"}>
             <StyledBackIcon icon={faArrowLeft} />
           </StyledBackLink>
         </section>
       )}
       {onclickedEvent && (
         <section>
-          <StyledBackLink href={"/veranstaltungen"}>
+          <StyledBackLink href={"/eventcollection"}>
             <StyledBackIcon icon={faArrowLeft} />
           </StyledBackLink>
           <h2>Party Planer</h2>

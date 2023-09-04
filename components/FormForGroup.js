@@ -1,7 +1,11 @@
 import { keyframes, styled } from "styled-components";
-import SecondaryColoredButton from "./SecondaryColoredButton";
+import SecondaryColoredButton from "./OrangeButton";
 
-export default function FormForGroup({ useSecondaryColor, children, onSubmit }) {
+export default function FormForGroup({
+  useSecondaryColor,
+  children,
+  onSubmit,
+}) {
   return (
     <StyledForm onSubmit={onSubmit}>
       <label htmlFor="groupname">{children}</label>

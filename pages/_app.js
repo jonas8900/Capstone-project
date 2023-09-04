@@ -41,4 +41,3 @@ export const StyledHeadline = styled.h1`
   padding: 1rem;
   margin-bottom: 3rem;
 `;
-

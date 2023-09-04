@@ -1,12 +1,11 @@
 import Dashboard from "@/components/Dashboard";
-import Login from "@/components/Login";
 import Votecard from "@/components/Votecard";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { styled } from "styled-components";
 
-export default function HomePage({ dates, setDates, voteDoneArray }) {
+export default function HomePage({}) {
   const { data: listOfAllVotesInProgress } = useSWR("api/voteForActivityDate");
   const { data: session } = useSession();
   return (
@@ -19,10 +18,8 @@ export default function HomePage({ dates, setDates, voteDoneArray }) {
             width={384}
             height={256}
           />
-          {listOfAllVotesInProgress !== undefined && (
-            <Votecard dates={dates} setDates={setDates} />
-          )}
-          <Dashboard voteDoneArray={voteDoneArray} dates={dates} />
+          {listOfAllVotesInProgress !== undefined && <Votecard />}
+          <Dashboard />
         </>
       ) : (
         <>

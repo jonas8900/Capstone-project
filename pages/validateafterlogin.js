@@ -4,7 +4,7 @@ import { styled } from "styled-components";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-
+//this page is only for validating the userData
 export default function ValidateAfterLogin() {
   const { data: session } = useSession();
 
@@ -32,13 +32,14 @@ export default function ValidateAfterLogin() {
               body: JSON.stringify(session.user),
             }).then(router.push("/nogroupscreen"));
           } else {
-            router.push("/veranstaltungen");
+            router.push("/eventcollection");
           }
         });
       });
     }
   }
-
+  //in this special case we dont want to re-render in every session dependency,
+  //so we need to check if the singIn is already done so we can call the function once
   useEffect(() => {
     getOrCreateUser();
   }, [sessionTrue]);

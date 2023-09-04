@@ -139,7 +139,7 @@ export default function Votecard({}) {
 
       if (response.ok) {
         mutate();
-        router.push("/veranstaltungen");
+        router.push("/eventcollection");
       }
     }
   }

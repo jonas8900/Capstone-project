@@ -59,7 +59,7 @@ export default function Addevent({}) {
       if (response.ok) {
         mutate();
         alert("Erfolgreich abgeändert!");
-        router.push("/veranstaltungen");
+        router.push("/eventcollection");
         event.target.reset();
       }
     }
@@ -70,7 +70,7 @@ export default function Addevent({}) {
       {findEventToEdit !== undefined && (
         <section>
           <StyledSectionForHeadlineAndBackButton>
-            <StyledBackButtonLink href={"/veranstaltungen"}>
+            <StyledBackButtonLink href={"/eventcollection"}>
               <StyledBackIcon icon={faArrowLeft} />
             </StyledBackButtonLink>
             <StyledHeadlineForEvents>

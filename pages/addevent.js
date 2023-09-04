@@ -46,14 +46,14 @@ export default function Addevent({}) {
       mutate();
     }
     alert("Du hast eine neues Event hinzugefügt!");
-    router.push("/veranstaltungen");
+    router.push("/eventcollection");
     event.target.reset();
   }
 
   return (
     <main>
       <StyledSectionForHeadlineAndBackButton>
-        <StyledBackButtonLink href={"/veranstaltungen"}>
+        <StyledBackButtonLink href={"/eventcollection"}>
           <StyledBackIcon icon={faArrowLeft} />
         </StyledBackButtonLink>
         <StyledHeadlineForEvents>

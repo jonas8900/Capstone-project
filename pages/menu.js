@@ -15,7 +15,7 @@ export default function Menu() {
               <StyledListItemText>Aktivitäten</StyledListItemText>
             </StyledMenuItem>
           </StyledMenuLink>
-          <StyledMenuLink href={"/veranstaltungen"}>
+          <StyledMenuLink href={"/eventcollection"}>
             <StyledMenuItem>
               <StyledRunIcon icon={faCalendar} />
               <StyledListItemText>Events</StyledListItemText>

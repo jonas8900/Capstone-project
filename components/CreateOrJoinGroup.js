@@ -1,15 +1,13 @@
 import { styled } from "styled-components";
-import SecondaryColoredButton from "./SecondaryColoredButton";
+import SecondaryColoredButton from "./OrangeButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
   faSpinner,
-  faTrash,
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import Form from "./Form";
 import FormForGroup from "./FormForGroup";
 import useSWR from "swr";
 
@@ -17,8 +15,8 @@ export default function CreateOrJoinGroup({}) {
   const { data: session } = useSession();
   const { isLoading, mutate } = useSWR("api/groupDetails");
   const userID = session && session.user.email;
-  const [inputShowGroupCreate, setInputShowGroupCreate] = useState(false);
-  const [inputShowJoinGroup, setInputShowJoinGroup] = useState(false);
+  const [createGroup, setCreateGroup] = useState(false);
+  const [joinGroup, setjoinGroup] = useState(false);
 
   if (isLoading) {
     return (
@@ -29,11 +27,11 @@ export default function CreateOrJoinGroup({}) {
   }
 
   function handleToggleInputCreate() {
-    setInputShowGroupCreate(!inputShowGroupCreate);
+    setCreateGroup(!createGroup);
   }
 
   function handleToggleInputJoin() {
-    setInputShowJoinGroup(!inputShowJoinGroup);
+    setjoinGroup(!joinGroup);
   }
 
   async function handleSubmitCreate(event) {
@@ -42,7 +40,6 @@ export default function CreateOrJoinGroup({}) {
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-  
     const newGroup = {
       groupname: data.groupname,
       members: [userID],
@@ -60,7 +57,6 @@ export default function CreateOrJoinGroup({}) {
     }
   }
 
-
   return (
     <>
       <h2>Gruppenauswahl</h2>
@@ -68,20 +64,7 @@ export default function CreateOrJoinGroup({}) {
         <StyledHeadline3>Du hast noch keine bestehende Gruppe</StyledHeadline3>
 
         <StyledArticleForButton>
-          {inputShowJoinGroup ? (
-            <FormForGroup useSecondaryColor={false}>
-              Füge hier den Link ein
-            </FormForGroup>
-          ) : (
-            <SecondaryColoredButton
-              useSecondaryColor={true}
-              onClick={handleToggleInputCreate}
-            >
-              Gruppe erstellen
-              <StyledIcon icon={faPlus} />
-            </SecondaryColoredButton>
-          )}
-          {inputShowGroupCreate ? (
+          {createGroup ? (
             <FormForGroup
               useSecondaryColor={true}
               onSubmit={handleSubmitCreate}
@@ -95,6 +78,19 @@ export default function CreateOrJoinGroup({}) {
             >
               Gruppe beitreten
               <StyledGroupIcon icon={faUserGroup} />
+            </SecondaryColoredButton>
+          )}
+          {joinGroup ? (
+            <FormForGroup useSecondaryColor={false}>
+              Füge hier den Link ein
+            </FormForGroup>
+          ) : (
+            <SecondaryColoredButton
+              useSecondaryColor={true}
+              onClick={handleToggleInputCreate}
+            >
+              Gruppe erstellen
+              <StyledIcon icon={faPlus} />
             </SecondaryColoredButton>
           )}
         </StyledArticleForButton>

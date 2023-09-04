@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export default function SecondaryColoredButton({
+export default function OrangeButton({
   children,
   type,
   onClick,
