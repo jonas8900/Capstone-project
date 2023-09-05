@@ -7,16 +7,31 @@ import {
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FormForGroup from "./FormForGroup";
 import useSWR from "swr";
+import { useRouter } from "next/router";
 
 export default function CreateOrJoinGroup({}) {
   const { data: session } = useSession();
-  const { isLoading, mutate } = useSWR("api/groupDetails");
+  const { isLoading, mutate } = useSWR("api/createNewGroup");
   const userID = session && session.user.email;
+  const userName = session && session.user.name;
   const [createGroup, setCreateGroup] = useState(false);
   const [joinGroup, setjoinGroup] = useState(false);
+  const router = useRouter();
+  const [newGroupId, setNewGroupId] = useState();
+  const newGroupAfterPost = newGroupId && newGroupId;
+
+  useEffect(() => {
+    fetch("api/createorupdateuser", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newGroupAfterPost),
+    });
+  }, [newGroupAfterPost]);
 
   if (isLoading) {
     return (
@@ -34,27 +49,29 @@ export default function CreateOrJoinGroup({}) {
     setjoinGroup(!joinGroup);
   }
 
-  async function handleSubmitCreate(event) {
+  function handleSubmitCreate(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-    const newGroup = {
+    const newGroupDetails = {
       groupname: data.groupname,
-      members: [userID],
+      members: [{ userID: userID, userName: userName }],
       ownerID: userID,
     };
-    const response = await fetch("api/groupDetails", {
+    fetch("api/createNewGroup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newGroup),
-    });
-    if (response) {
-      mutate();
-    }
+      body: JSON.stringify(newGroupDetails),
+    })
+      .then((promisedUserData) => promisedUserData.json())
+      .then((finalUserData) => setNewGroupId(finalUserData));
+    mutate();
+    alert("you Added a Group!");
+    router.push("/");
   }
 
   return (
@@ -66,7 +83,7 @@ export default function CreateOrJoinGroup({}) {
         <StyledArticleForButton>
           {createGroup ? (
             <FormForGroup
-              useSecondaryColor={true}
+              $useSecondaryColor={true}
               onSubmit={handleSubmitCreate}
             >
               Erstelle deine Gruppe:
@@ -81,12 +98,12 @@ export default function CreateOrJoinGroup({}) {
             </SecondaryColoredButton>
           )}
           {joinGroup ? (
-            <FormForGroup useSecondaryColor={false}>
+            <FormForGroup $useSecondaryColor={false}>
               Füge hier den Link ein
             </FormForGroup>
           ) : (
             <SecondaryColoredButton
-              useSecondaryColor={true}
+              $useSecondaryColor={true}
               onClick={handleToggleInputCreate}
             >
               Gruppe erstellen

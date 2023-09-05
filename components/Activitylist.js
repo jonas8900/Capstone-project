@@ -8,48 +8,52 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
-import useSWR from "swr";
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function Activitylist({}) {
-  const {
-    data: activitySuggestionList,
-    isLoading,
-    mutate,
-  } = useSWR("api/activitySuggestion");
   const { data: session } = useSession();
-  const userID = session && session.user.email;
-  if (isLoading) {
-    return (
-      <StyledLoadingError>
-        <StyledLoadingErrorIcon icon={faSpinner} spin />
-      </StyledLoadingError>
-    );
+  const [activityData, setActivityData] = useState([]);
+  const sessionTrue = session && true;
+  // const { mutate, isLoading } = useSWR("api/getorupdateactivitysuggestion");
+  function getActivitySuggestions() {
+    if (session) {
+      fetch("api/getorupdateactivitysuggestion", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalActivityData) => {
+          setActivityData(finalActivityData);
+        });
+      });
+    }
   }
+  useEffect(() => {
+    getActivitySuggestions();
+  }, [sessionTrue]);
 
-  
+  const userID = session && session.user.email;
 
   async function handleSubmitActivity(event) {
     event.preventDefault();
-
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
 
-    const newActivity = {
-      name: data.activityName,
-      likedByUser: [{ userID: "Tim-1225412" }],
+    const newActivityData = {
+      newActivityName: data.activityName,
+      userSessionData: session.user,
     };
-    const response = await fetch("api/activitySuggestion", {
+    await fetch("api/createordeleteactivitysuggestion", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newActivity),
+      body: JSON.stringify(newActivityData),
     });
-
-    if (response.ok) {
-      mutate();
-    }
+    getActivitySuggestions();
     event.target.reset();
   }
 
@@ -58,23 +62,41 @@ export default function Activitylist({}) {
       "Bist du dir sicher, dass du diese Aktivität löschen möchtest?"
     );
     if (areYouSureToDelete) {
-      const response = await fetch(`/api/activitySuggestion/`, {
+      await fetch(`/api/createordeleteactivitysuggestion/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id }),
       });
-      if (response.ok) {
-        mutate();
-      }
+      getActivitySuggestions();
     }
   }
 
   async function handleAddFavoriteButton(id) {
-    const activitySuggestionCard = activitySuggestionList.filter(
+    const activitySuggestionCard = activityData.filter(
       (card) => card._id === id
     );
+    // const currentLikedByUserList = activitySuggestionCard.likedByUser;
+    // const checkIfUserIsInLikedByUser = currentLikedByUserList.find(
+    //   (likedUser) => likedUser.userID === userID
+    // );
+    // console.log(activityData);
+    // console.log(activitySuggestionCard);
+    // console.log(currentLikedByUserList);
+
+    // const updatedLikedByUserList =
+    //   checkIfUserIsInLikedByUser == undefined
+    //     ? currentLikedByUserList.push({ userID: userID })
+    //     : currentLikedByUserList.pop({ userID: userID });
+
+    // const response = await fetch(`/api/getorupdateactivitysuggestion`, {
+    //   method: "PUT",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ updatedLikedByUserList, id }),
+    // });
 
     if (activitySuggestionCard) {
       const updatedFavoriteActivity = activitySuggestionCard.map((card) => {
@@ -105,17 +127,14 @@ export default function Activitylist({}) {
           return card;
         }
       });
-
-      const response = await fetch(`/api/activitySuggestion`, {
+      await fetch(`/api/getorupdateactivitysuggestion`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ updatedFavoriteActivity, id }),
       });
-      if (response.ok) {
-        mutate();
-      }
+      getActivitySuggestions();
     }
   }
 
@@ -126,7 +145,7 @@ export default function Activitylist({}) {
           <StyledActivitySection>
             <h2>Aktivitäten</h2>
             <StyledList>
-              {activitySuggestionList.map((activity) => (
+              {activityData.map((activity) => (
                 <StyledListItem key={activity._id}>
                   <StyledListItemHeadline>
                     {activity.name}

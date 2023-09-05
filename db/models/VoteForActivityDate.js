@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const voteForActivityDateSchema = new Schema({
   parentId: { type: String },
+  groupId: { type: String, reuquired: true },
   veranstaltung: { type: String, required: true },
   isInVotingProcess: { type: Boolean, required: true },
   ort: { type: String, required: true },

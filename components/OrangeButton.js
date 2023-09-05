@@ -4,14 +4,14 @@ export default function OrangeButton({
   children,
   type,
   onClick,
-  useSecondaryColor,
+  $useSecondaryColor,
 }) {
   return (
     <>
       <StyledButton
         type={type}
         onClick={onClick}
-        useSecondaryColor={useSecondaryColor}
+        $useSecondaryColor={$useSecondaryColor}
       >
         {children}
       </StyledButton>
@@ -23,8 +23,8 @@ const StyledButton = styled.button`
   display: flex;
   align-items: center;
   margin: auto;
-  background-color: ${({ useSecondaryColor }) =>
-    useSecondaryColor ? "var(--secondary-color)" : "var(--third-color)"};
+  background-color: ${({ $useSecondaryColor }) =>
+    $useSecondaryColor ? "var(--secondary-color)" : "var(--third-color)"};
 
   color: White;
   width: fit-content;

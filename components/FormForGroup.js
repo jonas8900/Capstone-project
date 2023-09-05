@@ -2,7 +2,7 @@ import { keyframes, styled } from "styled-components";
 import SecondaryColoredButton from "./OrangeButton";
 
 export default function FormForGroup({
-  useSecondaryColor,
+  $useSecondaryColor,
   children,
   onSubmit,
 }) {
@@ -16,7 +16,7 @@ export default function FormForGroup({
       ></StyledInputField>
       <SecondaryColoredButton
         type={"submit"}
-        useSecondaryColor={useSecondaryColor}
+        $useSecondaryColor={$useSecondaryColor}
       >
         Bestätigen
       </SecondaryColoredButton>

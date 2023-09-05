@@ -6,10 +6,15 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 //this page is only for validating the userData
 export default function ValidateAfterLogin() {
+  const [checkIfObjectFilled, setCheckIfObjectFilled] = useState(false);
   const { data: session } = useSession();
 
   const sessionTrue = session && true;
   const router = useRouter();
+  const [finalUserObject, setFinalUserObject] = useState();
+
+  //This function gets through the database and check if the user exist,
+  //if not create one
 
   function getOrCreateUser() {
     if (session) {
@@ -21,10 +26,9 @@ export default function ValidateAfterLogin() {
         body: JSON.stringify(session.user),
       }).then((promisedUserData) => {
         promisedUserData.json().then((finalUserData) => {
-          finalUserData;
-          console.log(finalUserData);
+          setFinalUserObject(finalUserData);
           if (finalUserData == undefined) {
-            fetch("api/createnewuser", {
+            fetch("api/createOrUpdateUser", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -32,7 +36,7 @@ export default function ValidateAfterLogin() {
               body: JSON.stringify(session.user),
             }).then(router.push("/nogroupscreen"));
           } else {
-            router.push("/eventcollection");
+            setCheckIfObjectFilled(true);
           }
         });
       });
@@ -43,6 +47,19 @@ export default function ValidateAfterLogin() {
   useEffect(() => {
     getOrCreateUser();
   }, [sessionTrue]);
+
+  useEffect(() => {
+    if (checkIfObjectFilled === true) {
+      if (finalUserObject.joinedGroupList.length > 0) {
+        router.push("/eventcollection");
+      } else if (
+        finalUserObject.joinedGroupList.length == 0 ||
+        finalUserObject.joinedGroupList.length == undefined
+      ) {
+        router.push("/nogroupscreen");
+      }
+    }
+  }, [checkIfObjectFilled]);
 
   return (
     <>

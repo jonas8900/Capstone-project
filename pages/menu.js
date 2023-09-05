@@ -1,5 +1,9 @@
 import { StyledList } from "@/components/Activitylist";
-import { faCalendar, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendar,
+  faPersonRunning,
+  faUserGroup,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { styled } from "styled-components";
@@ -19,6 +23,12 @@ export default function Menu() {
             <StyledMenuItem>
               <StyledRunIcon icon={faCalendar} />
               <StyledListItemText>Events</StyledListItemText>
+            </StyledMenuItem>
+          </StyledMenuLink>
+          <StyledMenuLink href={"/groupmember"}>
+            <StyledMenuItem>
+              <StyledRunIcon icon={faUserGroup} />
+              <StyledListItemText>Teilnehmer</StyledListItemText>
             </StyledMenuItem>
           </StyledMenuLink>
         </StyledList>

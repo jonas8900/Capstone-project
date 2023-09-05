@@ -85,7 +85,11 @@ export default function Addevent({}) {
               Datum: {moment(findEventToEdit.finalDate).format("lll")}
             </StyledParagraphForOldData>
           </StyledSectionOldData>
-          <CreateAndEditForm onSubmit={handleEditEvent} />
+          <CreateAndEditForm
+            onSubmit={handleEditEvent}
+            valueVeranstaltung={findEventToEdit.veranstaltung}
+            valueOrt={findEventToEdit.ort}
+          />
         </section>
       )}
     </main>

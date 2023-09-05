@@ -1,6 +1,10 @@
 import { styled } from "styled-components";
 
-export default function CreateAndEditForm({ onSubmit }) {
+export default function CreateAndEditForm({
+  onSubmit,
+  valueVeranstaltung,
+  valueOrt,
+}) {
   let minDateToday = new Date();
   minDateToday.setMinutes(
     minDateToday.getMinutes() - minDateToday.getTimezoneOffset()
@@ -19,12 +23,19 @@ export default function CreateAndEditForm({ onSubmit }) {
             type="text"
             id="veranstaltung"
             name="veranstaltung"
+            defaultValue={valueVeranstaltung}
             required
           />
         </StyledArticleForFormItems>
         <StyledArticleForFormItems>
           <StyledLabels htmlFor="ort">Veranstaltungsort:</StyledLabels>
-          <StyledInputDateField type="text" id="ort" name="ort" required />
+          <StyledInputDateField
+            type="text"
+            id="ort"
+            name="ort"
+            defaultValue={valueOrt}
+            required
+          />
         </StyledArticleForFormItems>
         <StyledArticleForFormItems>
           <StyledLabels htmlFor="finalDate">Datum:</StyledLabels>

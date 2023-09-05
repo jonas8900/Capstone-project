@@ -1,17 +1,20 @@
 import Image from "next/image";
 import { styled } from "styled-components";
 import Login from "./Login";
+import Link from "next/link";
 
 export default function Headline() {
   return (
     <StyledHeadline>
-      <StyledImage
-        alt="Friends-Logo"
-        src="/logo2-nobackground-200.png"
-        width={120}
-        height={120}
-        priority={false}
-      />
+      <Link href={"/"}>
+        <StyledImage
+          alt="Friends-Logo"
+          src="/logo2-nobackground-200.png"
+          width={120}
+          height={120}
+          priority={false}
+        />
+      </Link>
       <Login />
     </StyledHeadline>
   );

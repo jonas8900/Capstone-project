@@ -4,8 +4,9 @@ const { Schema } = mongoose;
 
 const groupDetailsSchema = new Schema({
   groupname: { type: String, required: true },
-  members: { type: [String] },
+  members: { type: [{ userID: String, userName: String }] },
   ownerID: { type: String, required: true },
+  iviteLink: { type: String },
 });
 
 const GroupDetails =

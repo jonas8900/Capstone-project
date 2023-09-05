@@ -41,10 +41,14 @@ export default function HomePage({}) {
 }
 
 const StyledOpeningImage = styled(Image)`
-  margin: 1.2rem;
+  display: flex;
+
+  margin: auto;
   padding: 0;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
+  width: 80%;
+  height: 80%;
 `;
 const StyledHeadlineSection = styled.h1`
   font-size: var(--font-headlines);
