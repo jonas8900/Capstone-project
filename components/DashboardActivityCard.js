@@ -4,7 +4,6 @@ import moment from "moment";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
