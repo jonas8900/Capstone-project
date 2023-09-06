@@ -2,24 +2,43 @@ import moment from "moment";
 import "moment/locale/de";
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
-import useSWR from "swr";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 export default function Votecard({}) {
   const { data: session } = useSession();
   const userID = session && session.user.email;
-
-
-  const router = useRouter();
-  const { data: listOfAllVotesInProgress, mutate } = useSWR(
-    "api/voteForActivityDate"
-  );
+  const [votes, setVotes] = useState([]);
   const [matchedID, setMatchedID] = useState({});
+  const router = useRouter();
+  const sessionTrue = session && true;
 
-  const objectWithTheSameID = listOfAllVotesInProgress.find(
+  function getActivitySuggestions() {
+    if (session) {
+      fetch("api/getallvotingstovote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalVoteData) => {
+          setVotes(finalVoteData);
+        });
+      });
+    }
+  }
+  useEffect(() => {
+    getActivitySuggestions();
+  }, [sessionTrue]);
+
+  const objectWithTheSameID = votes.find(
     (voting) => voting._id === matchedID._id
   );
+
+  function handleFindId(id) {
+    setMatchedID(votes.find((voting) => voting._id === id));
+  }
 
   async function handleSubmitCheckboxes(event) {
     event.preventDefault();
@@ -83,16 +102,14 @@ export default function Votecard({}) {
           "Du kannst entweder ein Datum oder keins passt auswählen nicht beides"
         );
       } else {
-        const response = await fetch("api/voteForActivityDate", {
+        await fetch("api/createorupdatevotings", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ updateSingleDate }),
         });
-        if (response.ok) {
-          mutate();
-        }
+        getActivitySuggestions();
       }
     } else {
       alert("Du musst etwas auswählen!");
@@ -100,9 +117,6 @@ export default function Votecard({}) {
   }
 
   //find the ID which matches with the card i clicked on and set it to the matchedID state
-  function handleFindId(id) {
-    setMatchedID(listOfAllVotesInProgress.find((voting) => voting._id === id));
-  }
 
   async function handleSubmitFinalDate(event) {
     event.preventDefault();
@@ -115,37 +129,34 @@ export default function Votecard({}) {
     );
     if (areYouSureToDelete) {
       const finalEventObject = {
+        userSessionData: session.user,
         finalDate: selectData.dateSelect,
-        veranstaltung: objectWithTheSameID.veranstaltung,
+        name: objectWithTheSameID.name,
         ort: objectWithTheSameID.ort,
         isInVotingProcess: false,
-        parentId: objectWithTheSameID.parentId,
+        activitySuggestionId: objectWithTheSameID.activitySuggestionId,
       };
 
-      const response = await fetch("api/finalEvents", {
+      await fetch("api/createfinaleventanddeletevoting", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(finalEventObject),
       });
-      await fetch(`/api/voteForActivityDate/`, {
+      await fetch(`/api/createfinaleventanddeletevoting/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ objectWithTheSameID }),
+        body: JSON.stringify(objectWithTheSameID),
       });
-
-      if (response.ok) {
-        mutate();
-        router.push("/eventcollection");
-      }
+      getActivitySuggestions();
     }
   }
   return (
     <>
-      {listOfAllVotesInProgress.map((date) => (
+      {votes.map((date) => (
         <StyledVoteCardWrapper key={date._id || date.finalDateID}>
           {date.votedUser.find((user) => user.userID === userID) ? (
             <StyledSectionForLastDate>
@@ -155,7 +166,7 @@ export default function Votecard({}) {
               <StyledVoteLastDateCardWrapper>
                 <StyledVoteCardArticle>
                   <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
-                  <StyledSubParagraph>{date.veranstaltung}</StyledSubParagraph>
+                  <StyledSubParagraph>{date.name}</StyledSubParagraph>
                 </StyledVoteCardArticle>
                 <StyledVoteCardUl>
                   <StyledParagraphInList>
@@ -232,7 +243,7 @@ export default function Votecard({}) {
               <StyledVoteCardForm onSubmit={handleSubmitCheckboxes} required>
                 <StyledVoteCardArticle>
                   <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
-                  <p>{date.veranstaltung}</p>
+                  <p>{date.name}</p>
                 </StyledVoteCardArticle>
                 <StyledNoDateMatch htmlFor="noDate">
                   Keins passt

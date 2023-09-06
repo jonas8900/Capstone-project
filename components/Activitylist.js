@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import Form from "./Form";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -77,26 +77,6 @@ export default function Activitylist({}) {
     const activitySuggestionCard = activityData.filter(
       (card) => card._id === id
     );
-    // const currentLikedByUserList = activitySuggestionCard.likedByUser;
-    // const checkIfUserIsInLikedByUser = currentLikedByUserList.find(
-    //   (likedUser) => likedUser.userID === userID
-    // );
-    // console.log(activityData);
-    // console.log(activitySuggestionCard);
-    // console.log(currentLikedByUserList);
-
-    // const updatedLikedByUserList =
-    //   checkIfUserIsInLikedByUser == undefined
-    //     ? currentLikedByUserList.push({ userID: userID })
-    //     : currentLikedByUserList.pop({ userID: userID });
-
-    // const response = await fetch(`/api/getorupdateactivitysuggestion`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ updatedLikedByUserList, id }),
-    // });
 
     if (activitySuggestionCard) {
       const updatedFavoriteActivity = activitySuggestionCard.map((card) => {
@@ -186,6 +166,11 @@ export default function Activitylist({}) {
   );
 }
 
+const FadeInAnimation = keyframes`
+0% {opacity: 0}
+100% {opacity: 1}
+`;
+
 export const StyledList = styled.ul`
   list-style: none;
   margin: 2rem 2rem 2rem 2rem;
@@ -220,6 +205,8 @@ const StyledListItemHeadline = styled.h3`
 const StyledActivitySection = styled.section`
   margin: 1rem auto;
   padding-bottom: 2rem;
+  animation-name: ${FadeInAnimation};
+  animation-duration: 1.5s;
 `;
 
 export const StyledDeleteButton = styled.button`

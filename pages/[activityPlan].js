@@ -2,36 +2,42 @@ import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import useSWR from "swr";
+import { useSession } from "next-auth/react";
 
 export default function ActivityPlan({}) {
-  const {
-    data: votedActivitys,
-    isLoading,
-    mutate,
-  } = useSWR("api/voteForActivityDate");
-
-  const { data: activitiesBeforeVoting } = useSWR("api/activitySuggestion");
-
+  // const [currentId, setCurrentId] = useState();
+  const { data: session } = useSession();
+  const [activityData, setActivityData] = useState([]);
+  const [activeVotes, setActiveVotes] = useState([]);
+  const sessionTrue = session && true;
   const router = useRouter();
-
-  if (isLoading) {
-    return (
-      <StyledLoadingError>
-        <StyledLoadingErrorIcon icon={faSpinner} spin />
-      </StyledLoadingError>
-    );
-  }
-
   const currentId = router.query.activityPlan;
 
-  const currentActivity = activitiesBeforeVoting.filter(
-    (activityCard) => activityCard._id === currentId
-  );
-  const currentActivitieObject = activitiesBeforeVoting.find(
-    (activityCard) => activityCard._id === currentId
-  );
+  const requestBody = {
+    currentId: currentId,
+    sessionData: session && session.user,
+  };
+  function getActivitySuggestions() {
+    if (session) {
+      fetch(`api/getoneactivityforplanning/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalActivityData) => {
+          setActivityData([finalActivityData]);
+        });
+      });
+    }
+  }
+  useEffect(() => {
+    getActivitySuggestions();
+    getVotingInVotingProcess();
+  }, [sessionTrue]);
 
   let minDateToday = new Date();
   minDateToday.setMinutes(
@@ -40,26 +46,34 @@ export default function ActivityPlan({}) {
   //convert the date into german date
   const minDateInRightFormat = minDateToday.toISOString().slice(0, 16);
 
-  // to check if we already had a submitevent with generate an object
-  const currentActivityObjectConvertToArray = votedActivitys.filter(
-    (date) => date.parentId === currentActivitieObject._id
-  );
+  async function getVotingInVotingProcess() {
+    if (session) {
+      await fetch("api/getvotingsinvotingprocess", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((activeVotes) => {
+          setActiveVotes([activeVotes]);
+        });
+      });
+    }
+  }
 
-  const currentActivityObjectUpdated = currentActivityObjectConvertToArray.find(
-    (date) => date
-  );
-
+ 
   async function handleSubmitDates(event) {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const data = Object.fromEntries(formData);
-
     let count = 0;
     const allDates = [];
     const dateObject = {
-      parentId: currentActivitieObject._id,
-      veranstaltung: currentActivitieObject.name,
+      userSessionData: session.user,
+      activitySuggestionId: activityData[0]._id,
+      name: activityData[0].name,
       isInVotingProcess: false,
       ort: data.ort,
       date1: data.date1,
@@ -67,7 +81,6 @@ export default function ActivityPlan({}) {
       date3: data.date3,
       date4: data.date4,
     };
-
     //to check if we have the same date twice by clicking submit, i put the dates in a array, sort the array, and loop over it to check if there's a same date
     for (let key in dateObject) {
       ++count;
@@ -82,16 +95,13 @@ export default function ActivityPlan({}) {
         return alert("Sie können nicht zwei gleiche Daten angeben");
       }
     }
-    const response = await fetch("api/voteForActivityDate", {
+    await fetch("api/createorupdatevotings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(dateObject),
     });
-    if (response.ok) {
-      mutate();
-    }
     alert("Glückwunsch ! Sie haben eine Abstimmung gestartet.");
     router.push("/");
   }
@@ -103,8 +113,8 @@ export default function ActivityPlan({}) {
         <StyledBackIcon icon={faArrowLeft} />
       </StyledBackButtonLink>
       <section>
-        {currentActivity.map((currentActivity) => (
-          <section key={currentId}>
+        {activityData.map((currentActivity) => (
+          <section key={currentActivity._id}>
             <h2>Welches Datum passt?</h2>
             <StyledThirdHeadling>
               Plane die nächste Veranstaltung:
@@ -122,13 +132,13 @@ export default function ActivityPlan({}) {
                     id="ort"
                     name="ort"
                     disabled={
-                      currentActivityObjectConvertToArray.length > 0
+                      activeVotes[0] != null && activeVotes.length > 0
                         ? true
                         : false
                     }
                     defaultValue={
-                      currentActivityObjectConvertToArray.length > 0
-                        ? currentActivityObjectUpdated.ort
+                      activeVotes[0] != null && activeVotes.length > 0
+                        ? activeVotes[0].ort
                         : ""
                     }
                     required
@@ -142,13 +152,13 @@ export default function ActivityPlan({}) {
                     name="date1"
                     min={minDateInRightFormat}
                     disabled={
-                      currentActivityObjectConvertToArray.length > 0
+                      activeVotes[0] != null && activeVotes.length > 0
                         ? true
                         : false
                     }
                     defaultValue={
-                      currentActivityObjectConvertToArray.length > 0
-                        ? currentActivityObjectUpdated.date1.slice(0, -8)
+                      activeVotes[0] != null && activeVotes.length > 0
+                        ? activeVotes[0].date1.slice(0, -8)
                         : ""
                     }
                     required
@@ -162,13 +172,13 @@ export default function ActivityPlan({}) {
                     name="date2"
                     min={minDateInRightFormat}
                     disabled={
-                      currentActivityObjectConvertToArray.length > 0
+                      activeVotes[0] != null && activeVotes.length > 0
                         ? true
                         : false
                     }
                     defaultValue={
-                      currentActivityObjectConvertToArray.length > 0
-                        ? currentActivityObjectUpdated.date2.slice(0, -8)
+                      activeVotes[0] != null && activeVotes.length > 0
+                        ? activeVotes[0].date2.slice(0, -8)
                         : ""
                     }
                     required
@@ -182,16 +192,15 @@ export default function ActivityPlan({}) {
                     name="date3"
                     min={minDateInRightFormat}
                     disabled={
-                      currentActivityObjectConvertToArray.length > 0
+                      activeVotes[0] != null && activeVotes.length > 0
                         ? true
                         : false
                     }
                     defaultValue={
-                      currentActivityObjectConvertToArray.length > 0 &&
-                      currentActivityObjectConvertToArray.hasOwnProperty(
-                        "date3"
-                      )
-                        ? currentActivityObjectUpdated.date3.slice(0, -8)
+                      activeVotes[0] != null &&
+                      activeVotes.length > 0 &&
+                      activeVotes.hasOwnProperty("date3")
+                        ? activeVotes[0].date3.slice(0, -8)
                         : ""
                     }
                   />
@@ -204,23 +213,22 @@ export default function ActivityPlan({}) {
                     name="date4"
                     min={minDateInRightFormat}
                     disabled={
-                      currentActivityObjectConvertToArray.length > 0
+                      activeVotes[0] != null && activeVotes.length > 0
                         ? true
                         : false
                     }
                     defaultValue={
-                      currentActivityObjectConvertToArray.length > 0 &&
-                      currentActivityObjectConvertToArray.hasOwnProperty(
-                        "date4"
-                      )
-                        ? currentActivityObjectUpdated.date4.slice(0, -8)
+                      activeVotes[0] != null &&
+                      activeVotes.length > 0 &&
+                      activeVotes.hasOwnProperty("date4")
+                        ? activeVotes[0].date4.slice(0, -8)
                         : ""
                     }
                   />
                 </StyledLabels>
                 <StyledFormButton
                   disabled={
-                    currentActivityObjectConvertToArray.length > 0
+                    activeVotes[0] != null && activeVotes.length > 0
                       ? true
                       : false
                   }

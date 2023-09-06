@@ -28,7 +28,6 @@ export default async function createOrDeleteActivitySuggestion(
   }
 
   if (request.method === "DELETE") {
-    console.log(id);
     try {
       await ActivitySuggestion.findByIdAndDelete(id);
       response

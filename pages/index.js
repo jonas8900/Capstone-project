@@ -1,13 +1,36 @@
 import Dashboard from "@/components/Dashboard";
 import Votecard from "@/components/Votecard";
-import useSWR from "swr";
+
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 export default function HomePage({}) {
-  const { data: listOfAllVotesInProgress } = useSWR("api/voteForActivityDate");
   const { data: session } = useSession();
+  const [votes, setVotes] = useState([]);
+
+  const sessionTrue = session && true;
+
+  function getActivitySuggestions() {
+    if (session) {
+      fetch("api/getallvotingstovote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalVoteData) => {
+          setVotes(finalVoteData);
+        });
+      });
+    }
+  }
+  useEffect(() => {
+    getActivitySuggestions();
+  }, [sessionTrue]);
+  console.log(votes);
   return (
     <>
       {session ? (
@@ -18,7 +41,7 @@ export default function HomePage({}) {
             width={384}
             height={256}
           />
-          {listOfAllVotesInProgress !== undefined && <Votecard />}
+          {votes !== undefined && <Votecard />}
           <Dashboard />
         </>
       ) : (

@@ -8,17 +8,10 @@ import useSWR from "swr";
 import { useSession } from "next-auth/react";
 
 export default function DashboardCard({}) {
-  const { data: allEvents, isLoading } = useSWR("api/finalEvents");
+  const { data: allEvents } = useSWR("api/createfinaleventanddeletevoting");
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
   const { data: session } = useSession();
   const userID = session && session.user.name;
-  if (isLoading) {
-    return (
-      <StyledLoadingError>
-        <StyledLoadingErrorIcon icon={faSpinner} spin />
-      </StyledLoadingError>
-    );
-  }
 
   function compareDatesToSort(a, b) {
     if (a.finalDate < b.finalDate) {
@@ -41,7 +34,7 @@ export default function DashboardCard({}) {
   return (
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
-      {allEvents.length <= 0 && (
+      {allEvents != undefined && allEvents.length <= 0 && (
         <StyledUl>
           <li>
             <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
@@ -52,7 +45,7 @@ export default function DashboardCard({}) {
           </li>
         </StyledUl>
       )}
-      {allEvents.length > 0 && (
+      {allEvents != undefined && allEvents.length > 0 && (
         <StyledSectionForUlAndLink>
           <StyledUl>
             <li>

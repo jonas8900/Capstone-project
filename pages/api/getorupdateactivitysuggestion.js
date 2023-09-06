@@ -25,12 +25,11 @@ export default async function getOrUpdateActivitySuggestion(request, response) {
   if (request.method === "PUT") {
     const { id } = request.body;
     try {
-      const updatedActivityInDatabase =
-        await ActivitySuggestion.findByIdAndUpdate(id, {
-          $set: {
-            likedByUser: request.body.updatedFavoriteActivity[0].likedByUser,
-          },
-        });
+      await ActivitySuggestion.findByIdAndUpdate(id, {
+        $set: {
+          likedByUser: request.body.updatedFavoriteActivity[0].likedByUser,
+        },
+      });
       response.status(200).json({ message: `successfully updated ${id}` });
     } catch (error) {
       console.log(error);
