@@ -43,7 +43,7 @@ export default async function voteForActivityDate(request, response) {
 
   if (request.method === "PUT") {
     const id = request.body.updateSingleDate._id;
-    console.log(request.body);
+
     try {
       await VoteForActivityDate.findByIdAndUpdate(id, {
         $set: {

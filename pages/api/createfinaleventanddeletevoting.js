@@ -9,16 +9,6 @@ export default async function createFinaleEventAndDeleteVoting(
 ) {
   await dbConnect();
 
-  if (request.method === "GET") {
-    try {
-      const finalEvent = await FinalEvent.find();
-      return response.status(200).json(finalEvent);
-    } catch (error) {
-      console.error("Fehler beim Abrufen der Events:", error);
-      response.status(405).json({ error: error.message });
-    }
-  }
-
   if (request.method === "POST") {
     try {
       const finalEvent = request.body;

@@ -17,11 +17,32 @@ export default function CreateOrJoinGroup({}) {
   const { isLoading, mutate } = useSWR("api/createNewGroup");
   const userID = session && session.user.email;
   const userName = session && session.user.name;
+  const sessionTrue = session && true;
   const [createGroup, setCreateGroup] = useState(false);
   const [joinGroup, setjoinGroup] = useState(false);
+  const [userData, setUserData] = useState();
   const router = useRouter();
   const [newGroupId, setNewGroupId] = useState();
   const newGroupAfterPost = newGroupId && newGroupId;
+
+  function getSingleUserByMail() {
+    if (session) {
+      fetch("api/getsingleuserbymail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalVoteData) => {
+          setUserData(finalVoteData);
+        });
+      });
+    }
+  }
+  useEffect(() => {
+    getSingleUserByMail();
+  }, [sessionTrue]);
 
   useEffect(() => {
     fetch("api/createorupdateuser", {
@@ -78,7 +99,9 @@ export default function CreateOrJoinGroup({}) {
     <>
       <h2>Gruppenauswahl</h2>
       <StyledSectionForUpcomingScreen>
-        <StyledHeadline3>Du hast noch keine bestehende Gruppe</StyledHeadline3>
+        <StyledHeadline3>
+          Erstelle oder trete jetzt einer Gruppe bei!
+        </StyledHeadline3>
 
         <StyledArticleForButton>
           {createGroup ? (

@@ -151,7 +151,7 @@ export default function Votecard({}) {
         },
         body: JSON.stringify(objectWithTheSameID),
       });
-      getActivitySuggestions();
+      router.push("/eventcollection");
     }
   }
   return (

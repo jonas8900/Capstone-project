@@ -2,32 +2,49 @@ import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
-import useSWR from "swr";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 import Link from "next/link";
 import CreateAndEditForm from "@/components/CreateAndEditForm";
 import { StyledBackIcon } from "../[activityPlan]";
 import moment from "moment";
 import "moment/locale/de";
-import Headline from "@/components/Headline";
 
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 export default function Addevent({}) {
+  // const [currentId, setCurrentId] = useState();
+  const { data: session } = useSession();
+  const sessionTrue = session && true;
   const router = useRouter();
   const currentEventId = router.query.editevent;
-  const { data, mutate, isLoading } = useSWR("/api/finalEvents");
+  const [finalEvent, setFinalEvent] = useState([]);
+  const requestBody = {
+    currentEventId: currentEventId,
+    sessionData: session && session.user,
+  };
 
-  const allEvents = data;
+  function getActivitySuggestions() {
+    if (session) {
+      fetch(`/api/getorupdateevent/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalActivityData) => {
+          setFinalEvent([finalActivityData]);
+        });
+      });
+    }
+  }
+  useEffect(() => {
+    getActivitySuggestions();
+  }, [sessionTrue]);
 
   const findEventToEdit =
-    allEvents !== undefined &&
-    allEvents.find((finalEvent) => finalEvent._id === currentEventId);
-  if (isLoading) {
-    return (
-      <StyledLoadingError>
-        <StyledLoadingErrorIcon icon={faSpinner} spin />
-      </StyledLoadingError>
-    );
-  }
+    finalEvent !== undefined &&
+    finalEvent.find((finalEvent) => finalEvent._id === currentEventId);
 
   async function handleEditEvent(event) {
     event.preventDefault();
@@ -38,9 +55,9 @@ export default function Addevent({}) {
     const addEventObject = {
       finalDate: editEventData.finalDate,
       ort: editEventData.ort,
-      veranstaltung: editEventData.veranstaltung,
+      name: editEventData.veranstaltung,
       isInVotingProcess: findEventToEdit.isInVotingProcess,
-      parentId: findEventToEdit.parentId,
+      activitySuggestionId: findEventToEdit.parentId,
       products: findEventToEdit.products,
       _id: findEventToEdit._id,
     };
@@ -48,20 +65,16 @@ export default function Addevent({}) {
       "Bist du dir sicher, dass du dieses Event ändern möchtest?"
     );
     if (areYouSureToDelete) {
-      const response = await fetch(`/api/finalEvents`, {
+      await fetch(`/api/getorupdateevent`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ addEventObject }),
+        body: JSON.stringify(addEventObject),
       });
-
-      if (response.ok) {
-        mutate();
-        alert("Erfolgreich abgeändert!");
-        router.push("/eventcollection");
-        event.target.reset();
-      }
+      alert("Erfolgreich abgeändert!");
+      router.push("/eventcollection");
+      event.target.reset();
     }
   }
 
@@ -74,7 +87,7 @@ export default function Addevent({}) {
               <StyledBackIcon icon={faArrowLeft} />
             </StyledBackButtonLink>
             <StyledHeadlineForEvents>
-              Veranstaltung {findEventToEdit.veranstaltung} Ändern:
+              Veranstaltung {findEventToEdit.name} Ändern:
             </StyledHeadlineForEvents>
           </StyledSectionForHeadlineAndBackButton>
           <StyledSectionOldData>
@@ -87,7 +100,7 @@ export default function Addevent({}) {
           </StyledSectionOldData>
           <CreateAndEditForm
             onSubmit={handleEditEvent}
-            valueVeranstaltung={findEventToEdit.veranstaltung}
+            valueVeranstaltung={findEventToEdit.name}
             valueOrt={findEventToEdit.ort}
           />
         </section>
@@ -95,18 +108,6 @@ export default function Addevent({}) {
     </main>
   );
 }
-
-const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
-  width: 4rem;
-  height: 4rem;
-`;
-
-const StyledLoadingError = styled.h1`
-  margin-top: 32vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const StyledBackButtonLink = styled(Link)`
   color: black;

@@ -1,6 +1,7 @@
 import { StyledList } from "@/components/Activitylist";
 import {
   faCalendar,
+  faPeopleGroup,
   faPersonRunning,
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
@@ -29,6 +30,12 @@ export default function Menu() {
             <StyledMenuItem>
               <StyledRunIcon icon={faUserGroup} />
               <StyledListItemText>Teilnehmer</StyledListItemText>
+            </StyledMenuItem>
+          </StyledMenuLink>
+          <StyledMenuLink href={"/nogroupscreen"}>
+            <StyledMenuItem>
+              <StyledRunIcon icon={faPeopleGroup} />
+              <StyledListItemText>Gruppen</StyledListItemText>
             </StyledMenuItem>
           </StyledMenuLink>
         </StyledList>

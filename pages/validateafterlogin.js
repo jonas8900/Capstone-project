@@ -28,7 +28,7 @@ export default function ValidateAfterLogin() {
         promisedUserData.json().then((finalUserData) => {
           setFinalUserObject(finalUserData);
           if (finalUserData == undefined) {
-            fetch("api/createOrUpdateUser", {
+            fetch("api/createorupdateuser", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -46,7 +46,7 @@ export default function ValidateAfterLogin() {
   //so we need to check if the singIn is already done so we can call the function once
   useEffect(() => {
     getOrCreateUser();
-  }, [sessionTrue]);
+  }, [sessionTrue, checkIfObjectFilled]);
 
   useEffect(() => {
     if (checkIfObjectFilled === true) {
@@ -59,7 +59,7 @@ export default function ValidateAfterLogin() {
         router.push("/nogroupscreen");
       }
     }
-  }, [checkIfObjectFilled]);
+  }, [sessionTrue, checkIfObjectFilled]);
 
   return (
     <>

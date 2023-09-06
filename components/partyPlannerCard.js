@@ -80,84 +80,90 @@ export default function PartyPlannerCard({}) {
   }
 
   return (
-    <main>
-      {onclickedEvent === undefined && (
-        <section>
-          <h2>dieses Event existiert nicht...</h2>
-          <p>zurück zu den Events:</p>
-          <StyledBackLink href={"/eventcollection"}>
-            <StyledBackIcon icon={faArrowLeft} />
-          </StyledBackLink>
-        </section>
+    <>
+      {session && (
+        <main>
+          {onclickedEvent === undefined && (
+            <section>
+              <h2>dieses Event existiert nicht...</h2>
+              <p>zurück zu den Events:</p>
+              <StyledBackLink href={"/eventcollection"}>
+                <StyledBackIcon icon={faArrowLeft} />
+              </StyledBackLink>
+            </section>
+          )}
+          {onclickedEvent && (
+            <section>
+              <StyledBackLink href={"/eventcollection"}>
+                <StyledBackIcon icon={faArrowLeft} />
+              </StyledBackLink>
+              <h2>Party Planer</h2>
+
+              <StyledThirdEventHeadline>
+                anstehende Aktivitäten:
+              </StyledThirdEventHeadline>
+
+              <StyledPlannerSectionWrapper>
+                <StyledFormCardWrapper key={onclickedEvent._id}>
+                  <StyledShowActivityWrapper>
+                    <StyledFourthHeadline>Aktivität:</StyledFourthHeadline>
+                    <StyledParagraphForDetails>
+                      {onclickedEvent.name}
+                    </StyledParagraphForDetails>
+                  </StyledShowActivityWrapper>
+                  <StyledShowLocationWrapper>
+                    <StyledFourthHeadline>Ort:</StyledFourthHeadline>
+                    <StyledParagraphForDetails>
+                      {onclickedEvent.ort}
+                    </StyledParagraphForDetails>
+                  </StyledShowLocationWrapper>
+                  <StyledShowDateWrapper>
+                    <StyledFourthHeadline>Datum:</StyledFourthHeadline>
+                    <StyledParagraphForDetails>
+                      {" "}
+                      {moment(onclickedEvent.finalDate).format("lll")}
+                    </StyledParagraphForDetails>
+                  </StyledShowDateWrapper>
+                </StyledFormCardWrapper>
+
+                <StyledThirdEventHeadline>
+                  Wer holt was:
+                </StyledThirdEventHeadline>
+                <StyledDisplayFormArticle>
+                  <StyledFourthHeadline>Name</StyledFourthHeadline>
+
+                  <StyledFourthHeadline2>nimmt mit</StyledFourthHeadline2>
+                  <StyledUlForNames>
+                    {onclickedEvent.products &&
+                      onclickedEvent.products.map((product) => (
+                        <StyledListItemArticle key={product._id}>
+                          <StyledListItemUserID>
+                            {product.userID}
+                          </StyledListItemUserID>
+                          <StyledListItemProduct>
+                            {product.product}
+                          </StyledListItemProduct>
+                          <StyledDeleteProductButton
+                            onClick={() => handleDelete(product.productId)}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </StyledDeleteProductButton>
+                        </StyledListItemArticle>
+                      ))}
+                  </StyledUlForNames>
+                </StyledDisplayFormArticle>
+              </StyledPlannerSectionWrapper>
+              <Form
+                name={"product"}
+                type={"text"}
+                onSubmit={handleSubmitPlanning}
+                placeholder={"Was bringst du mit..."}
+              />
+            </section>
+          )}
+        </main>
       )}
-      {onclickedEvent && (
-        <section>
-          <StyledBackLink href={"/eventcollection"}>
-            <StyledBackIcon icon={faArrowLeft} />
-          </StyledBackLink>
-          <h2>Party Planer</h2>
-
-          <StyledThirdEventHeadline>
-            anstehende Aktivitäten:
-          </StyledThirdEventHeadline>
-
-          <StyledPlannerSectionWrapper>
-            <StyledFormCardWrapper key={onclickedEvent._id}>
-              <StyledShowActivityWrapper>
-                <StyledFourthHeadline>Aktivität:</StyledFourthHeadline>
-                <StyledParagraphForDetails>
-                  {onclickedEvent.veranstaltung}
-                </StyledParagraphForDetails>
-              </StyledShowActivityWrapper>
-              <StyledShowLocationWrapper>
-                <StyledFourthHeadline>Ort:</StyledFourthHeadline>
-                <StyledParagraphForDetails>
-                  {onclickedEvent.ort}
-                </StyledParagraphForDetails>
-              </StyledShowLocationWrapper>
-              <StyledShowDateWrapper>
-                <StyledFourthHeadline>Datum:</StyledFourthHeadline>
-                <StyledParagraphForDetails>
-                  {" "}
-                  {moment(onclickedEvent.finalDate).format("lll")}
-                </StyledParagraphForDetails>
-              </StyledShowDateWrapper>
-            </StyledFormCardWrapper>
-
-            <StyledThirdEventHeadline>Wer holt was:</StyledThirdEventHeadline>
-            <StyledDisplayFormArticle>
-              <StyledFourthHeadline>Name</StyledFourthHeadline>
-
-              <StyledFourthHeadline2>nimmt mit</StyledFourthHeadline2>
-              <StyledUlForNames>
-                {onclickedEvent.products &&
-                  onclickedEvent.products.map((product) => (
-                    <StyledListItemArticle key={product._id}>
-                      <StyledListItemUserID>
-                        {product.userID}
-                      </StyledListItemUserID>
-                      <StyledListItemProduct>
-                        {product.product}
-                      </StyledListItemProduct>
-                      <StyledDeleteProductButton
-                        onClick={() => handleDelete(product.productId)}
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </StyledDeleteProductButton>
-                    </StyledListItemArticle>
-                  ))}
-              </StyledUlForNames>
-            </StyledDisplayFormArticle>
-          </StyledPlannerSectionWrapper>
-          <Form
-            name={"product"}
-            type={"text"}
-            onSubmit={handleSubmitPlanning}
-            placeholder={"Was bringst du mit..."}
-          />
-        </section>
-      )}
-    </main>
+    </>
   );
 }
 

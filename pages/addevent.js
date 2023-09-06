@@ -7,18 +7,13 @@ import useSWR from "swr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import CreateAndEditForm from "@/components/CreateAndEditForm";
+import { uid } from "uid";
+import { useSession } from "next-auth/react";
 
 export default function Addevent({}) {
   const router = useRouter();
-  const { mutate, isLoading } = useSWR("api/finalEvents");
-
-  if (isLoading) {
-    return (
-      <StyledLoadingError>
-        <StyledLoadingErrorIcon icon={faSpinner} spin />
-      </StyledLoadingError>
-    );
-  }
+  const { data: session } = useSession();
+  const userID = session && session.user.email;
 
   async function handleSubmitAddEvent(event) {
     event.preventDefault();
@@ -28,28 +23,51 @@ export default function Addevent({}) {
 
     const addEventObject = {
       finalDate: addEventData.finalDate,
+      name: addEventData.veranstaltung,
       isInVotingProcess: false,
       ort: addEventData.ort,
-      parentId: "newCreated",
+      activitySuggestionId: uid(),
       products: [],
-      veranstaltung: addEventData.veranstaltung,
+      userSessionData: session.user,
     };
-    const response = await fetch("api/finalEvents", {
+    await fetch("api/createfinaleventanddeletevoting", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(addEventObject),
     });
-
-    if (response.ok) {
-      mutate();
-    }
     alert("Du hast eine neues Event hinzugefügt!");
     router.push("/eventcollection");
     event.target.reset();
   }
 
+  // async function handleSubmitFinalDate(event) {
+  //   event.preventDefault();
+
+  //   const formData = new FormData(event.target);
+  //   const selectData = Object.fromEntries(formData);
+
+  //   const areYouSureToDelete = window.confirm(
+  //     "Überprüfe die Eingabe bevor du ein Finales Datum setzt!"
+  //   );
+  //   if (areYouSureToDelete) {
+  //     const finalEventObject = {
+  //       userSessionData: session.user,
+  //       finalDate: selectData.dateSelect,
+  //       name: objectWithTheSameID.name,
+  //       ort: objectWithTheSameID.ort,
+  //       isInVotingProcess: false,
+  //       activitySuggestionId: objectWithTheSameID.activitySuggestionId,
+  //     };
+
+  //     await fetch("api/createfinaleventanddeletevoting", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(finalEventObject),
+  //     });
   return (
     <main>
       <StyledSectionForHeadlineAndBackButton>
@@ -60,7 +78,7 @@ export default function Addevent({}) {
           Veranstaltung hinzufügen:
         </StyledHeadlineForEvents>
       </StyledSectionForHeadlineAndBackButton>
-      <CreateAndEditForm onSubmit={handleSubmitAddEvent}  />
+      <CreateAndEditForm onSubmit={handleSubmitAddEvent} />
     </main>
   );
 }

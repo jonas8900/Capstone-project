@@ -4,14 +4,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { keyframes, styled } from "styled-components";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function GroupMember() {
   const { data: session } = useSession();
   const [groupSelection, setGroupSelection] = useState(false);
   const randomstring = require("randomstring");
   const [userData, setUserData] = useState();
+  const [activeGroupData, setActiveGroupData] = useState();
+  const sendUserData = userData && userData;
+  const sessionTrue = session && true;
+  const router = useRouter();
 
-  function getOrCreateUser() {
+  function getSingleUserByMail() {
     if (session) {
       fetch("api/getsingleuserbymail", {
         method: "POST",
@@ -28,9 +33,28 @@ export default function GroupMember() {
   }
 
   useEffect(() => {
-    getOrCreateUser();
-  }, []);
+    getSingleUserByMail();
+  }, [sessionTrue]);
 
+  function getGroupDetails() {
+    if (session) {
+      fetch("api/getgroupdetails", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      }).then((promisedUserData) => {
+        promisedUserData.json().then((finalUserData) => {
+          setActiveGroupData(finalUserData);
+        });
+      });
+    }
+  }
+  console.log(activeGroupData);
+  useEffect(() => {
+    getGroupDetails();
+  }, [sendUserData]);
   function handleGroupSelect() {
     setGroupSelection(!groupSelection);
   }
@@ -45,54 +69,65 @@ export default function GroupMember() {
     if (groupId != null) {
       generatedURL = `${generatedRandomString}/${groupId}`;
     }
-
+    console.log(generatedURL);
   }
 
   return (
-    <StyledMain>
-      <h2>Teilnehmer</h2>
-      <StyledSectionForGroupMembers>
-        <StyledArticleForHeadDetails>
-          <StyledHeadline3>Deine FreundesGruppe:</StyledHeadline3>
-          <StyledParagraphForWhichGroupIsActive>
-            Coder
-          </StyledParagraphForWhichGroupIsActive>
-          {groupSelection ? (
-            <OrangeButton $useSecondaryColor={true} onClick={handleGroupSelect}>
-              Abbrechen
-            </OrangeButton>
-          ) : (
-            <OrangeButton $useSecondaryColor={true} onClick={handleGroupSelect}>
-              Gruppe auswählen
-            </OrangeButton>
-          )}
-          {groupSelection && (
+    <>
+      {session && (
+        <StyledMain>
+          <h2>Teilnehmer</h2>
+          <StyledSectionForGroupMembers>
             <StyledArticleForHeadDetails>
-              <select>
-                <option>Freundesgruppe2</option>
-                <option>Freundesgruppe3</option>
-              </select>
+              <StyledHeadline3>Deine FreundesGruppe:</StyledHeadline3>
+              <StyledParagraphForWhichGroupIsActive>
+                {activeGroupData != undefined && activeGroupData.groupname}
+              </StyledParagraphForWhichGroupIsActive>
+              {groupSelection ? (
+                <OrangeButton
+                  $useSecondaryColor={true}
+                  onClick={handleGroupSelect}
+                >
+                  Abbrechen
+                </OrangeButton>
+              ) : (
+                <OrangeButton
+                  $useSecondaryColor={true}
+                  onClick={handleGroupSelect}
+                >
+                  Gruppe auswählen
+                </OrangeButton>
+              )}
+              {groupSelection && (
+                <StyledArticleForHeadDetails>
+                  <select>
+                    <option>Freundesgruppe2</option>
+                    <option>Freundesgruppe3</option>
+                  </select>
 
-              <OrangeButton type="submit">Gruppe wechseln</OrangeButton>
+                  <OrangeButton type="submit">Gruppe wechseln</OrangeButton>
+                </StyledArticleForHeadDetails>
+              )}
             </StyledArticleForHeadDetails>
-          )}
-        </StyledArticleForHeadDetails>
-        <StyledHeadline4>Teilnehmer:</StyledHeadline4>
-        <StyledList>
-          <StyledListItem>Tim</StyledListItem>
-          <StyledListItem>Jonas</StyledListItem>
-          <StyledListItem>Max</StyledListItem>
-          <StyledListItem>Nick</StyledListItem>
-          <StyledListItem>Philipp</StyledListItem>
-        </StyledList>
-        <StyledArticleForButton>
-          <OrangeButton $useSecondaryColor={true} onClick={getInviteLink}>
-            Copy link to invite friends
-            <StyledIcon icon={faCopy} />
-          </OrangeButton>
-        </StyledArticleForButton>
-      </StyledSectionForGroupMembers>
-    </StyledMain>
+            <StyledHeadline4>Teilnehmer:</StyledHeadline4>
+            <StyledList>
+              {activeGroupData != undefined &&
+                activeGroupData.members.map((user) => (
+                  <StyledListItem key={user._id}>
+                    {user.userName}
+                  </StyledListItem>
+                ))}
+            </StyledList>
+            <StyledArticleForButton>
+              <OrangeButton $useSecondaryColor={true} onClick={getInviteLink}>
+                Copy link to invite friends
+                <StyledIcon icon={faCopy} />
+              </OrangeButton>
+            </StyledArticleForButton>
+          </StyledSectionForGroupMembers>
+        </StyledMain>
+      )}
+    </>
   );
 }
 

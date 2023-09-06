@@ -15,14 +15,4 @@ export default async function getSingleUserByMail(request, response) {
       response.status(400).json({ error: error.message });
     }
   }
-
-  if (request.method === "GET") {
-    try {
-      const respondedUserData = await UserDetails.find();
-      return response.status(200).json(respondedUserData);
-    } catch (error) {
-      console.error("Fehler beim Abrufen der Activity Suggestions:", error);
-      response.status(405).json({ error: error.message });
-    }
-  }
 }
