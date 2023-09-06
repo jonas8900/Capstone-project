@@ -1,19 +1,22 @@
 import dbConnect from "@/db/connect";
 import GroupDetails from "@/db/models/GroupDetails";
 
-export default async function getGroupWithInviteLink(request, response) {
+export default async function getGroupDetails(request, response) {
   await dbConnect();
 
   if (request.method === "POST") {
-    const inviteLink = request.body.groupname;
+    const joinedGroupList = request.body.joinedGroupList;
+   
     try {
-      const groupWithInviteLink = await GroupDetails.findOne({
-        inviteLink: inviteLink,
+      const createdGroup = await GroupDetails.find({
+        _id: { $in: joinedGroupList },
       });
-      response.status(201).json(groupWithInviteLink);
+
+      response.status(201).json(createdGroup);
     } catch (error) {
       console.log(error);
       response.status(400).json({ error: error.message });
     }
   }
+
 }

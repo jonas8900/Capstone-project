@@ -17,7 +17,6 @@ export default async function getGroupDetails(request, response) {
 
   if (request.method === "PUT") {
     const id = request.body.groupIdFromLink;
-    console.log(request.body.generatedLink);
     try {
       await GroupDetails.findByIdAndUpdate(id, {
         $set: {

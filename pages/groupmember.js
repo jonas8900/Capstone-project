@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { keyframes, styled } from "styled-components";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function GroupMember() {
   const { data: session } = useSession();
@@ -14,6 +13,7 @@ export default function GroupMember() {
   const [userData, setUserData] = useState();
   const [activeGroupData, setActiveGroupData] = useState();
   const [generatedLink, setGeneratedLink] = useState();
+  const [alluserGroups, setAllUserGroups] = useState();
   const sendUserData = userData && userData;
   const sessionTrue = session && true;
   const router = useRouter();
@@ -31,6 +31,7 @@ export default function GroupMember() {
           setUserData(finalUserData);
         });
       });
+      getAllGroupsForUser();
     }
   }
 
@@ -58,6 +59,7 @@ export default function GroupMember() {
     getGroupDetails();
   }, [sendUserData]);
   function handleGroupSelect() {
+    getAllGroupsForUser();
     setGroupSelection(!groupSelection);
   }
 
@@ -96,6 +98,47 @@ export default function GroupMember() {
   useEffect(() => {
     addInviteLinkToGroup();
   }, [generatedLink]);
+
+  async function getAllGroupsForUser() {
+    await fetch("api/getallusergroups", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    }).then((promisedUserData) => {
+      promisedUserData.json().then((finalGroupData) => {
+        setAllUserGroups(finalGroupData);
+      });
+    });
+  }
+
+  function handleSubmitGroupChange(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const selectData = Object.fromEntries(formData);
+    console.log(selectData);
+    const confirmToChangeGroup = window.confirm(
+      "Möchtest du wirklich die Gruppe wechseln?"
+    );
+    if (confirmToChangeGroup) {
+      const changeUserActiveGroupId = {
+        userSessionData: userData,
+        activeGroupId: selectData,
+      };
+
+      fetch("api/updateactivegroupidinuser", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(changeUserActiveGroupId),
+      });
+      router.reload();
+    }
+  }
+
   return (
     <>
       {session && (
@@ -123,14 +166,19 @@ export default function GroupMember() {
                 </OrangeButton>
               )}
               {groupSelection && (
-                <StyledArticleForHeadDetails>
-                  <select>
-                    <option>Freundesgruppe2</option>
-                    <option>Freundesgruppe3</option>
+                <StyledForm onSubmit={handleSubmitGroupChange}>
+                  <label htmlFor="selectGroup">Wähle deine Gruppe aus:</label>
+
+                  <select id="selectGroup" name="selectGroup">
+                    {alluserGroups.map((userGroup) => (
+                      <option value={userGroup._id} key={userGroup._id}>
+                        {userGroup.groupname}
+                      </option>
+                    ))}
                   </select>
 
                   <OrangeButton type="submit">Gruppe wechseln</OrangeButton>
-                </StyledArticleForHeadDetails>
+                </StyledForm>
               )}
             </StyledArticleForHeadDetails>
             <StyledHeadline4>Teilnehmer:</StyledHeadline4>
@@ -178,6 +226,19 @@ const StyledSectionForGroupMembers = styled.section`
 `;
 
 const StyledArticleForHeadDetails = styled.article`
+  border-bottom: 1px solid var(--grey-topics);
+  display: grid;
+  align-items: center;
+  text-align: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
+  padding: 2rem;
+  margin-top: 0rem;
+`;
+
+const StyledForm = styled.form`
   border-bottom: 1px solid var(--grey-topics);
   display: grid;
   align-items: center;

@@ -54,7 +54,7 @@ export default function CreateOrJoinGroup({}) {
       body: JSON.stringify(newGroupAfterPost),
     });
   }, [newGroupAfterPost]);
-  console.log(userData);
+ 
   useEffect(() => {
     if (fetchedGroup !== undefined) {
       const requestBody = {
@@ -72,7 +72,7 @@ export default function CreateOrJoinGroup({}) {
     mutate();
   }, [fetchedGroupTrue]);
 
-  console.log(fetchedGroup);
+
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -108,7 +108,17 @@ export default function CreateOrJoinGroup({}) {
       body: JSON.stringify(newGroupDetails),
     })
       .then((promisedUserData) => promisedUserData.json())
-      .then((finalUserData) => setNewGroupId(finalUserData));
+      .then((finalUserData) => {
+        setNewGroupId(finalUserData);
+
+        fetch("api/createorupdateuser", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(finalUserData),
+        });
+      });
     mutate();
     alert("Du hast eine Gruppe erstellt!");
     router.push("/");
@@ -144,6 +154,17 @@ export default function CreateOrJoinGroup({}) {
             alert("Ungültiger Einladungslink!");
           }
         }
+        const requestBody = {
+          userData,
+          fetchedGroupData,
+        };
+        fetch("api/updategroupafterjoin", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
       })
       .then(() => {
         mutate();
