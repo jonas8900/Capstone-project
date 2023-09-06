@@ -15,4 +15,23 @@ export default async function getSingleUserByMail(request, response) {
       response.status(400).json({ error: error.message });
     }
   }
+  if (request.method === "PUT") {
+    const id = request.body.userData._id;
+
+ 
+    try {
+      const updatedUser = await UserDetails.findByIdAndUpdate(id, {
+        $set: {
+          activeGroupId: request.body.fetchedGroup._id,
+        },
+        $push: {
+          joinedGroupList: request.body.fetchedGroup._id,
+        },
+      });
+      response.status(200).json(updatedUser);
+    } catch (error) {
+      console.log(error);
+      response.status(400).json({ error: error.message });
+    }
+  }
 }

@@ -6,7 +6,7 @@ const groupDetailsSchema = new Schema({
   groupname: { type: String, required: true },
   members: { type: [{ userID: String, userName: String }] },
   ownerID: { type: String, required: true },
-  iviteLink: { type: String },
+  inviteLink: { type: String, expires: 120 },
 });
 
 const GroupDetails =

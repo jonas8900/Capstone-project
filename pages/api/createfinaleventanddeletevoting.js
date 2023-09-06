@@ -35,7 +35,7 @@ export default async function createFinaleEventAndDeleteVoting(
 
   if (request.method === "DELETE") {
     const id = request.body._id;
-    console.log("FINALIDTODELETE:", id);
+  
     try {
       const deletedVoting = await VoteForActivityDate.findByIdAndDelete(id);
       response.status(200).json(deletedVoting);

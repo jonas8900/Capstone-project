@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { keyframes, styled } from "styled-components";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 export default function GroupMember() {
   const { data: session } = useSession();
@@ -12,6 +13,7 @@ export default function GroupMember() {
   const randomstring = require("randomstring");
   const [userData, setUserData] = useState();
   const [activeGroupData, setActiveGroupData] = useState();
+  const [generatedLink, setGeneratedLink] = useState();
   const sendUserData = userData && userData;
   const sessionTrue = session && true;
   const router = useRouter();
@@ -38,7 +40,7 @@ export default function GroupMember() {
 
   function getGroupDetails() {
     if (session) {
-      fetch("api/getgroupdetails", {
+      fetch("api/getorupdategroupdetails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export default function GroupMember() {
       });
     }
   }
-  console.log(activeGroupData);
+
   useEffect(() => {
     getGroupDetails();
   }, [sendUserData]);
@@ -68,10 +70,32 @@ export default function GroupMember() {
     }
     if (groupId != null) {
       generatedURL = `${generatedRandomString}/${groupId}`;
+      setGeneratedLink(generatedURL);
+      navigator.clipboard.writeText(generatedURL);
     }
-    console.log(generatedURL);
   }
 
+  function addInviteLinkToGroup() {
+    if (generatedLink != undefined) {
+      const splitLink = generatedLink.split("/");
+      const groupIdFromLink = splitLink[1];
+
+      const requestBody = {
+        groupIdFromLink,
+        generatedLink,
+      };
+      fetch("api/getorupdategroupdetails", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+    }
+  }
+  useEffect(() => {
+    addInviteLinkToGroup();
+  }, [generatedLink]);
   return (
     <>
       {session && (
@@ -200,4 +224,13 @@ const StyledArticleForButton = styled.article`
 const StyledIcon = styled(FontAwesomeIcon)`
   padding: 3px;
   margin-left: 1rem;
+`;
+
+const StyledGeneratedLink = styled.p`
+  word-break: break-all;
+  margin: 2rem;
+  width: 20rem;
+  height: 4rem;
+  border-radius: 9px;
+  box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
 `;

@@ -30,7 +30,7 @@ export default function HomePage({}) {
   useEffect(() => {
     getActivitySuggestions();
   }, [sessionTrue]);
-  console.log(votes);
+
   return (
     <>
       {session ? (

@@ -21,6 +21,8 @@ export default function CreateOrJoinGroup({}) {
   const [createGroup, setCreateGroup] = useState(false);
   const [joinGroup, setjoinGroup] = useState(false);
   const [userData, setUserData] = useState();
+  const [fetchedGroup, setFetchedGroup] = useState();
+  const fetchedGroupTrue = fetchedGroup && fetchedGroup;
   const router = useRouter();
   const [newGroupId, setNewGroupId] = useState();
   const newGroupAfterPost = newGroupId && newGroupId;
@@ -36,6 +38,7 @@ export default function CreateOrJoinGroup({}) {
       }).then((promisedActivityData) => {
         promisedActivityData.json().then((finalVoteData) => {
           setUserData(finalVoteData);
+          console.log(finalVoteData);
         });
       });
     }
@@ -52,7 +55,25 @@ export default function CreateOrJoinGroup({}) {
       },
       body: JSON.stringify(newGroupAfterPost),
     });
-  }, [newGroupAfterPost]);
+    mutate();
+  }, []);
+
+  useEffect(() => {
+    if (fetchedGroup !== undefined) {
+      const requestBody = {
+        userData,
+        fetchedGroup,
+      };
+      fetch("api/getsingleuserbymail", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      });
+    }
+    mutate();
+  }, [fetchedGroupTrue]);
 
   if (isLoading) {
     return (
@@ -95,6 +116,26 @@ export default function CreateOrJoinGroup({}) {
     router.push("/");
   }
 
+  function handleSubmitJoin(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const joinData = Object.fromEntries(formData);
+
+    fetch("api/getgroupwithinvitelink", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(joinData),
+    })
+      .then((promisedUserData) => promisedUserData.json())
+      .then((fetchedGroupData) => setFetchedGroup(fetchedGroupData));
+    mutate();
+    alert("Deine Gruppe wurde hinzugefügt");
+    router.push("/");
+  }
+
   return (
     <>
       <h2>Gruppenauswahl</h2>
@@ -121,7 +162,10 @@ export default function CreateOrJoinGroup({}) {
             </SecondaryColoredButton>
           )}
           {joinGroup ? (
-            <FormForGroup $useSecondaryColor={false}>
+            <FormForGroup
+              $useSecondaryColor={false}
+              onSubmit={handleSubmitJoin}
+            >
               Füge hier den Link ein
             </FormForGroup>
           ) : (

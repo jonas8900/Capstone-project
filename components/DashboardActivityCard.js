@@ -34,7 +34,7 @@ export default function DashboardCard({}) {
     getActivitySuggestions();
   }, [sessionTrue]);
 
-  console.log(finaleDates);
+ 
   function compareDatesToSort(a, b) {
     if (a.finalDate < b.finalDate) {
       return -1;
