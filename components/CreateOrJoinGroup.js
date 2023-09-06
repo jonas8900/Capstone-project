@@ -25,8 +25,7 @@ export default function CreateOrJoinGroup({}) {
   const fetchedGroupTrue = fetchedGroup && fetchedGroup;
   const router = useRouter();
   const [newGroupId, setNewGroupId] = useState();
-  const newGroupAfterPost = newGroupId && newGroupId;
-
+  const newGroupAfterPost = newGroupId;
   function getSingleUserByMail() {
     if (session) {
       fetch("api/getsingleuserbymail", {
@@ -38,7 +37,6 @@ export default function CreateOrJoinGroup({}) {
       }).then((promisedActivityData) => {
         promisedActivityData.json().then((finalVoteData) => {
           setUserData(finalVoteData);
-          console.log(finalVoteData);
         });
       });
     }
@@ -55,9 +53,8 @@ export default function CreateOrJoinGroup({}) {
       },
       body: JSON.stringify(newGroupAfterPost),
     });
-    mutate();
-  }, []);
-
+  }, [newGroupAfterPost]);
+  console.log(userData);
   useEffect(() => {
     if (fetchedGroup !== undefined) {
       const requestBody = {
@@ -75,6 +72,7 @@ export default function CreateOrJoinGroup({}) {
     mutate();
   }, [fetchedGroupTrue]);
 
+  console.log(fetchedGroup);
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -112,7 +110,7 @@ export default function CreateOrJoinGroup({}) {
       .then((promisedUserData) => promisedUserData.json())
       .then((finalUserData) => setNewGroupId(finalUserData));
     mutate();
-    alert("you Added a Group!");
+    alert("Du hast eine Gruppe erstellt!");
     router.push("/");
   }
 
@@ -122,18 +120,34 @@ export default function CreateOrJoinGroup({}) {
     const formData = new FormData(event.target);
     const joinData = Object.fromEntries(formData);
 
-    fetch("api/getgroupwithinvitelink", {
+    const response = fetch("api/getgroupwithinvitelink", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(joinData),
-    })
+    }) // because of the timing in this function, i need help and used stackoverflow and chatGPT a lot for this result.
       .then((promisedUserData) => promisedUserData.json())
-      .then((fetchedGroupData) => setFetchedGroup(fetchedGroupData));
-    mutate();
-    alert("Deine Gruppe wurde hinzugefügt");
-    router.push("/");
+      .then((fetchedGroupData) => {
+        if (
+          userData.joinedGroupList.find((group) => {
+            return group === fetchedGroupData._id;
+          })
+        ) {
+          return alert("du bist bereits in dieser Gruppe");
+        } else {
+          setFetchedGroup(fetchedGroupData);
+          if (fetchedGroupData != undefined) {
+            alert("Deine Gruppe wurde hinzugefügt");
+            router.push("/");
+          } else {
+            alert("Ungültiger Einladungslink!");
+          }
+        }
+      })
+      .then(() => {
+        mutate();
+      });
   }
 
   return (
