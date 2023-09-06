@@ -156,7 +156,7 @@ export default function Votecard({}) {
   }
   return (
     <>
-      {votes &&
+      {votes !== undefined &&
         votes.map((date) => (
           <StyledVoteCardWrapper key={date._id || date.finalDateID}>
             {date.votedUser.find((user) => user.userID === userID) ? (

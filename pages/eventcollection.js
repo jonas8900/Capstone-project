@@ -70,7 +70,7 @@ export default function Events({}) {
   return (
     <>
       <h2>Events</h2>
-      {finaleDates &&
+      {finaleDates !== undefined &&
         finaleDates.map((date) => (
           <section key={date._id}>
             {date.finalDate && (
