@@ -156,151 +156,152 @@ export default function Votecard({}) {
   }
   return (
     <>
-      {votes.map((date) => (
-        <StyledVoteCardWrapper key={date._id || date.finalDateID}>
-          {date.votedUser.find((user) => user.userID === userID) ? (
-            <StyledSectionForLastDate>
-              <StyledVoteCardHeadline>
-                Veranstaltungsabstimmung
-              </StyledVoteCardHeadline>
-              <StyledVoteLastDateCardWrapper>
-                <StyledVoteCardArticle>
-                  <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
-                  <StyledSubParagraph>{date.name}</StyledSubParagraph>
-                </StyledVoteCardArticle>
-                <StyledVoteCardUl>
-                  <StyledParagraphInList>
-                    Bisherige Auswertung:
-                  </StyledParagraphInList>
+      {votes &&
+        votes.map((date) => (
+          <StyledVoteCardWrapper key={date._id || date.finalDateID}>
+            {date.votedUser.find((user) => user.userID === userID) ? (
+              <StyledSectionForLastDate>
+                <StyledVoteCardHeadline>
+                  Veranstaltungsabstimmung
+                </StyledVoteCardHeadline>
+                <StyledVoteLastDateCardWrapper>
+                  <StyledVoteCardArticle>
+                    <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
+                    <StyledSubParagraph>{date.name}</StyledSubParagraph>
+                  </StyledVoteCardArticle>
+                  <StyledVoteCardUl>
+                    <StyledParagraphInList>
+                      Bisherige Auswertung:
+                    </StyledParagraphInList>
 
-                  <StyledVoteCardLi>
-                    {moment(date.date1).format("lll")} Uhr
-                    <p>Personen: {date.date1IsTrue.length}</p>
-                  </StyledVoteCardLi>
-
-                  <StyledVoteCardLi>
-                    {moment(date.date2).format("lll")} Uhr
-                    <p>Personen: {date.date2IsTrue.length}</p>
-                  </StyledVoteCardLi>
-
-                  {date.date3 !== null && (
                     <StyledVoteCardLi>
-                      {moment(date.date3).format("lll")} Uhr
-                      <p>Personen: {date.date3IsTrue.length}</p>
-                    </StyledVoteCardLi>
-                  )}
-                  {date.date4 !== null && (
-                    <StyledVoteCardLi>
-                      {moment(date.date4).format("lll")} Uhr
-                      <p>Personen: {date.date4IsTrue.length}</p>
-                    </StyledVoteCardLi>
-                  )}
-                  <StyledVoteCardLi>
-                    keins passt {date.noDateMatches.length}
-                  </StyledVoteCardLi>
-                </StyledVoteCardUl>
-                <StyledVoteCardFormFinalDatePick
-                  onSubmit={handleSubmitFinalDate}
-                >
-                  <StyledFinalDateLabel htmlFor="dateSelect">
-                    Wähle das finale Datum:
-                  </StyledFinalDateLabel>
-                  <select id="dateSelect" name="dateSelect">
-                    <option value={date.date1}>
                       {moment(date.date1).format("lll")} Uhr
-                    </option>
+                      <p>Personen: {date.date1IsTrue.length}</p>
+                    </StyledVoteCardLi>
 
-                    <option value={date.date2}>
+                    <StyledVoteCardLi>
                       {moment(date.date2).format("lll")} Uhr
-                    </option>
+                      <p>Personen: {date.date2IsTrue.length}</p>
+                    </StyledVoteCardLi>
 
                     {date.date3 !== null && (
-                      <option value={date.date3}>
+                      <StyledVoteCardLi>
                         {moment(date.date3).format("lll")} Uhr
-                      </option>
+                        <p>Personen: {date.date3IsTrue.length}</p>
+                      </StyledVoteCardLi>
                     )}
                     {date.date4 !== null && (
-                      <option value={date.date4}>
+                      <StyledVoteCardLi>
                         {moment(date.date4).format("lll")} Uhr
-                      </option>
+                        <p>Personen: {date.date4IsTrue.length}</p>
+                      </StyledVoteCardLi>
                     )}
-                  </select>
-                  <StyledVoteCardButtonClose
+                    <StyledVoteCardLi>
+                      keins passt {date.noDateMatches.length}
+                    </StyledVoteCardLi>
+                  </StyledVoteCardUl>
+                  <StyledVoteCardFormFinalDatePick
+                    onSubmit={handleSubmitFinalDate}
+                  >
+                    <StyledFinalDateLabel htmlFor="dateSelect">
+                      Wähle das finale Datum:
+                    </StyledFinalDateLabel>
+                    <select id="dateSelect" name="dateSelect">
+                      <option value={date.date1}>
+                        {moment(date.date1).format("lll")} Uhr
+                      </option>
+
+                      <option value={date.date2}>
+                        {moment(date.date2).format("lll")} Uhr
+                      </option>
+
+                      {date.date3 !== null && (
+                        <option value={date.date3}>
+                          {moment(date.date3).format("lll")} Uhr
+                        </option>
+                      )}
+                      {date.date4 !== null && (
+                        <option value={date.date4}>
+                          {moment(date.date4).format("lll")} Uhr
+                        </option>
+                      )}
+                    </select>
+                    <StyledVoteCardButtonClose
+                      type="submit"
+                      onClick={() => handleFindId(date._id)}
+                    >
+                      Abstimmung abschließen
+                    </StyledVoteCardButtonClose>
+                  </StyledVoteCardFormFinalDatePick>
+                </StyledVoteLastDateCardWrapper>
+              </StyledSectionForLastDate>
+            ) : (
+              //when you don't voted at all, the voting statistic will disappear
+              <section>
+                <StyledVoteCardHeadline>
+                  Veranstaltungsabstimmung
+                </StyledVoteCardHeadline>
+                <StyledVoteCardForm onSubmit={handleSubmitCheckboxes} required>
+                  <StyledVoteCardArticle>
+                    <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
+                    <p>{date.name}</p>
+                  </StyledVoteCardArticle>
+                  <StyledNoDateMatch htmlFor="noDate">
+                    Keins passt
+                    <input type="checkbox" name="noDate" id="noDate" />
+                  </StyledNoDateMatch>
+                  {date.date1 !== null && (
+                    <article>
+                      <StyledDateHeadline>Datum 1</StyledDateHeadline>
+                      <StyledDateOneLabel htmlFor="date1">
+                        {moment(date.date1).format("lll")}
+                        <input type="checkbox" id="date1" name="date1" />
+                      </StyledDateOneLabel>
+                    </article>
+                  )}
+                  {date.date2 !== null && (
+                    <article>
+                      <StyledDateHeadline>Datum 2</StyledDateHeadline>
+                      <StyledDateTwoLabel htmlFor="date2">
+                        {moment(date.date2).format("lll")}
+                        <input type="checkbox" id="date2" name="date2" />
+                      </StyledDateTwoLabel>
+                    </article>
+                  )}
+                  {date.date3 !== null && (
+                    <article>
+                      <StyledDateHeadline>Datum 3</StyledDateHeadline>
+                      <StyledDateThreeLabel htmlFor="date3">
+                        {moment(date.date3).format("lll")}
+                        <input type="checkbox" id="date3" name="date3" />
+                      </StyledDateThreeLabel>
+                    </article>
+                  )}
+                  {date.date4 !== null && (
+                    <article>
+                      <StyledDateHeadline>Datum 4</StyledDateHeadline>
+                      <StyledDateFourLabel htmlFor="date4">
+                        {moment(date.date4).format("lll")}
+                        <input
+                          type="checkbox"
+                          id="date4"
+                          name="date4"
+                          value={date.date4}
+                        />
+                      </StyledDateFourLabel>
+                    </article>
+                  )}
+                  <StyledVoteCardButton
                     type="submit"
                     onClick={() => handleFindId(date._id)}
                   >
-                    Abstimmung abschließen
-                  </StyledVoteCardButtonClose>
-                </StyledVoteCardFormFinalDatePick>
-              </StyledVoteLastDateCardWrapper>
-            </StyledSectionForLastDate>
-          ) : (
-            //when you don't voted at all, the voting statistic will disappear
-            <section>
-              <StyledVoteCardHeadline>
-                Veranstaltungsabstimmung
-              </StyledVoteCardHeadline>
-              <StyledVoteCardForm onSubmit={handleSubmitCheckboxes} required>
-                <StyledVoteCardArticle>
-                  <StyledVoteCardHeadline3>Aktivität</StyledVoteCardHeadline3>
-                  <p>{date.name}</p>
-                </StyledVoteCardArticle>
-                <StyledNoDateMatch htmlFor="noDate">
-                  Keins passt
-                  <input type="checkbox" name="noDate" id="noDate" />
-                </StyledNoDateMatch>
-                {date.date1 !== null && (
-                  <article>
-                    <StyledDateHeadline>Datum 1</StyledDateHeadline>
-                    <StyledDateOneLabel htmlFor="date1">
-                      {moment(date.date1).format("lll")}
-                      <input type="checkbox" id="date1" name="date1" />
-                    </StyledDateOneLabel>
-                  </article>
-                )}
-                {date.date2 !== null && (
-                  <article>
-                    <StyledDateHeadline>Datum 2</StyledDateHeadline>
-                    <StyledDateTwoLabel htmlFor="date2">
-                      {moment(date.date2).format("lll")}
-                      <input type="checkbox" id="date2" name="date2" />
-                    </StyledDateTwoLabel>
-                  </article>
-                )}
-                {date.date3 !== null && (
-                  <article>
-                    <StyledDateHeadline>Datum 3</StyledDateHeadline>
-                    <StyledDateThreeLabel htmlFor="date3">
-                      {moment(date.date3).format("lll")}
-                      <input type="checkbox" id="date3" name="date3" />
-                    </StyledDateThreeLabel>
-                  </article>
-                )}
-                {date.date4 !== null && (
-                  <article>
-                    <StyledDateHeadline>Datum 4</StyledDateHeadline>
-                    <StyledDateFourLabel htmlFor="date4">
-                      {moment(date.date4).format("lll")}
-                      <input
-                        type="checkbox"
-                        id="date4"
-                        name="date4"
-                        value={date.date4}
-                      />
-                    </StyledDateFourLabel>
-                  </article>
-                )}
-                <StyledVoteCardButton
-                  type="submit"
-                  onClick={() => handleFindId(date._id)}
-                >
-                  Bestätigen
-                </StyledVoteCardButton>
-              </StyledVoteCardForm>
-            </section>
-          )}
-        </StyledVoteCardWrapper>
-      ))}
+                    Bestätigen
+                  </StyledVoteCardButton>
+                </StyledVoteCardForm>
+              </section>
+            )}
+          </StyledVoteCardWrapper>
+        ))}
     </>
   );
 }

@@ -11,7 +11,7 @@ export default async function createOrUpdateUser(request, response) {
       await UserDetails.create({
         email: request.body.email,
         name: request.body.name,
-        activeGroupId: undefined,
+        activeGroupId: "",
         joinedGroupList: [],
       });
       return response.status(200).json(userData);
