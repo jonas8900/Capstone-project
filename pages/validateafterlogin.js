@@ -51,7 +51,7 @@ export default function ValidateAfterLogin() {
   useEffect(() => {
     if (checkIfObjectFilled === true) {
       if (finalUserObject.joinedGroupList.length > 0) {
-        router.push("/eventcollection");
+        router.push("/");
       } else if (
         finalUserObject.joinedGroupList.length == 0 ||
         finalUserObject.joinedGroupList.length == undefined
