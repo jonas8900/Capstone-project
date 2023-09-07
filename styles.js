@@ -30,6 +30,7 @@ export default createGlobalStyle`
     width: 100%;
     height: 100%;
     max-width: 420px;
+    min-width: 420px;
     margin-inline: auto;
 
   }

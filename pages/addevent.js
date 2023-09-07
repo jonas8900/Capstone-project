@@ -8,11 +8,11 @@ import Link from "next/link";
 import CreateAndEditForm from "@/components/CreateAndEditForm";
 import { uid } from "uid";
 import { useSession } from "next-auth/react";
+import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
 
 export default function Addevent({}) {
   const router = useRouter();
   const { data: session } = useSession();
-  const userID = session && session.user.email;
 
   async function handleSubmitAddEvent(event) {
     event.preventDefault();
@@ -41,33 +41,15 @@ export default function Addevent({}) {
     event.target.reset();
   }
 
- 
   return (
     <main>
-      <StyledSectionForHeadlineAndBackButton>
-        <StyledBackButtonLink href={"/eventcollection"}>
-          <StyledBackIcon icon={faArrowLeft} />
-        </StyledBackButtonLink>
-        <StyledHeadlineForEvents>
-          Veranstaltung hinzufügen:
-        </StyledHeadlineForEvents>
-      </StyledSectionForHeadlineAndBackButton>
+      <BackButtonWithHeadLine href={"eventcollection"} icon={faArrowLeft}>
+        Veranstaltung hinzufügen:
+      </BackButtonWithHeadLine>{" "}
       <CreateAndEditForm onSubmit={handleSubmitAddEvent} />
     </main>
   );
 }
-
-const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
-  width: 4rem;
-  height: 4rem;
-`;
-
-const StyledLoadingError = styled.h1`
-  margin-top: 32vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const StyledBackButtonLink = styled(Link)`
   color: black;

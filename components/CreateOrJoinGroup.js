@@ -54,7 +54,7 @@ export default function CreateOrJoinGroup({}) {
       body: JSON.stringify(newGroupAfterPost),
     });
   }, [newGroupAfterPost]);
- 
+
   useEffect(() => {
     if (fetchedGroup !== undefined) {
       const requestBody = {
@@ -71,7 +71,6 @@ export default function CreateOrJoinGroup({}) {
     }
     mutate();
   }, [fetchedGroupTrue]);
-
 
   if (isLoading) {
     return (
@@ -130,7 +129,7 @@ export default function CreateOrJoinGroup({}) {
     const formData = new FormData(event.target);
     const joinData = Object.fromEntries(formData);
 
-    const response = fetch("api/getgroupwithinvitelink", {
+    fetch("api/getgroupwithinvitelink", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -4,7 +4,7 @@ import Votecard from "@/components/Votecard";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import  styled  from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export default function HomePage({}) {
   const { data: session } = useSession();
@@ -62,7 +62,10 @@ export default function HomePage({}) {
     </>
   );
 }
-
+const FadeInAnimation = keyframes`
+0% {opacity: 0}
+100% {opacity: 1}
+`;
 const StyledOpeningImage = styled(Image)`
   display: flex;
 
@@ -72,8 +75,12 @@ const StyledOpeningImage = styled(Image)`
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
   width: 80%;
   height: 80%;
+  animation-name: ${FadeInAnimation};
+  animation-duration: 1s;
 `;
 const StyledHeadlineSection = styled.h1`
+  animation-name: ${FadeInAnimation};
+  animation-duration: 1.5s;
   font-size: var(--font-headlines);
   color: var(--secondary-color);
   display: flex;

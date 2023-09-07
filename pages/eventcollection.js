@@ -18,8 +18,7 @@ import moment from "moment";
 import "moment/locale/de";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import  styled  from "styled-components";
-import useSWR from "swr";
+import styled from "styled-components";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
@@ -129,6 +128,10 @@ const StyledIcon = styled(FontAwesomeIcon)`
 
 const StyledTrashIcon = styled(FontAwesomeIcon)`
   color: var(--grey-topics);
+
+  &:active {
+    color: var(--secondary-color);
+  }
 `;
 
 const StyledLink = styled(Link)`
@@ -154,12 +157,19 @@ const StyledEditButton = styled.button`
   height: fit-content;
   font-size: 1rem;
   grid-area: 1 / 1 / 2 / 2;
+
+  &:active {
+    color: var(--secondary-color);
+  }
 `;
 
 const StyledCheckListIcon = styled(FontAwesomeIcon)`
   width: 2rem;
   height: 2rem;
   color: var(--grey-topics);
+  &:active {
+    color: var(--secondary-color);
+  }
 `;
 
 const StyledIconLink = styled(Link)`
@@ -167,14 +177,3 @@ const StyledIconLink = styled(Link)`
   margin: auto 1rem 1rem auto;
 `;
 
-const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
-  width: 4rem;
-  height: 4rem;
-`;
-
-const StyledLoadingError = styled.h1`
-  margin-top: 32vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;

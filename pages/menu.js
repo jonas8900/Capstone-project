@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import  styled  from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export default function Menu() {
   return (
@@ -44,6 +44,11 @@ export default function Menu() {
   );
 }
 
+const FadeInAnimation = keyframes`
+0% {opacity: 0}
+100% {opacity: 1}
+`;
+
 const StyledMenuItem = styled.li`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -59,6 +64,8 @@ const StyledMenuItem = styled.li`
   font-style: normal;
   text-align: center;
   align-items: center;
+  animation-name: ${FadeInAnimation};
+  animation-duration: 0.7s;
 
   &:active {
     background-color: rgba(255, 59, 23, 0.8);

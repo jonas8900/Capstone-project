@@ -37,11 +37,10 @@ const StyledHeadline = styled.section`
   border-image-slice: 1;
   width: 100%;
 
-  padding: 1rem;
   margin-bottom: 1rem;
 `;
 
 const StyledImage = styled(Image)`
-  margin-bottom: -3rem;
+  margin-bottom: -2rem;
   grid-area: 1 / 1 / 2 / 2;
 `;

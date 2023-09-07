@@ -33,8 +33,7 @@ export default function Login() {
         <StyledLoginButton
           onClick={() => {
             signIn("google", {
-              callbackUrl:
-                "https://capstone-project-git-add-user-login-jonas8900.vercel.app/validateafterlogin",
+              callbackUrl: "http://localhost:3000//validateafterlogin",
             });
           }}
         >
@@ -56,6 +55,7 @@ const StyledLoginButton = styled.button`
 const StyledLoginSection = styled.section`
   grid-area: 1 / 3 / 2 / 4;
   align-self: center;
+  margin-right: 1rem;
 `;
 
 const StyledLoggedInSection = styled.section`

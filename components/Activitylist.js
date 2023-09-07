@@ -240,6 +240,14 @@ const StyledActivityLink = styled(Link)`
   grid-area: 2 / 3 / 3 / 4;
 `;
 
+const HeartBounce = keyframes`
+  0%   { transform: scale(1); }
+  10% {rotate: 5deg;}
+  60% {rotate: 40deg;}
+  90%   { transform: scale(1.2); }
+  100% { transform: scale(1.1); }
+`;
+
 const StyledFavoriteIconRegular = styled(FontAwesomeIcon)`
   width: 1.5rem;
   height: 1.5rem;
@@ -249,6 +257,8 @@ const StyledFavoriteIconSolid = styled(FontAwesomeIcon)`
   width: 1.5rem;
   height: 1.5rem;
   color: red;
+  animation-name: ${HeartBounce};
+  animation-duration: 0.5s;
 `;
 
 const StyledFavoriteButton = styled.button`
@@ -257,16 +267,4 @@ const StyledFavoriteButton = styled.button`
   margin-left: 2rem;
   background-color: transparent;
   border: none;
-`;
-
-const StyledLoadingError = styled.h1`
-  margin-top: 32vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
-  width: 4rem;
-  height: 4rem;
 `;

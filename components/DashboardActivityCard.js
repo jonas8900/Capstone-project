@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import "moment/locale/de";
 import moment from "moment";
 import Link from "next/link";
@@ -33,7 +33,6 @@ export default function DashboardCard({}) {
     getActivitySuggestions();
   }, [sessionTrue]);
 
- 
   function compareDatesToSort(a, b) {
     if (a.finalDate < b.finalDate) {
       return -1;
@@ -56,15 +55,17 @@ export default function DashboardCard({}) {
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
       {finaleDates != undefined && finaleDates.length <= 0 && (
-        <StyledUl>
-          <li>
-            <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
-            <br />
-            <StyledDetailText>
-              Starte ein Event um das nächste Event zu sehen!
-            </StyledDetailText>
-          </li>
-        </StyledUl>
+        <StyledLink href={"/addevent"}>
+          <StyledUl>
+            <li>
+              <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
+              <br />
+              <StyledDetailText>
+                Starte ein Event um das nächste Event zu sehen!
+              </StyledDetailText>
+            </li>
+          </StyledUl>
+        </StyledLink>
       )}
       {finaleDates != undefined && finaleDates.length > 0 && (
         <StyledSectionForUlAndLink>
@@ -104,6 +105,11 @@ export default function DashboardCard({}) {
   );
 }
 
+const FadeInAnimation = keyframes`
+0% {opacity: 0}
+100% {opacity: 1}
+`;
+
 export const StyledHeadline2 = styled.h2`
   font-size: var(--font-size-headline);
   color: var(--secondary-color);
@@ -128,6 +134,8 @@ export const StyledSection = styled.section`
   margin-bottom: 6rem;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
+  animation-name: ${FadeInAnimation};
+  animation-duration: 1.5s;
 `;
 
 export const StyledUl = styled.ul`
@@ -145,20 +153,18 @@ const StyledCheckListIcon = styled(FontAwesomeIcon)`
   width: 2rem;
   height: 2rem;
   color: var(--grey-topics);
+
+  &:active {
+    color: var(--secondary-color);
+  }
 `;
 
 const StyledSectionForUlAndLink = styled.section`
   display: flex;
 `;
 
-const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
-  width: 4rem;
-  height: 4rem;
-`;
-
-const StyledLoadingError = styled.h1`
-  margin-top: 32vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const StyledLink = styled(Link)`
+  color: black;
+  font-style: none;
+  text-decoration: none;
 `;

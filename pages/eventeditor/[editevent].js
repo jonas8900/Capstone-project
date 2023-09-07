@@ -1,6 +1,6 @@
 import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
 
-import  styled  from "styled-components";
+import styled from "styled-components";
 import { useRouter } from "next/router";
 
 import Link from "next/link";
@@ -11,6 +11,7 @@ import "moment/locale/de";
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
 export default function Addevent({}) {
   // const [currentId, setCurrentId] = useState();
   const { data: session } = useSession();
@@ -82,14 +83,9 @@ export default function Addevent({}) {
     <main>
       {findEventToEdit !== undefined && (
         <section>
-          <StyledSectionForHeadlineAndBackButton>
-            <StyledBackButtonLink href={"/eventcollection"}>
-              <StyledBackIcon icon={faArrowLeft} />
-            </StyledBackButtonLink>
-            <StyledHeadlineForEvents>
-              Veranstaltung {findEventToEdit.name} Ändern:
-            </StyledHeadlineForEvents>
-          </StyledSectionForHeadlineAndBackButton>
+          <BackButtonWithHeadLine href={"/eventcollection"} icon={faArrowLeft}>
+            Veranstaltung <u>`{findEventToEdit.name}`</u> Ändern:
+          </BackButtonWithHeadLine>
           <StyledSectionOldData>
             <StyledParagraphForOldData>
               Ort: {findEventToEdit.ort}
