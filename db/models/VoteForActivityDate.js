@@ -3,8 +3,9 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const voteForActivityDateSchema = new Schema({
-  parentId: { type: String },
-  veranstaltung: { type: String, required: true },
+  groupId: { type: String, reuquired: true },
+  activitySuggestionId: { type: String, required: true },
+  name: { type: String, required: true },
   isInVotingProcess: { type: Boolean, required: true },
   ort: { type: String, required: true },
   date1: { type: Date },
@@ -16,6 +17,7 @@ const voteForActivityDateSchema = new Schema({
   date3IsTrue: { type: [{ userID: String }] },
   date4IsTrue: { type: [{ userID: String }] },
   noDateMatches: { type: [{ userID: String }] },
+  votedUser: { type: [{ userID: String }] },
 });
 
 const VoteForActivityDate =

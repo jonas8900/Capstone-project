@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 
 const activitySuggestionSchema = new Schema({
   name: { type: String, required: true },
+  groupId: { type: String, reuquired: true },
   likedByUser: { type: [{ userID: String }] },
 });
 

@@ -12,6 +12,7 @@ import Form from "./Form";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import { uid } from "uid";
+import { useSession } from "next-auth/react";
 
 export default function PartyPlannerCard({}) {
   const router = useRouter();
@@ -20,7 +21,8 @@ export default function PartyPlannerCard({}) {
     mutate,
     isLoading,
   } = useSWR(`/api/planner/${router.query.partyPlanner}`);
-
+  const { data: session } = useSession();
+  const userID = session && session.user.name;
   if (isLoading) {
     return (
       <StyledLoadingError>
@@ -28,8 +30,6 @@ export default function PartyPlannerCard({}) {
       </StyledLoadingError>
     );
   }
-
-  const userID = "Marvin-818924";
 
   const onclickedEvent = finalEvent;
 
@@ -80,84 +80,90 @@ export default function PartyPlannerCard({}) {
   }
 
   return (
-    <main>
-      {onclickedEvent === undefined && (
-        <section>
-          <h2>dieses Event existiert nicht...</h2>
-          <p>zurück zu den Events:</p>
-          <StyledBackLink href={"/veranstaltungen"}>
-            <StyledBackIcon icon={faArrowLeft} />
-          </StyledBackLink>
-        </section>
+    <>
+      {session && (
+        <main>
+          {onclickedEvent === undefined && (
+            <section>
+              <h2>dieses Event existiert nicht...</h2>
+              <p>zurück zu den Events:</p>
+              <StyledBackLink href={"/eventcollection"}>
+                <StyledBackIcon icon={faArrowLeft} />
+              </StyledBackLink>
+            </section>
+          )}
+          {onclickedEvent && (
+            <section>
+              <StyledBackLink href={"/eventcollection"}>
+                <StyledBackIcon icon={faArrowLeft} />
+              </StyledBackLink>
+              <h2>Party Planer</h2>
+
+              <StyledThirdEventHeadline>
+                anstehende Aktivitäten:
+              </StyledThirdEventHeadline>
+
+              <StyledPlannerSectionWrapper>
+                <StyledFormCardWrapper key={onclickedEvent._id}>
+                  <StyledShowActivityWrapper>
+                    <StyledFourthHeadline>Aktivität:</StyledFourthHeadline>
+                    <StyledParagraphForDetails>
+                      {onclickedEvent.name}
+                    </StyledParagraphForDetails>
+                  </StyledShowActivityWrapper>
+                  <StyledShowLocationWrapper>
+                    <StyledFourthHeadline>Ort:</StyledFourthHeadline>
+                    <StyledParagraphForDetails>
+                      {onclickedEvent.ort}
+                    </StyledParagraphForDetails>
+                  </StyledShowLocationWrapper>
+                  <StyledShowDateWrapper>
+                    <StyledFourthHeadline>Datum:</StyledFourthHeadline>
+                    <StyledParagraphForDetails>
+                      {" "}
+                      {moment(onclickedEvent.finalDate).format("lll")}
+                    </StyledParagraphForDetails>
+                  </StyledShowDateWrapper>
+                </StyledFormCardWrapper>
+
+                <StyledThirdEventHeadline>
+                  Wer holt was:
+                </StyledThirdEventHeadline>
+                <StyledDisplayFormArticle>
+                  <StyledFourthHeadline>Name</StyledFourthHeadline>
+
+                  <StyledFourthHeadline2>nimmt mit</StyledFourthHeadline2>
+                  <StyledUlForNames>
+                    {onclickedEvent.products &&
+                      onclickedEvent.products.map((product) => (
+                        <StyledListItemArticle key={product._id}>
+                          <StyledListItemUserID>
+                            {product.userID}
+                          </StyledListItemUserID>
+                          <StyledListItemProduct>
+                            {product.product}
+                          </StyledListItemProduct>
+                          <StyledDeleteProductButton
+                            onClick={() => handleDelete(product.productId)}
+                          >
+                            <FontAwesomeIcon icon={faTrash} />
+                          </StyledDeleteProductButton>
+                        </StyledListItemArticle>
+                      ))}
+                  </StyledUlForNames>
+                </StyledDisplayFormArticle>
+              </StyledPlannerSectionWrapper>
+              <Form
+                name={"product"}
+                type={"text"}
+                onSubmit={handleSubmitPlanning}
+                placeholder={"Was bringst du mit..."}
+              />
+            </section>
+          )}
+        </main>
       )}
-      {onclickedEvent && (
-        <section>
-          <StyledBackLink href={"/veranstaltungen"}>
-            <StyledBackIcon icon={faArrowLeft} />
-          </StyledBackLink>
-          <h2>Party Planer</h2>
-
-          <StyledThirdEventHeadline>
-            anstehende Aktivitäten:
-          </StyledThirdEventHeadline>
-
-          <StyledPlannerSectionWrapper>
-            <StyledFormCardWrapper key={onclickedEvent._id}>
-              <StyledShowActivityWrapper>
-                <StyledFourthHeadline>Aktivität:</StyledFourthHeadline>
-                <StyledParagraphForDetails>
-                  {onclickedEvent.veranstaltung}
-                </StyledParagraphForDetails>
-              </StyledShowActivityWrapper>
-              <StyledShowLocationWrapper>
-                <StyledFourthHeadline>Ort:</StyledFourthHeadline>
-                <StyledParagraphForDetails>
-                  {onclickedEvent.ort}
-                </StyledParagraphForDetails>
-              </StyledShowLocationWrapper>
-              <StyledShowDateWrapper>
-                <StyledFourthHeadline>Datum:</StyledFourthHeadline>
-                <StyledParagraphForDetails>
-                  {" "}
-                  {moment(onclickedEvent.finalDate).format("lll")}
-                </StyledParagraphForDetails>
-              </StyledShowDateWrapper>
-            </StyledFormCardWrapper>
-
-            <StyledThirdEventHeadline>Wer holt was:</StyledThirdEventHeadline>
-            <StyledDisplayFormArticle>
-              <StyledFourthHeadline>Name</StyledFourthHeadline>
-
-              <StyledFourthHeadline2>nimmt mit</StyledFourthHeadline2>
-              <StyledUlForNames>
-                {onclickedEvent.products &&
-                  onclickedEvent.products.map((product) => (
-                    <StyledListItemArticle key={product._id}>
-                      <StyledListItemUserID>
-                        {product.userID}
-                      </StyledListItemUserID>
-                      <StyledListItemProduct>
-                        {product.product}
-                      </StyledListItemProduct>
-                      <StyledDeleteProductButton
-                        onClick={() => handleDelete(product.productId)}
-                      >
-                        <FontAwesomeIcon icon={faTrash} />
-                      </StyledDeleteProductButton>
-                    </StyledListItemArticle>
-                  ))}
-              </StyledUlForNames>
-            </StyledDisplayFormArticle>
-          </StyledPlannerSectionWrapper>
-          <Form
-            name={"product"}
-            type={"text"}
-            onSubmit={handleSubmitPlanning}
-            placeholder={"hier aktivität eingeben..."}
-          />
-        </section>
-      )}
-    </main>
+    </>
   );
 }
 
@@ -197,6 +203,7 @@ const StyledPlannerSectionWrapper = styled.section`
   margin: 2rem;
   margin-top: 0px;
   border-radius: 9px;
+  margin-bottom: 10rem;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
 `;
 

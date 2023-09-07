@@ -18,20 +18,35 @@ import moment from "moment";
 import "moment/locale/de";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { styled } from "styled-components";
+import  styled  from "styled-components";
 import useSWR from "swr";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function Events({}) {
-  const { data: allEvents, isLoading } = useSWR("api/finalEvents/");
-  const userID = "Marvin-818924";
+  const { data: session } = useSession();
+  const sessionTrue = session && true;
+  const [finaleDates, setFinalDates] = useState([]);
   const router = useRouter();
-  if (isLoading) {
-    return (
-      <StyledLoadingError>
-        <StyledLoadingErrorIcon icon={faSpinner} spin />
-      </StyledLoadingError>
-    );
+
+  function getActivitySuggestions() {
+    if (session) {
+      fetch("api/getallfinalevents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalVoteData) => {
+          setFinalDates(finalVoteData);
+        });
+      });
+    }
   }
+  useEffect(() => {
+    getActivitySuggestions();
+  }, [sessionTrue]);
 
   async function handleEdit(id) {
     router.push(`/eventeditor/${id}`);
@@ -42,27 +57,26 @@ export default function Events({}) {
       "Bist du dir sicher, dass du das Event löschen möchtest?"
     );
     if (alertWindow) {
-      await fetch(`/api/finalEvents/`, {
+      await fetch(`/api/deletefinalevent/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ id }),
       });
+      getActivitySuggestions();
     }
   }
   return (
     <>
       <h2>Events</h2>
-      {allEvents &&
-        allEvents.map((date) => (
+      {finaleDates !== undefined &&
+        finaleDates.map((date) => (
           <section key={date._id}>
             {date.finalDate && (
               <StyledSection>
                 <StyledSectionHeadlineAndButton>
-                  <StyledHeadline2>
-                    Veranstaltung {date.veranstaltung}
-                  </StyledHeadline2>
+                  <StyledHeadline2>Veranstaltung {date.name}</StyledHeadline2>
 
                   <StyledEditButton onClick={() => handleEdit(date._id)}>
                     <FontAwesomeIcon icon={faPenToSquare} />
@@ -74,7 +88,7 @@ export default function Events({}) {
                 <StyledUl>
                   <li>
                     <StyledHeadline3>Veranstaltung:</StyledHeadline3>
-                    <StyledDetailText>{date.veranstaltung}</StyledDetailText>
+                    <StyledDetailText>{date.name}</StyledDetailText>
                   </li>
                   <li>
                     <StyledHeadline3>Datum der Veranstaltung:</StyledHeadline3>

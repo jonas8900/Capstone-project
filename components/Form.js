@@ -1,6 +1,6 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export default function Form({ name, onSubmit, placeholder, type }) {
   return (
@@ -20,6 +20,10 @@ export default function Form({ name, onSubmit, placeholder, type }) {
     </StyledForm>
   );
 }
+const FadeInAnimation = keyframes`
+0% {opacity: 0}
+100% {opacity: 1}
+`;
 
 const StyledForm = styled.form`
   display: flex;
@@ -30,6 +34,8 @@ const StyledForm = styled.form`
   left: 0;
   right: 0;
   bottom: 5.5rem;
+  animation-name: ${FadeInAnimation};
+  animation-duration: 1.5s;
 `;
 
 const StyledInputField = styled.input`

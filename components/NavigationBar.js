@@ -2,17 +2,24 @@ import { faBars, faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { styled } from "styled-components";
+import { useSession } from "next-auth/react";
 
 export default function NavigationBar() {
+  const { data: session } = useSession();
+
   return (
-    <StyledNavElement>
-      <Link href={"/"}>
-        <StyledHouseIcon icon={faHouse} />
-      </Link>
-      <Link href={"/menu"}>
-        <StyledMenuIcon icon={faBars} />
-      </Link>
-    </StyledNavElement>
+    <>
+      {session && (
+        <StyledNavElement>
+          <Link href={"/"}>
+            <StyledHouseIcon icon={faHouse} />
+          </Link>
+          <Link href={"/menu"}>
+            <StyledMenuIcon icon={faBars} />
+          </Link>
+        </StyledNavElement>
+      )}
+    </>
   );
 }
 
@@ -28,7 +35,7 @@ const StyledNavElement = styled.nav`
   grid-row-gap: 40px;
   text-align: center;
   background-color: white;
-  box-shadow: 0px -2px 17px 0px rgba(117, 117, 117,0.5);
+  box-shadow: 0px -2px 17px 0px rgba(117, 117, 117, 0.5);
 `;
 
 const StyledHouseIcon = styled(FontAwesomeIcon)`

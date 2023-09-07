@@ -4,20 +4,36 @@ import moment from "moment";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faListCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import useSWR from "swr";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function DashboardCard({}) {
-  const { data: allEvents, isLoading } = useSWR("api/finalEvents");
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
-  const userID = "Marvin-818924";
-  if (isLoading) {
-    return (
-      <StyledLoadingError>
-        <StyledLoadingErrorIcon icon={faSpinner} spin />
-      </StyledLoadingError>
-    );
-  }
+  const { data: session } = useSession();
+  const userID = session && session.user.name;
+  const [finaleDates, setFinalDates] = useState([]);
+  const sessionTrue = session && true;
 
+  function getActivitySuggestions() {
+    if (session) {
+      fetch("api/getallfinalevents", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalVoteData) => {
+          setFinalDates(finalVoteData);
+        });
+      });
+    }
+  }
+  useEffect(() => {
+    getActivitySuggestions();
+  }, [sessionTrue]);
+
+ 
   function compareDatesToSort(a, b) {
     if (a.finalDate < b.finalDate) {
       return -1;
@@ -28,18 +44,18 @@ export default function DashboardCard({}) {
       return 0;
     }
   }
-  const nextActivity = allEvents !== undefined && allEvents[0];
+  const nextActivity = finaleDates !== undefined && finaleDates[0];
 
   const productsOfNextActivity =
     nextActivity !== undefined && nextActivity.products;
 
-  if (allEvents !== undefined) {
-    allEvents.sort(compareDatesToSort);
+  if (finaleDates !== undefined) {
+    finaleDates.sort(compareDatesToSort);
   }
   return (
     <StyledSection>
       <StyledHeadline2>Nächste Aktivität</StyledHeadline2>
-      {allEvents.length <= 0 && (
+      {finaleDates != undefined && finaleDates.length <= 0 && (
         <StyledUl>
           <li>
             <StyledHeadline3>Sieht leer aus...</StyledHeadline3>
@@ -50,12 +66,12 @@ export default function DashboardCard({}) {
           </li>
         </StyledUl>
       )}
-      {allEvents.length > 0 && (
+      {finaleDates != undefined && finaleDates.length > 0 && (
         <StyledSectionForUlAndLink>
           <StyledUl>
             <li>
               <StyledHeadline3>Aktivitäten</StyledHeadline3>
-              <StyledDetailText>{nextActivity.veranstaltung}</StyledDetailText>
+              <StyledDetailText>{nextActivity.name}</StyledDetailText>
             </li>
             <li>
               <StyledHeadline3>Datum</StyledHeadline3>
@@ -68,12 +84,15 @@ export default function DashboardCard({}) {
               <StyledDetailText>{nextActivity.ort}</StyledDetailText>
             </li>
             <li>
-              <StyledHeadline3>was bringst du mit</StyledHeadline3>
-              {productsOfNextActivity.map((product) => product.userID === userID &&(
-                <StyledDetailText key={product._id}>
-                  {product.product}
-                </StyledDetailText>
-              ))}
+              <StyledHeadline3>Was bringst du mit</StyledHeadline3>
+              {productsOfNextActivity.map(
+                (product) =>
+                  product.userID === userID && (
+                    <StyledDetailText key={product._id}>
+                      {product.product}
+                    </StyledDetailText>
+                  )
+              )}
             </li>
           </StyledUl>
           <StyledIconLink href={`/planner/${nextActivity._id}`}>
@@ -105,7 +124,7 @@ export const StyledSection = styled.section`
   display: flex;
   flex-direction: column;
   margin: 2rem;
-  margin-top: 4rem;
+  margin-top: 1rem;
   margin-bottom: 6rem;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);

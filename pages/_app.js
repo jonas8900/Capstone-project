@@ -1,35 +1,25 @@
 import NavigationBar from "@/components/NavigationBar";
 import GlobalStyle from "../styles";
-import useLocalStorageState from "use-local-storage-state";
-import { styled } from "styled-components";
-import Image from "next/image";
+import styled from "styled-components";
+import { keyframes } from "styled-components";
 import { SWRConfig } from "swr/_internal";
+import { SessionProvider } from "next-auth/react";
+import Headline from "@/components/Headline";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function App({ Component, pageProps }) {
-
-
-
-
+export default function App({ Component, pageProps, session }) {
   return (
     <>
       <GlobalStyle />
-      <StyledHeadline>
-        <StyledImage
-          alt="Friends-Logo"
-          src="/logo2-nobackground-200.png"
-          width={120}
-          height={120}
-          priority={false}
-        />
-      </StyledHeadline>
+
       <SWRConfig value={{ fetcher }}>
-        <Component
-          {...pageProps}
-        />
+        <SessionProvider session={session}>
+          <Headline />
+          <Component {...pageProps} />
+          <NavigationBar />
+        </SessionProvider>
       </SWRConfig>
-      <NavigationBar />
     </>
   );
 }
@@ -50,8 +40,4 @@ export const StyledHeadline = styled.h1`
   margin: auto;
   padding: 1rem;
   margin-bottom: 3rem;
-`;
-
-const StyledImage = styled(Image)`
-  margin-bottom: -3rem;
 `;

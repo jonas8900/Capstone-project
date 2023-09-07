@@ -1,4 +1,5 @@
 import dbConnect from "@/db/connect";
+import UserDetails from "@/db/models/UserDetails";
 import VoteForActivityDate from "@/db/models/VoteForActivityDate";
 
 export default async function voteForActivityDate(request, response) {
@@ -16,10 +17,24 @@ export default async function voteForActivityDate(request, response) {
 
   if (request.method === "POST") {
     try {
-      const voteForActivityDate = request.body;
-      await VoteForActivityDate.create(voteForActivityDate);
+      const startVotingProcess = request.body;
+      const userData = await UserDetails.findOne({
+        email: startVotingProcess.userSessionData.email,
+      });
 
-      response.status(201).json({ status: "voting created" });
+      const createNewVoting = await VoteForActivityDate.create({
+        groupId: userData.activeGroupId,
+        activitySuggestionId: startVotingProcess.activitySuggestionId,
+        name: startVotingProcess.name,
+        isInVotingProcess: startVotingProcess.isInVotingProcess,
+        ort: startVotingProcess.ort,
+        date1: startVotingProcess.date1,
+        date2: startVotingProcess.date2,
+        date3: startVotingProcess.date3,
+        date4: startVotingProcess.date4,
+      });
+
+      response.status(201).json(createNewVoting);
     } catch (error) {
       console.log(error);
       response.status(400).json({ error: error.message });
@@ -28,6 +43,7 @@ export default async function voteForActivityDate(request, response) {
 
   if (request.method === "PUT") {
     const id = request.body.updateSingleDate._id;
+
     try {
       await VoteForActivityDate.findByIdAndUpdate(id, {
         $set: {
@@ -37,6 +53,7 @@ export default async function voteForActivityDate(request, response) {
           date3IsTrue: request.body.updateSingleDate.date3IsTrue,
           date4IsTrue: request.body.updateSingleDate.date4IsTrue,
           noDateMatches: request.body.updateSingleDate.noDateMatches,
+          votedUser: request.body.updateSingleDate.votedUser,
         },
       });
       response.status(200).json({ status: `voting ${id} send!` });

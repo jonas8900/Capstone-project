@@ -27,7 +27,6 @@ export default async function getPartyPlanner(request, response) {
       response
         .status(200)
         .json({ status: `activity with id: ${id} successfully deleted.` });
-      console.log(id);
     } catch (error) {
       console.log(error);
       response.status(400).json({ error: error.message });

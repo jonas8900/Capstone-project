@@ -1,8 +1,13 @@
 import { StyledList } from "@/components/Activitylist";
-import { faCalendar, faPersonRunning } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendar,
+  faPeopleGroup,
+  faPersonRunning,
+  faUserGroup,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { styled } from "styled-components";
+import  styled  from "styled-components";
 
 export default function Menu() {
   return (
@@ -15,10 +20,22 @@ export default function Menu() {
               <StyledListItemText>Aktivitäten</StyledListItemText>
             </StyledMenuItem>
           </StyledMenuLink>
-          <StyledMenuLink href={"/veranstaltungen"}>
+          <StyledMenuLink href={"/eventcollection"}>
             <StyledMenuItem>
               <StyledRunIcon icon={faCalendar} />
               <StyledListItemText>Events</StyledListItemText>
+            </StyledMenuItem>
+          </StyledMenuLink>
+          <StyledMenuLink href={"/groupmember"}>
+            <StyledMenuItem>
+              <StyledRunIcon icon={faUserGroup} />
+              <StyledListItemText>Teilnehmer</StyledListItemText>
+            </StyledMenuItem>
+          </StyledMenuLink>
+          <StyledMenuLink href={"/nogroupscreen"}>
+            <StyledMenuItem>
+              <StyledRunIcon icon={faPeopleGroup} />
+              <StyledListItemText>Gruppen</StyledListItemText>
             </StyledMenuItem>
           </StyledMenuLink>
         </StyledList>
