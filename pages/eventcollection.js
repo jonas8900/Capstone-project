@@ -18,7 +18,7 @@ import moment from "moment";
 import "moment/locale/de";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { styled } from "styled-components";
+import  styled  from "styled-components";
 import useSWR from "swr";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";

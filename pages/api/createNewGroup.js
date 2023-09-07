@@ -21,7 +21,7 @@ export default async function createNewGroup(request, response) {
 
       response.status(201).json(createdGroup);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       response.status(400).json({ error: error.message });
     }
   }

@@ -57,7 +57,7 @@ export default async function createFinaleEventAndDeleteVoting(
 
       response.status(200).json({ status: `voting ${id} send!` });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       response.status(400).json({ error: error.message`${id}` });
     }
   }

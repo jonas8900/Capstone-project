@@ -7,15 +7,13 @@ export default function OrangeButton({
   $useSecondaryColor,
 }) {
   return (
-    <>
-      <StyledButton
-        type={type}
-        onClick={onClick}
-        $useSecondaryColor={$useSecondaryColor}
-      >
-        {children}
-      </StyledButton>
-    </>
+    <StyledButton
+      type={type}
+      onClick={onClick}
+      $useSecondaryColor={$useSecondaryColor}
+    >
+      {children}
+    </StyledButton>
   );
 }
 

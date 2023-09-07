@@ -172,7 +172,7 @@ const FadeInAnimation = keyframes`
 
 export const StyledList = styled.ul`
   list-style: none;
-  margin: 2rem 2rem 2rem 2rem;
+  margin: 2rem;
   padding: 0;
   text-align: center;
 `;

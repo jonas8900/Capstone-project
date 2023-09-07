@@ -7,7 +7,6 @@ export default async function createOrUpdateUser(request, response) {
   if (request.method === "POST") {
     try {
       const userData = request.body;
-      console.log(userData);
       await UserDetails.create({
         email: request.body.email,
         name: request.body.name,

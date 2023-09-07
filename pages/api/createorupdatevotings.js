@@ -21,7 +21,7 @@ export default async function voteForActivityDate(request, response) {
       const userData = await UserDetails.findOne({
         email: startVotingProcess.userSessionData.email,
       });
-      // await VoteForActivityDate.create(voteForActivityDate);
+
       const createNewVoting = await VoteForActivityDate.create({
         groupId: userData.activeGroupId,
         activitySuggestionId: startVotingProcess.activitySuggestionId,

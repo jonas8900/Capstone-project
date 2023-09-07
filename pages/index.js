@@ -4,7 +4,7 @@ import Votecard from "@/components/Votecard";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import  styled  from "styled-components";
 
 export default function HomePage({}) {
   const { data: session } = useSession();

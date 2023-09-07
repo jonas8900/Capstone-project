@@ -118,7 +118,6 @@ export default function GroupMember() {
 
     const formData = new FormData(event.target);
     const selectData = Object.fromEntries(formData);
-    console.log(selectData);
     const confirmToChangeGroup = window.confirm(
       "Möchtest du wirklich die Gruppe wechseln?"
     );

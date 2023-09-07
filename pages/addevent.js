@@ -3,7 +3,6 @@ import { StyledBackIcon } from "./[activityPlan]";
 import { StyledHeadlineForSubpages } from "@/components/Activitylist";
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
-import useSWR from "swr";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import CreateAndEditForm from "@/components/CreateAndEditForm";
@@ -42,32 +41,7 @@ export default function Addevent({}) {
     event.target.reset();
   }
 
-  // async function handleSubmitFinalDate(event) {
-  //   event.preventDefault();
-
-  //   const formData = new FormData(event.target);
-  //   const selectData = Object.fromEntries(formData);
-
-  //   const areYouSureToDelete = window.confirm(
-  //     "Überprüfe die Eingabe bevor du ein Finales Datum setzt!"
-  //   );
-  //   if (areYouSureToDelete) {
-  //     const finalEventObject = {
-  //       userSessionData: session.user,
-  //       finalDate: selectData.dateSelect,
-  //       name: objectWithTheSameID.name,
-  //       ort: objectWithTheSameID.ort,
-  //       isInVotingProcess: false,
-  //       activitySuggestionId: objectWithTheSameID.activitySuggestionId,
-  //     };
-
-  //     await fetch("api/createfinaleventanddeletevoting", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify(finalEventObject),
-  //     });
+ 
   return (
     <main>
       <StyledSectionForHeadlineAndBackButton>
