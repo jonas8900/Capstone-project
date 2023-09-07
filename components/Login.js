@@ -7,8 +7,6 @@ export default function Login() {
   const { data: session } = useSession();
   const router = useRouter();
 
-
-
   return (
     <StyledLoginSection>
       {session ? (
@@ -35,7 +33,8 @@ export default function Login() {
         <StyledLoginButton
           onClick={() => {
             signIn("google", {
-              callbackUrl: "http://localhost:3000//validateafterlogin",
+              callbackUrl:
+                "https://capstone-project-git-add-user-login-jonas8900.vercel.app/validateafterlogin",
             });
           }}
         >

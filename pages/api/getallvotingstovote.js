@@ -15,7 +15,7 @@ export default async function getOrUpdateActivitySuggestion(request, response) {
       const votingForActivity = await VoteForActivityDate.find({
         groupId: userData.activeGroupId,
       });
-      
+
       response.status(200).json(votingForActivity);
     } catch (error) {
       console.log(error);
