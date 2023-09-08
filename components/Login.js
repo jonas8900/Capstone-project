@@ -34,7 +34,7 @@ export default function Login() {
           onClick={() => {
             signIn("google", {
               callbackUrl:
-                "https://friends-project.vercel.app//validateafterlogin",
+                "https://friends-project.vercel.app/validateafterlogin",
             });
           }}
         >
