@@ -3,7 +3,7 @@ import "moment/locale/de";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 export default function Votecard({}) {
   const { data: session } = useSession();

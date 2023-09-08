@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import useSWR from "swr";
 import FormForGroup from "./FormForGroup";
 import SecondaryColoredButton from "./OrangeButton";

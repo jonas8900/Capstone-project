@@ -4,7 +4,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { styled } from "styled-components";
+import styled from "styled-components";
 import { uid } from "uid";
 
 export default function Addevent({}) {
