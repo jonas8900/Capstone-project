@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { styled } from "styled-components";
-import Login from "./Login";
 import Link from "next/link";
+import styled from "styled-components";
+import Login from "./Login";
 
 export default function Headline() {
   return (
@@ -37,11 +37,10 @@ const StyledHeadline = styled.section`
   border-image-slice: 1;
   width: 100%;
 
-  padding: 1rem;
   margin-bottom: 1rem;
 `;
 
 const StyledImage = styled(Image)`
-  margin-bottom: -3rem;
+  margin-bottom: -2rem;
   grid-area: 1 / 1 / 2 / 2;
 `;

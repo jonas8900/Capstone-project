@@ -7,12 +7,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import  styled  from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export default function Menu() {
   return (
     <>
-      <section>
+      <StyledSection>
         <StyledList>
           <StyledMenuLink href={"/activities"}>
             <StyledMenuItem>
@@ -39,10 +39,15 @@ export default function Menu() {
             </StyledMenuItem>
           </StyledMenuLink>
         </StyledList>
-      </section>
+      </StyledSection>
     </>
   );
 }
+
+const FadeInAnimation = keyframes`
+0% {opacity: 0}
+100% {opacity: 1}
+`;
 
 const StyledMenuItem = styled.li`
   display: grid;
@@ -59,6 +64,8 @@ const StyledMenuItem = styled.li`
   font-style: normal;
   text-align: center;
   align-items: center;
+  animation-name: ${FadeInAnimation};
+  animation-duration: 0.7s;
 
   &:active {
     background-color: rgba(255, 59, 23, 0.8);
@@ -80,4 +87,8 @@ const StyledListItemText = styled.p`
 const StyledMenuLink = styled(Link)`
   text-decoration: none;
   color: black;
+`;
+
+const StyledSection = styled.section`
+  margin-bottom: 8rem;
 `;

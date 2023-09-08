@@ -24,6 +24,7 @@ export default function CreateAndEditForm({
             id="veranstaltung"
             name="veranstaltung"
             defaultValue={valueVeranstaltung}
+            maxLength={50}
             required
           />
         </StyledArticleForFormItems>
@@ -34,6 +35,7 @@ export default function CreateAndEditForm({
             id="ort"
             name="ort"
             defaultValue={valueOrt}
+            maxLength={60}
             required
           />
         </StyledArticleForFormItems>

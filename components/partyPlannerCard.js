@@ -5,14 +5,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
-import Link from "next/link";
-import { styled } from "styled-components";
 import "moment/locale/de";
-import Form from "./Form";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import styled from "styled-components";
 import useSWR from "swr";
 import { uid } from "uid";
-import { useSession } from "next-auth/react";
+import BackButtonWithHeadLine from "./BackButtonWithHeadline";
+import Form from "./Form";
 
 export default function PartyPlannerCard({}) {
   const router = useRouter();
@@ -82,22 +82,27 @@ export default function PartyPlannerCard({}) {
   return (
     <>
       {session && (
-        <main>
+        <StyledMain>
           {onclickedEvent === undefined && (
             <section>
               <h2>dieses Event existiert nicht...</h2>
               <p>zurück zu den Events:</p>
-              <StyledBackLink href={"/eventcollection"}>
-                <StyledBackIcon icon={faArrowLeft} />
-              </StyledBackLink>
+              <BackButtonWithHeadLine
+                href={"/eventcollection"}
+                icon={faArrowLeft}
+              >
+                zurück zu den Events:
+              </BackButtonWithHeadLine>
             </section>
           )}
           {onclickedEvent && (
             <section>
-              <StyledBackLink href={"/eventcollection"}>
-                <StyledBackIcon icon={faArrowLeft} />
-              </StyledBackLink>
-              <h2>Party Planer</h2>
+              <BackButtonWithHeadLine
+                href={"/eventcollection"}
+                icon={faArrowLeft}
+              >
+                Party Planer
+              </BackButtonWithHeadLine>
 
               <StyledThirdEventHeadline>
                 anstehende Aktivitäten:
@@ -161,7 +166,7 @@ export default function PartyPlannerCard({}) {
               />
             </section>
           )}
-        </main>
+        </StyledMain>
       )}
     </>
   );
@@ -169,7 +174,7 @@ export default function PartyPlannerCard({}) {
 
 const StyledThirdEventHeadline = styled.h3`
   font-size: 15px;
-  margin: 2rem;
+  text-align: center;
   font-weight: normal;
 `;
 
@@ -183,18 +188,6 @@ const StyledLoadingError = styled.h1`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const StyledBackLink = styled(Link)`
-  justify-content: left;
-  color: black;
-  width: 2rem;
-  height: 2rem;
-`;
-
-const StyledBackIcon = styled(FontAwesomeIcon)`
-  width: 2rem;
-  height: 2rem;
 `;
 
 const StyledPlannerSectionWrapper = styled.section`
@@ -283,3 +276,5 @@ const StyledDeleteProductButton = styled.button`
   background-color: white;
   border: none;
 `;
+
+const StyledMain = styled.main``;

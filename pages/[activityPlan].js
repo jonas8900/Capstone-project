@@ -1,10 +1,11 @@
-import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import  styled  from "styled-components";
-import { useSession } from "next-auth/react";
+import styled from "styled-components";
 
 export default function ActivityPlan({}) {
   // const [currentId, setCurrentId] = useState();
@@ -62,7 +63,6 @@ export default function ActivityPlan({}) {
     }
   }
 
- 
   async function handleSubmitDates(event) {
     event.preventDefault();
 
@@ -109,13 +109,13 @@ export default function ActivityPlan({}) {
   // when we already have an submitevent with an object, the button and the dates get disabled
   return (
     <main>
-      <StyledBackButtonLink href={"/activities"}>
-        <StyledBackIcon icon={faArrowLeft} />
-      </StyledBackButtonLink>
+      <BackButtonWithHeadLine href={"/activities"} icon={faArrowLeft}>
+        Welches Datum passt?
+      </BackButtonWithHeadLine>
+
       <section>
         {activityData.map((currentActivity) => (
           <section key={currentActivity._id}>
-            <h2>Welches Datum passt?</h2>
             <StyledThirdHeadling>
               Plane die nächste Veranstaltung:
             </StyledThirdHeadling>
@@ -247,7 +247,7 @@ export default function ActivityPlan({}) {
 
 const StyledThirdHeadling = styled.h3`
   font-size: 15px;
-  margin: 2rem;
+  text-align: center;
   font-weight: normal;
 `;
 

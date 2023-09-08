@@ -1,4 +1,4 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
@@ -34,7 +34,7 @@ export default function Login() {
           onClick={() => {
             signIn("google", {
               callbackUrl:
-                "https://capstone-project-git-add-user-login-jonas8900.vercel.app/validateafterlogin",
+                "https://friends-project.vercel.app/validateafterlogin",
             });
           }}
         >
@@ -56,6 +56,7 @@ const StyledLoginButton = styled.button`
 const StyledLoginSection = styled.section`
   grid-area: 1 / 3 / 2 / 4;
   align-self: center;
+  margin-right: 1rem;
 `;
 
 const StyledLoggedInSection = styled.section`

@@ -1,18 +1,15 @@
-import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { StyledBackIcon } from "./[activityPlan]";
-import { StyledHeadlineForSubpages } from "@/components/Activitylist";
-import { styled } from "styled-components";
-import { useRouter } from "next/router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
+import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
 import CreateAndEditForm from "@/components/CreateAndEditForm";
-import { uid } from "uid";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import styled from "styled-components";
+import { uid } from "uid";
 
 export default function Addevent({}) {
   const router = useRouter();
   const { data: session } = useSession();
-  const userID = session && session.user.email;
 
   async function handleSubmitAddEvent(event) {
     event.preventDefault();
@@ -41,33 +38,15 @@ export default function Addevent({}) {
     event.target.reset();
   }
 
- 
   return (
     <main>
-      <StyledSectionForHeadlineAndBackButton>
-        <StyledBackButtonLink href={"/eventcollection"}>
-          <StyledBackIcon icon={faArrowLeft} />
-        </StyledBackButtonLink>
-        <StyledHeadlineForEvents>
-          Veranstaltung hinzufügen:
-        </StyledHeadlineForEvents>
-      </StyledSectionForHeadlineAndBackButton>
+      <BackButtonWithHeadLine href={"eventcollection"} icon={faArrowLeft}>
+        Veranstaltung hinzufügen:
+      </BackButtonWithHeadLine>{" "}
       <CreateAndEditForm onSubmit={handleSubmitAddEvent} />
     </main>
   );
 }
-
-const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
-  width: 4rem;
-  height: 4rem;
-`;
-
-const StyledLoadingError = styled.h1`
-  margin-top: 32vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const StyledBackButtonLink = styled(Link)`
   color: black;

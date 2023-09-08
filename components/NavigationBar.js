@@ -1,15 +1,43 @@
 import { faBars, faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Link from "next/link";
-import { styled } from "styled-components";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { styled } from "styled-components";
 
 export default function NavigationBar() {
   const { data: session } = useSession();
+  const [userData, setUserData] = useState();
+  const sessionTrue = session && true;
+  const [checkProperty, setCheckProperty] = useState();
+  function getSingleUserByMail() {
+    if (session) {
+      fetch("api/getsingleuserbymail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(session.user),
+      }).then((promisedActivityData) => {
+        promisedActivityData.json().then((finalUserData) => {
+          setUserData(finalUserData);
+        });
+      });
+    }
+  }
 
+  useEffect(() => {
+    getSingleUserByMail();
+  }, [sessionTrue]);
+
+  useEffect(() => {
+    if (userData != undefined) {
+      setCheckProperty(userData.activeGroupId !== "");
+    }
+  }, [userData]);
   return (
     <>
-      {session && (
+      {session && userData !== undefined && checkProperty && (
         <StyledNavElement>
           <Link href={"/"}>
             <StyledHouseIcon icon={faHouse} />

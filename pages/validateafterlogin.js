@@ -1,9 +1,9 @@
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import  styled  from "styled-components";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 //this page is only for validating the userData
 export default function ValidateAfterLogin() {
   const [checkIfObjectFilled, setCheckIfObjectFilled] = useState(false);
@@ -34,7 +34,11 @@ export default function ValidateAfterLogin() {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify(session.user),
-            }).then(router.push("/nogroupscreen"));
+            })
+              .then(router.push("/nogroupscreen"))
+              .then(() => {
+                router.reload();
+              });
           } else {
             setCheckIfObjectFilled(true);
           }

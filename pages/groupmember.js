@@ -1,10 +1,11 @@
 import OrangeButton from "@/components/OrangeButton";
 import { faCopy } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
-import { keyframes, styled } from "styled-components";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { keyframes } from "styled-components";
 
 export default function GroupMember() {
   const { data: session } = useSession();
@@ -73,7 +74,9 @@ export default function GroupMember() {
     if (groupId != null) {
       generatedURL = `${generatedRandomString}/${groupId}`;
       setGeneratedLink(generatedURL);
-      navigator.clipboard.writeText(generatedURL);
+      navigator.clipboard.writeText(generatedURL).then(() => {
+        alert("der Link ist erfolgreich kopiert!");
+      });
     }
   }
 
@@ -112,7 +115,6 @@ export default function GroupMember() {
       });
     });
   }
-
   function handleSubmitGroupChange(event) {
     event.preventDefault();
 
