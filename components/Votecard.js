@@ -1,9 +1,9 @@
 import moment from "moment";
 import "moment/locale/de";
-import { styled } from "styled-components";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { styled } from "styled-components";
 
 export default function Votecard({}) {
   const { data: session } = useSession();
@@ -254,7 +254,7 @@ export default function Votecard({}) {
                     <article>
                       <StyledDateHeadline>Datum 1</StyledDateHeadline>
                       <StyledDateOneLabel htmlFor="date1">
-                        {moment(date.date1).format("lll")}
+                        {moment(date.date1).format("lll")} Uhr
                         <input type="checkbox" id="date1" name="date1" />
                       </StyledDateOneLabel>
                     </article>
@@ -263,7 +263,7 @@ export default function Votecard({}) {
                     <article>
                       <StyledDateHeadline>Datum 2</StyledDateHeadline>
                       <StyledDateTwoLabel htmlFor="date2">
-                        {moment(date.date2).format("lll")}
+                        {moment(date.date2).format("lll")} Uhr
                         <input type="checkbox" id="date2" name="date2" />
                       </StyledDateTwoLabel>
                     </article>
@@ -272,7 +272,7 @@ export default function Votecard({}) {
                     <article>
                       <StyledDateHeadline>Datum 3</StyledDateHeadline>
                       <StyledDateThreeLabel htmlFor="date3">
-                        {moment(date.date3).format("lll")}
+                        {moment(date.date3).format("lll")} Uhr
                         <input type="checkbox" id="date3" name="date3" />
                       </StyledDateThreeLabel>
                     </article>
@@ -281,7 +281,7 @@ export default function Votecard({}) {
                     <article>
                       <StyledDateHeadline>Datum 4</StyledDateHeadline>
                       <StyledDateFourLabel htmlFor="date4">
-                        {moment(date.date4).format("lll")}
+                        {moment(date.date4).format("lll")} Uhr
                         <input
                           type="checkbox"
                           id="date4"
@@ -349,7 +349,7 @@ const StyledVoteCardForm = styled.form`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  grid-column-gap: 0px;
+  grid-column-gap: 40px;
   grid-row-gap: 0px;
   margin-left: 2.5rem;
   grid-area: 3 / 1 / 4 / 2;

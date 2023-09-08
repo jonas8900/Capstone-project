@@ -1,14 +1,14 @@
-import styled, { keyframes } from "styled-components";
-import Form from "./Form";
-import Link from "next/link";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import {
   faHeart as faHeartSolid,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
+import Form from "./Form";
 
 export default function Activitylist({}) {
   const { data: session } = useSession();

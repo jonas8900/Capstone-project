@@ -12,7 +12,7 @@ import styled, { keyframes } from "styled-components";
 export default function Menu() {
   return (
     <>
-      <section>
+      <StyledSection>
         <StyledList>
           <StyledMenuLink href={"/activities"}>
             <StyledMenuItem>
@@ -39,7 +39,7 @@ export default function Menu() {
             </StyledMenuItem>
           </StyledMenuLink>
         </StyledList>
-      </section>
+      </StyledSection>
     </>
   );
 }
@@ -87,4 +87,8 @@ const StyledListItemText = styled.p`
 const StyledMenuLink = styled(Link)`
   text-decoration: none;
   color: black;
+`;
+
+const StyledSection = styled.section`
+  margin-bottom: 8rem;
 `;

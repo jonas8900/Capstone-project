@@ -1,11 +1,11 @@
-import { faArrowLeft, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useSession } from "next-auth/react";
-import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
 
 export default function ActivityPlan({}) {
   // const [currentId, setCurrentId] = useState();

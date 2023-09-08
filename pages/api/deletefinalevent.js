@@ -1,6 +1,5 @@
 import dbConnect from "@/db/connect";
 import FinalEvent from "@/db/models/FinalEvent";
-import UserDetails from "@/db/models/UserDetails";
 
 export default async function deleteFinalEvent(request, response) {
   dbConnect();

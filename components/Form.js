@@ -36,6 +36,7 @@ const StyledForm = styled.form`
   bottom: 5.5rem;
   animation-name: ${FadeInAnimation};
   animation-duration: 1.5s;
+  margin-top: 1rem;
 `;
 
 const StyledInputField = styled.input`

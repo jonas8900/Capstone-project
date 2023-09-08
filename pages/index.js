@@ -67,10 +67,9 @@ const FadeInAnimation = keyframes`
 100% {opacity: 1}
 `;
 const StyledOpeningImage = styled(Image)`
-  display: flex;
-
+  display: block;
   margin: auto;
-  padding: 0;
+
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
   width: 80%;

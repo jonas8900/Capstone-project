@@ -10,17 +10,16 @@ import {
   faListCheck,
   faPenToSquare,
   faPlus,
-  faSpinner,
-  faTrash,
+  faTrash
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
 import "moment/locale/de";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import styled from "styled-components";
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 
 export default function Events({}) {
   const { data: session } = useSession();

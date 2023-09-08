@@ -1,4 +1,4 @@
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { styled } from "styled-components";
@@ -33,7 +33,8 @@ export default function Login() {
         <StyledLoginButton
           onClick={() => {
             signIn("google", {
-              callbackUrl: "http://localhost:3000//validateafterlogin",
+              callbackUrl:
+                "https://friends-project.vercel.app/validateafterlogin",
             });
           }}
         >

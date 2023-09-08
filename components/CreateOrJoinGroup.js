@@ -1,16 +1,18 @@
-import { styled } from "styled-components";
-import SecondaryColoredButton from "./OrangeButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faArrowRotateLeft,
   faPlus,
   faSpinner,
   faUserGroup,
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import FormForGroup from "./FormForGroup";
-import useSWR from "swr";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { styled } from "styled-components";
+import useSWR from "swr";
+import FormForGroup from "./FormForGroup";
+import SecondaryColoredButton from "./OrangeButton";
+import Link from "next/link";
 
 export default function CreateOrJoinGroup({}) {
   const { data: session } = useSession();
@@ -18,6 +20,7 @@ export default function CreateOrJoinGroup({}) {
   const userID = session && session.user.email;
   const userName = session && session.user.name;
   const sessionTrue = session && true;
+  const [checkProperty, setCheckProperty] = useState();
   const [createGroup, setCreateGroup] = useState(false);
   const [joinGroup, setjoinGroup] = useState(false);
   const [userData, setUserData] = useState();
@@ -41,6 +44,7 @@ export default function CreateOrJoinGroup({}) {
       });
     }
   }
+
   useEffect(() => {
     getSingleUserByMail();
   }, [sessionTrue]);
@@ -71,6 +75,12 @@ export default function CreateOrJoinGroup({}) {
     }
     mutate();
   }, [fetchedGroupTrue]);
+
+  useEffect(() => {
+    if (userData != undefined) {
+      setCheckProperty(userData.activeGroupId !== "");
+    }
+  }, [userData]);
 
   if (isLoading) {
     return (
@@ -120,7 +130,9 @@ export default function CreateOrJoinGroup({}) {
       });
     mutate();
     alert("Du hast eine Gruppe erstellt!");
-    router.push("/");
+    router.push("/").then(() => {
+      router.reload();
+    });
   }
 
   function handleSubmitJoin(event) {
@@ -148,7 +160,9 @@ export default function CreateOrJoinGroup({}) {
           setFetchedGroup(fetchedGroupData);
           if (fetchedGroupData != undefined) {
             alert("Deine Gruppe wurde hinzugefügt");
-            router.push("/");
+            router.push("/").then(() => {
+              router.reload();
+            });
           } else {
             alert("Ungültiger Einladungslink!");
           }
@@ -211,6 +225,14 @@ export default function CreateOrJoinGroup({}) {
               <StyledIcon icon={faPlus} />
             </SecondaryColoredButton>
           )}
+          {joinGroup === false && createGroup === false && checkProperty && (
+            <StyledLink href={"/groupmember"}>
+              <SecondaryColoredButton>
+                Gruppe Wechseln
+                <StyledIcon icon={faArrowRotateLeft} />
+              </SecondaryColoredButton>
+            </StyledLink>
+          )}
         </StyledArticleForButton>
       </StyledSectionForUpcomingScreen>
     </>
@@ -263,4 +285,8 @@ const StyledLoadingError = styled.h1`
 const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
   width: 4rem;
   height: 4rem;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
 `;

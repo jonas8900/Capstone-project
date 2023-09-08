@@ -1,11 +1,11 @@
-import styled, { keyframes } from "styled-components";
-import "moment/locale/de";
-import moment from "moment";
-import Link from "next/link";
+import { faListCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faListCheck, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
+import "moment/locale/de";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import styled, { keyframes } from "styled-components";
 
 export default function DashboardCard({}) {
   //voteDoneArray sorted the array by date, so we can get access for the next activity:
