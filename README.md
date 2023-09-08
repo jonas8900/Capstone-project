@@ -8,6 +8,7 @@ This app is still being programmed and is not yet complete, but you can already 
 
 Thank you very much for your time!
 
+![image](https://github.com/jonas8900/Capstone-project/assets/123127839/08f85cc7-627a-48f7-a03b-b6aeb33d7f55)
 
 
 ## Hightlights:
@@ -33,28 +34,21 @@ https://github.com/jonas8900/Capstone-project/assets/123127839/f579fcae-4ed4-49c
 
 Press play to see the voting process
 
-### Local Development
 
-To work locally, please install the dependencies using `npm i` first.
 
-Run `npm run dev` to start a development server and open the displayed URL in a browser.
 
-Use `npm run test` to run the tests.
+Deployment
+You can have a look at the last update of CatYummy on Vercel: [Friends](https://friends-project.vercel.app/)
 
-### CodeSandbox Cloud
+### Tech Stack
+- [X]  React
+- [X]  React Router
+- [X]  React Hook Form
+- [X]  styled components
+- [X]  Javascript
+- [X]  MongoDB
+- [X]  Mongoose
+- [X]  NextAuth
 
-Select the "Preview: 3000" tab to view this project.
 
-Select the "Tests: logs" tab to view the tests.
 
-> The `npm run dev` and `npm run test` scripts run automatically.
-
-### Scripts
-
-You can use the following commands:
-
-- `npm run dev` to start a development server
-- `npm run build` to build the project
-- `npm run start` to start a production server
-- `npm run test` to run the tests
-- `npm run lint` to run the linter
