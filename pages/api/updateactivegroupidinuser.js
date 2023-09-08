@@ -6,7 +6,6 @@ export default async function updateActiveGroupIdInUser(request, response) {
 
   if (request.method === "PUT") {
     try {
-      console.log(request.body);
       const filter = { email: request.body.userSessionData.email };
       const refreshObjectOptions = { new: true };
       const update = {
