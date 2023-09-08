@@ -33,7 +33,8 @@ export default function Login() {
         <StyledLoginButton
           onClick={() => {
             signIn("google", {
-              callbackUrl: process.env.NEXT_PUBLIC_OAUTH_CALLBACK_URL,
+              callbackUrl:
+                "https://capstone-project-git-add-styling-jonas8900.vercel.app/validateafterlogin",
             });
           }}
         >
