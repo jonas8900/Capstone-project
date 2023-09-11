@@ -13,6 +13,7 @@ export default function Galery() {
   const [groupData, setGroupData] = useState(null);
   const [error, setError] = useState(null);
   const { data: session } = useSession();
+  const [reRenderTrigger, setRerenderTrigger] = useState(false);
   const sessionTrue = session && true;
 
   function handleClickInput() {
@@ -39,6 +40,9 @@ export default function Galery() {
         public_id,
       };
       setImage(newImage);
+    } else {
+      console.error(error);
+      alert("es wurde kein Bild hochgeladen!");
     }
 
     event.target.reset();
@@ -73,25 +77,23 @@ export default function Galery() {
   }, [image]);
 
   useEffect(() => {
-    if (session) {
-      const requestBody = {
-        user: session.user,
-        cloudyImage: image,
-      };
-      fetch("api/cloudinary/getupdateordeletegroupdetailswithpictures", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      }).then((promisedGroupData) => {
-        promisedGroupData.json().then((finalGroupData) => {
-          setGroupData(finalGroupData.groupPictures);
-        });
+    const requestBody = {
+      user: session.user,
+      cloudyImage: image,
+    };
+    fetch("api/cloudinary/getupdateordeletegroupdetailswithpictures", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    }).then((promisedGroupData) => {
+      promisedGroupData.json().then((finalGroupData) => {
+        setGroupData(finalGroupData.groupPictures);
       });
-    }
-  }, [sessionTrue, handleDeletePicture]);
-
+    });
+  }, [reRenderTrigger]);
+  console.log(reRenderTrigger);
   async function handleDeletePicture(public_id) {
     const requestBody = {
       public_id: public_id,
@@ -117,6 +119,7 @@ export default function Galery() {
         },
         body: JSON.stringify({ public_id }),
       });
+      setRerenderTrigger(!reRenderTrigger);
     }
   }
   return (

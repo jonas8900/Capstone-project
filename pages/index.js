@@ -10,26 +10,31 @@ export default function HomePage({}) {
   const { data: session } = useSession();
   const [votes, setVotes] = useState([]);
   const [randomPicture, setRandomPicture] = useState();
+  const [randomNumber, setRandomNumber] = useState();
+  let listOfRandomNumbers = [];
 
   const sessionTrue = session && true;
 
-  function getSingleUserByMail() {
-    if (session) {
+  async function getSingleUserByMail() {
+    if (sessionTrue) {
       const requestBody = {
         user: session.user,
       };
 
-      fetch("api/cloudinary/getupdateordeletegroupdetailswithpictures", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      }).then((promisedGroupData) => {
-        promisedGroupData.json().then((finalGroupData) => {
-          getRandomizedPic(finalGroupData);
-        });
-      });
+      const response = await fetch(
+        "api/cloudinary/getupdateordeletegroupdetailswithpictures",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+      if (response.ok) {
+        const finalGroupData = await response.json();
+        getRandomizedPic(finalGroupData);
+      }
     }
   }
 
@@ -37,15 +42,19 @@ export default function HomePage({}) {
     if (session) {
       const pictureList = finalGroupData.groupPictures.length;
       const randomNumber = Math.floor(Math.random() * pictureList);
+      setRandomNumber(randomNumber);
+      listOfRandomNumbers.push(randomNumber);
+      const secondNumberInList = listOfRandomNumbers[0];
+      console.log(secondNumberInList);
       const changeableRandomPicture =
-        finalGroupData.groupPictures[randomNumber];
+        finalGroupData.groupPictures[secondNumberInList];
       setRandomPicture(changeableRandomPicture);
     }
   }
-
-  function getActivitySuggestions() {
+  console.log(randomPicture);
+  async function getActivitySuggestions() {
     if (session) {
-      fetch("api/votes/getallvotingstovote", {
+      await fetch("api/votes/getallvotingstovote", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,10 +65,12 @@ export default function HomePage({}) {
           setVotes(finalVoteData);
         });
       });
+
+      getSingleUserByMail();
     }
   }
+
   useEffect(() => {
-    getSingleUserByMail();
     getActivitySuggestions();
   }, [sessionTrue]);
 
@@ -133,6 +144,5 @@ const StyledHeadlineSection = styled.h1`
 `;
 
 const StyledSection = styled.section`
-  max-width: 400px;
-  max-height: 500px;
+  margin-bottom: 5rem;
 `;

@@ -36,6 +36,8 @@ export default function Login() {
               callbackUrl:
                 "https://friends-project.vercel.app/validateafterlogin",
             });
+            // https://friends-project.vercel.app/validateafterlogin
+            //http://localhost:3000//validateafterlogin
           }}
         >
           Login
