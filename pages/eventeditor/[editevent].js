@@ -25,7 +25,7 @@ export default function Addevent({}) {
 
   function getActivitySuggestions() {
     if (session) {
-      fetch(`/api/getorupdateevent/`, {
+      fetch(`/api/events/getorupdateevent/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export default function Addevent({}) {
       "Bist du dir sicher, dass du dieses Event ändern möchtest?"
     );
     if (areYouSureToDelete) {
-      await fetch(`/api/getorupdateevent`, {
+      await fetch(`/api/events/getorupdateevent`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

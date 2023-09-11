@@ -22,7 +22,7 @@ export default function ActivityPlan({}) {
   };
   function getActivitySuggestions() {
     if (session) {
-      fetch(`api/getoneactivityforplanning/`, {
+      fetch(`api/activitys/getoneactivityforplanning/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export default function ActivityPlan({}) {
 
   async function getVotingInVotingProcess() {
     if (session) {
-      await fetch("api/getvotingsinvotingprocess", {
+      await fetch("api/votes/getvotingsinvotingprocess", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export default function ActivityPlan({}) {
         return alert("Sie können nicht zwei gleiche Daten angeben");
       }
     }
-    await fetch("api/createorupdatevotings", {
+    await fetch("api/votes/createorupdatevotings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

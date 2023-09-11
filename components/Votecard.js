@@ -15,7 +15,7 @@ export default function Votecard({}) {
 
   function getActivitySuggestions() {
     if (session) {
-      fetch("api/getallvotingstovote", {
+      fetch("api/votes/getallvotingstovote", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export default function Votecard({}) {
           "Du kannst entweder ein Datum oder keins passt auswählen nicht beides"
         );
       } else {
-        await fetch("api/createorupdatevotings", {
+        await fetch("api/votes/createorupdatevotings", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -137,14 +137,14 @@ export default function Votecard({}) {
         activitySuggestionId: objectWithTheSameID.activitySuggestionId,
       };
 
-      await fetch("api/createfinaleventanddeletevoting", {
+      await fetch("api/events/createfinaleventanddeletevoting", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(finalEventObject),
       });
-      await fetch(`/api/createfinaleventanddeletevoting/`, {
+      await fetch(`/api/events/createfinaleventanddeletevoting/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

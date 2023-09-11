@@ -10,7 +10,7 @@ import {
   faListCheck,
   faPenToSquare,
   faPlus,
-  faTrash
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import moment from "moment";
@@ -29,7 +29,7 @@ export default function Events({}) {
 
   function getActivitySuggestions() {
     if (session) {
-      fetch("api/getallfinalevents", {
+      fetch("api/events/getallfinalevents", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export default function Events({}) {
       "Bist du dir sicher, dass du das Event löschen möchtest?"
     );
     if (alertWindow) {
-      await fetch(`/api/deletefinalevent/`, {
+      await fetch(`/api/events/deletefinalevent/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -175,4 +175,3 @@ const StyledIconLink = styled(Link)`
   align-self: flex-end;
   margin: auto 1rem 1rem auto;
 `;
-

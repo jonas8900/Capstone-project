@@ -18,7 +18,7 @@ export default function ValidateAfterLogin() {
 
   function getOrCreateUser() {
     if (session) {
-      fetch("api/getsingleuserbymail", {
+      fetch("api/user/getsingleuserbymail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export default function ValidateAfterLogin() {
         promisedUserData.json().then((finalUserData) => {
           setFinalUserObject(finalUserData);
           if (finalUserData == undefined) {
-            fetch("api/createorupdateuser", {
+            fetch("api/user/createorupdateuser", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

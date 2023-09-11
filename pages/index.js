@@ -9,12 +9,43 @@ import styled, { keyframes } from "styled-components";
 export default function HomePage({}) {
   const { data: session } = useSession();
   const [votes, setVotes] = useState([]);
+  const [randomPicture, setRandomPicture] = useState();
 
   const sessionTrue = session && true;
 
+  function getSingleUserByMail() {
+    if (session) {
+      const requestBody = {
+        user: session.user,
+      };
+
+      fetch("api/cloudinary/getupdateordeletegroupdetailswithpictures", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestBody),
+      }).then((promisedGroupData) => {
+        promisedGroupData.json().then((finalGroupData) => {
+          getRandomizedPic(finalGroupData);
+        });
+      });
+    }
+  }
+
+  function getRandomizedPic(finalGroupData) {
+    if (session) {
+      const pictureList = finalGroupData.groupPictures.length;
+      const randomNumber = Math.floor(Math.random() * pictureList);
+      const changeableRandomPicture =
+        finalGroupData.groupPictures[randomNumber];
+      setRandomPicture(changeableRandomPicture);
+    }
+  }
+
   function getActivitySuggestions() {
     if (session) {
-      fetch("api/getallvotingstovote", {
+      fetch("api/votes/getallvotingstovote", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,22 +59,32 @@ export default function HomePage({}) {
     }
   }
   useEffect(() => {
+    getSingleUserByMail();
     getActivitySuggestions();
   }, [sessionTrue]);
 
   return (
     <>
-      {session ? (
-        <>
-          <StyledOpeningImage
-            src="/hands-2847508_1920.jpg"
-            alt="Bild von Freunden"
-            width={384}
-            height={256}
-          />
+      {sessionTrue ? (
+        <StyledSection>
+          {randomPicture ? (
+            <StyledOpeningImage
+              src={randomPicture.url}
+              alt="zufällig generiertes Bild aus der Freundesgalerie"
+              width={randomPicture.width}
+              height={randomPicture.height}
+            />
+          ) : (
+            <StyledOpeningImage
+              src="/hands-2847508_1920.jpg"
+              alt="Bild von Freunden"
+              width={384}
+              height={256}
+            />
+          )}
           {votes !== undefined && <Votecard />}
           <Dashboard />
-        </>
+        </StyledSection>
       ) : (
         <>
           <StyledOpeningImage
@@ -74,8 +115,9 @@ const StyledOpeningImage = styled(Image)`
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
   width: 80%;
   height: 80%;
+  max-width: 400px;
   animation-name: ${FadeInAnimation};
-  animation-duration: 1s;
+  animation-duration: 3s;
 `;
 const StyledHeadlineSection = styled.h1`
   animation-name: ${FadeInAnimation};
@@ -88,4 +130,9 @@ const StyledHeadlineSection = styled.h1`
   padding: 5rem;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
+`;
+
+const StyledSection = styled.section`
+  max-width: 400px;
+  max-height: 500px;
 `;

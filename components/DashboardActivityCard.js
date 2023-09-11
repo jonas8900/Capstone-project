@@ -16,7 +16,7 @@ export default function DashboardCard({}) {
 
   function getActivitySuggestions() {
     if (session) {
-      fetch("api/getallfinalevents", {
+      fetch("api/events/getallfinalevents", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

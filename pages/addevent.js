@@ -26,7 +26,7 @@ export default function Addevent({}) {
       products: [],
       userSessionData: session.user,
     };
-    await fetch("api/createfinaleventanddeletevoting", {
+    await fetch("api/events/createfinaleventanddeletevoting", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
