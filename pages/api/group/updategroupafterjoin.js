@@ -1,7 +1,7 @@
 import dbConnect from "@/db/connect";
 import GroupDetails from "@/db/models/GroupDetails";
 
-export default async function createNewGroup(request, response) {
+export default async function updateGroupAfterJoin(request, response) {
   await dbConnect();
 
   if (request.method === "PUT") {

@@ -1,16 +1,13 @@
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
-
 import { useRouter } from "next/router";
 import styled from "styled-components";
-
 import CreateAndEditForm from "@/components/CreateAndEditForm";
 import moment from "moment";
 import "moment/locale/de";
-import Link from "next/link";
-
 import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+
 export default function Addevent({}) {
   // const [currentId, setCurrentId] = useState();
   const { data: session } = useSession();
@@ -25,7 +22,7 @@ export default function Addevent({}) {
 
   function getActivitySuggestions() {
     if (session) {
-      fetch(`/api/getorupdateevent/`, {
+      fetch(`/api/events/getorupdateevent/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -65,7 +62,7 @@ export default function Addevent({}) {
       "Bist du dir sicher, dass du dieses Event ändern möchtest?"
     );
     if (areYouSureToDelete) {
-      await fetch(`/api/getorupdateevent`, {
+      await fetch(`/api/events/getorupdateevent`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -103,33 +100,6 @@ export default function Addevent({}) {
     </main>
   );
 }
-
-const StyledBackButtonLink = styled(Link)`
-  color: black;
-  width: 100%;
-  height: 2rem;
-  margin-top: 0;
-  grid-area: 1 / 1 / 2 / 2;
-
-  &:active {
-    background-color: var(--secondary-color);
-  }
-`;
-
-const StyledSectionForHeadlineAndBackButton = styled.section`
-  display: grid;
-  grid-template-columns: 0.25fr 1fr 0.25fr;
-  grid-template-rows: 0.5fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-`;
-
-const StyledHeadlineForEvents = styled.h2`
-  font-size: var(--font-size-headline);
-  margin-left: 40px;
-  grid-area: 1 / 2 / 2 / 3;
-  align-content: center;
-`;
 
 const StyledSectionOldData = styled.section`
   display: flex;

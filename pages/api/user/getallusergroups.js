@@ -6,7 +6,7 @@ export default async function getGroupDetails(request, response) {
 
   if (request.method === "POST") {
     const joinedGroupList = request.body.joinedGroupList;
-   
+
     try {
       const createdGroup = await GroupDetails.find({
         _id: { $in: joinedGroupList },
@@ -18,5 +18,4 @@ export default async function getGroupDetails(request, response) {
       response.status(400).json({ error: error.message });
     }
   }
-
 }

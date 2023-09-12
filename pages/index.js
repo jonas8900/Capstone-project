@@ -9,12 +9,52 @@ import styled, { keyframes } from "styled-components";
 export default function HomePage({}) {
   const { data: session } = useSession();
   const [votes, setVotes] = useState([]);
+  const [randomPicture, setRandomPicture] = useState();
+  const [randomNumber, setRandomNumber] = useState();
+  let listOfRandomNumbers = [];
 
   const sessionTrue = session && true;
 
-  function getActivitySuggestions() {
+  async function getSingleUserByMail() {
+    if (sessionTrue) {
+      const requestBody = {
+        user: session.user,
+      };
+
+      const response = await fetch(
+        "api/cloudinary/getupdateordeletegroupdetailswithpictures",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        }
+      );
+      if (response.ok) {
+        const finalGroupData = await response.json();
+        getRandomizedPic(finalGroupData);
+      }
+    }
+  }
+  //if you have a picture in your galery, this function put a random picture on your dashboard from your galery
+  function getRandomizedPic(finalGroupData) {
     if (session) {
-      fetch("api/getallvotingstovote", {
+      const pictureList = finalGroupData.groupPictures.length;
+      const randomNumber = Math.floor(Math.random() * pictureList);
+      setRandomNumber(randomNumber);
+      listOfRandomNumbers.push(randomNumber);
+      const secondNumberInList = listOfRandomNumbers[0];
+
+      const changeableRandomPicture =
+        finalGroupData.groupPictures[secondNumberInList];
+      setRandomPicture(changeableRandomPicture);
+    }
+  }
+
+  async function getActivitySuggestions() {
+    if (session) {
+      await fetch("api/votes/getallvotingstovote", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,25 +65,38 @@ export default function HomePage({}) {
           setVotes(finalVoteData);
         });
       });
+
+      getSingleUserByMail();
     }
   }
+
   useEffect(() => {
     getActivitySuggestions();
   }, [sessionTrue]);
 
   return (
     <>
-      {session ? (
-        <>
-          <StyledOpeningImage
-            src="/hands-2847508_1920.jpg"
-            alt="Bild von Freunden"
-            width={384}
-            height={256}
-          />
+      {sessionTrue ? (
+        <StyledSection>
+          {randomPicture ? (
+            <StyledOpeningImage
+              src={randomPicture.url}
+              alt="zufällig generiertes Bild aus der Freundesgalerie"
+              width={randomPicture.width}
+              height={randomPicture.height}
+              priority={true}
+            />
+          ) : (
+            <StyledOpeningImage
+              src="/hands-2847508_1920.jpg"
+              alt="Bild von Freunden"
+              width={384}
+              height={256}
+            />
+          )}
           {votes !== undefined && <Votecard />}
           <Dashboard />
-        </>
+        </StyledSection>
       ) : (
         <>
           <StyledOpeningImage
@@ -66,6 +119,12 @@ const FadeInAnimation = keyframes`
 0% {opacity: 0}
 100% {opacity: 1}
 `;
+
+const FadeInForPicture = keyframes`
+0% {opacity: 0}
+70% {opacity: 0}
+100% {opacity: 1}
+`;
 const StyledOpeningImage = styled(Image)`
   display: block;
   margin: auto;
@@ -74,8 +133,9 @@ const StyledOpeningImage = styled(Image)`
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
   width: 80%;
   height: 80%;
-  animation-name: ${FadeInAnimation};
-  animation-duration: 1s;
+  max-width: 400px;
+  animation-name: ${FadeInForPicture};
+  animation-duration: 2s;
 `;
 const StyledHeadlineSection = styled.h1`
   animation-name: ${FadeInAnimation};
@@ -88,4 +148,8 @@ const StyledHeadlineSection = styled.h1`
   padding: 5rem;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
+`;
+
+const StyledSection = styled.section`
+  margin-bottom: 5rem;
 `;

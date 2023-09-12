@@ -21,7 +21,7 @@ export default function GroupMember() {
 
   function getSingleUserByMail() {
     if (session) {
-      fetch("api/getsingleuserbymail", {
+      fetch("api/user/getsingleuserbymail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export default function GroupMember() {
 
   function getGroupDetails() {
     if (session) {
-      fetch("api/getorupdategroupdetails", {
+      fetch("api/group/getorupdategroupdetails", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export default function GroupMember() {
         groupIdFromLink,
         generatedLink,
       };
-      fetch("api/getorupdategroupdetails", {
+      fetch("api/group/getorupdategroupdetails", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export default function GroupMember() {
   }, [generatedLink]);
 
   async function getAllGroupsForUser() {
-    await fetch("api/getallusergroups", {
+    await fetch("api/user/getallusergroups", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -129,7 +129,7 @@ export default function GroupMember() {
         activeGroupId: selectData,
       };
 
-      fetch("api/updateactivegroupidinuser", {
+      fetch("api/user/updateactivegroupidinuser", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -288,11 +288,3 @@ const StyledIcon = styled(FontAwesomeIcon)`
   margin-left: 1rem;
 `;
 
-const StyledGeneratedLink = styled.p`
-  word-break: break-all;
-  margin: 2rem;
-  width: 20rem;
-  height: 4rem;
-  border-radius: 9px;
-  box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
-`;

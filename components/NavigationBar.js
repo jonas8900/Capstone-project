@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 export default function NavigationBar() {
   const { data: session } = useSession();
@@ -12,7 +12,7 @@ export default function NavigationBar() {
   const [checkProperty, setCheckProperty] = useState();
   function getSingleUserByMail() {
     if (session) {
-      fetch("api/getsingleuserbymail", {
+      fetch("api/user/getsingleuserbymail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

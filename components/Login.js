@@ -1,7 +1,7 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { styled } from "styled-components";
+import styled from "styled-components";
 
 export default function Login() {
   const { data: session } = useSession();
@@ -36,6 +36,8 @@ export default function Login() {
               callbackUrl:
                 "https://friends-project.vercel.app/validateafterlogin",
             });
+            // https://friends-project.vercel.app/validateafterlogin
+            //http://localhost:3000//validateafterlogin
           }}
         >
           Login
@@ -49,6 +51,7 @@ const StyledLoginButton = styled.button`
   background-color: #ffc44d;
   width: 4rem;
   height: 2rem;
+  margin-right: 4rem;
   border-radius: 4px;
   border: none;
 `;
@@ -63,7 +66,7 @@ const StyledLoggedInSection = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 0.5fr;
-  grid-column-gap: 30px;
+  grid-column-gap: 1rem;
   grid-row-gap: 0px;
   margin-left: 3rem;
   align-items: center;

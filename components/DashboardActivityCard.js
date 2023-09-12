@@ -16,7 +16,7 @@ export default function DashboardCard({}) {
 
   function getActivitySuggestions() {
     if (session) {
-      fetch("api/getallfinalevents", {
+      fetch("api/events/getallfinalevents", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +131,7 @@ export const StyledSection = styled.section`
   flex-direction: column;
   margin: 2rem;
   margin-top: 1rem;
-  margin-bottom: 6rem;
+  margin-bottom: 10rem;
   border-radius: 9px;
   box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
   animation-name: ${FadeInAnimation};

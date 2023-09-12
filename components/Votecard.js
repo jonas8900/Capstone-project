@@ -15,7 +15,7 @@ export default function Votecard({}) {
 
   function getActivitySuggestions() {
     if (session) {
-      fetch("api/getallvotingstovote", {
+      fetch("api/votes/getallvotingstovote", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export default function Votecard({}) {
           "Du kannst entweder ein Datum oder keins passt auswählen nicht beides"
         );
       } else {
-        await fetch("api/createorupdatevotings", {
+        await fetch("api/votes/createorupdatevotings", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -137,14 +137,14 @@ export default function Votecard({}) {
         activitySuggestionId: objectWithTheSameID.activitySuggestionId,
       };
 
-      await fetch("api/createfinaleventanddeletevoting", {
+      await fetch("api/events/createfinaleventanddeletevoting", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(finalEventObject),
       });
-      await fetch(`/api/createfinaleventanddeletevoting/`, {
+      await fetch(`/api/events/createfinaleventanddeletevoting/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -282,12 +282,7 @@ export default function Votecard({}) {
                       <StyledDateHeadline>Datum 4</StyledDateHeadline>
                       <StyledDateFourLabel htmlFor="date4">
                         {moment(date.date4).format("lll")} Uhr
-                        <input
-                          type="checkbox"
-                          id="date4"
-                          name="date4"
-                          value={date.date4}
-                        />
+                        <input type="checkbox" id="date4" name="date4" />
                       </StyledDateFourLabel>
                     </article>
                   )}
@@ -432,11 +427,6 @@ const StyledVoteCardLi = styled.li`
   border-bottom: 1px solid black;
 `;
 
-const StyledVoteCardNoVoteSection = styled.section`
-  margin: 0px;
-  padding: 0px;
-  grid-area: 3 / 1 / 4 / 2;
-`;
 
 const StyledVoteCardFormFinalDatePick = styled.form`
   grid-area: 4 / 1 / 5 / 2;

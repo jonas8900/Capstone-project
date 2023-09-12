@@ -14,10 +14,10 @@ export default function Activitylist({}) {
   const { data: session } = useSession();
   const [activityData, setActivityData] = useState([]);
   const sessionTrue = session && true;
-  // const { mutate, isLoading } = useSWR("api/getorupdateactivitysuggestion");
+
   function getActivitySuggestions() {
     if (session) {
-      fetch("api/getorupdateactivitysuggestion", {
+      fetch("api/activitys/getorupdateactivitysuggestion", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export default function Activitylist({}) {
       newActivityName: data.activityName,
       userSessionData: session.user,
     };
-    await fetch("api/createordeleteactivitysuggestion", {
+    await fetch("api/activitys/createordeleteactivitysuggestion", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +61,7 @@ export default function Activitylist({}) {
       "Bist du dir sicher, dass du diese Aktivität löschen möchtest?"
     );
     if (areYouSureToDelete) {
-      await fetch(`/api/createordeleteactivitysuggestion/`, {
+      await fetch(`/api/activitys/createordeleteactivitysuggestion/`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export default function Activitylist({}) {
           return card;
         }
       });
-      await fetch(`/api/getorupdateactivitysuggestion`, {
+      await fetch(`/api/activitys/getorupdateactivitysuggestion`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

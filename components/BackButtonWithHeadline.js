@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { styled } from "styled-components";
+import  styled  from "styled-components";
 
 export default function BackButtonWithHeadLine({ children, href, icon }) {
   return (

@@ -16,7 +16,7 @@ import Link from "next/link";
 
 export default function CreateOrJoinGroup({}) {
   const { data: session } = useSession();
-  const { isLoading, mutate } = useSWR("api/createNewGroup");
+  const { isLoading, mutate } = useSWR("api/group/createNewGroup");
   const userID = session && session.user.email;
   const userName = session && session.user.name;
   const sessionTrue = session && true;
@@ -31,7 +31,7 @@ export default function CreateOrJoinGroup({}) {
   const newGroupAfterPost = newGroupId;
   function getSingleUserByMail() {
     if (session) {
-      fetch("api/getsingleuserbymail", {
+      fetch("api/user/getsingleuserbymail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export default function CreateOrJoinGroup({}) {
   }, [sessionTrue]);
 
   useEffect(() => {
-    fetch("api/createorupdateuser", {
+    fetch("api/user/createorupdateuser", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export default function CreateOrJoinGroup({}) {
         userData,
         fetchedGroup,
       };
-      fetch("api/getsingleuserbymail", {
+      fetch("api/user/getsingleuserbymail", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -109,7 +109,7 @@ export default function CreateOrJoinGroup({}) {
       members: [{ userID: userID, userName: userName }],
       ownerID: userID,
     };
-    fetch("api/createNewGroup", {
+    fetch("api/group/createNewGroup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export default function CreateOrJoinGroup({}) {
       .then((finalUserData) => {
         setNewGroupId(finalUserData);
 
-        fetch("api/createorupdateuser", {
+        fetch("api/user/createorupdateuser", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -141,7 +141,7 @@ export default function CreateOrJoinGroup({}) {
     const formData = new FormData(event.target);
     const joinData = Object.fromEntries(formData);
 
-    fetch("api/getgroupwithinvitelink", {
+    fetch("api/group/getgroupwithinvitelink", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export default function CreateOrJoinGroup({}) {
           userData,
           fetchedGroupData,
         };
-        fetch("api/updategroupafterjoin", {
+        fetch("api/group/updategroupafterjoin", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
