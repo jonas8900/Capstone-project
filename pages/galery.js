@@ -122,7 +122,6 @@ export default function Galery() {
     }
   }
 
-  console.log(groupData);
   return (
     <>
       <h2>Bildergalerie</h2>
