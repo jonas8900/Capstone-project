@@ -1,7 +1,6 @@
 import NavigationBar from "@/components/NavigationBar";
 import GlobalStyle from "../styles";
 import styled from "styled-components";
-import { keyframes } from "styled-components";
 import { SWRConfig } from "swr/_internal";
 import { SessionProvider } from "next-auth/react";
 import Headline from "@/components/Headline";

@@ -35,7 +35,7 @@ export default async function createFinaleEventAndDeleteVoting(
 
   if (request.method === "PUT") {
     const updateDateData = request.body._id;
-    console.log(updateDateData);
+
     try {
       await FinalEvent.findByIdAndUpdate(updateDateData, {
         $set: {

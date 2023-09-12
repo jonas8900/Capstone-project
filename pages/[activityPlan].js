@@ -320,14 +320,3 @@ export const StyledBackIcon = styled(FontAwesomeIcon)`
   height: 2rem;
 `;
 
-const StyledLoadingError = styled.h1`
-  margin-top: 32vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const StyledLoadingErrorIcon = styled(FontAwesomeIcon)`
-  width: 4rem;
-  height: 4rem;
-`;

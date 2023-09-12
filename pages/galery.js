@@ -1,4 +1,4 @@
-import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
 import { useState } from "react";
@@ -14,7 +14,6 @@ export default function Galery() {
   const [error, setError] = useState(null);
   const { data: session } = useSession();
   const [reRenderTrigger, setRerenderTrigger] = useState(false);
-  const sessionTrue = session && true;
 
   function handleClickInput() {
     setClickedInput(!clickedInput);
@@ -93,7 +92,7 @@ export default function Galery() {
       });
     });
   }, [reRenderTrigger]);
-  console.log(reRenderTrigger);
+
   async function handleDeletePicture(public_id) {
     const requestBody = {
       public_id: public_id,
@@ -122,6 +121,8 @@ export default function Galery() {
       setRerenderTrigger(!reRenderTrigger);
     }
   }
+
+  console.log(groupData);
   return (
     <>
       <h2>Bildergalerie</h2>
@@ -142,6 +143,15 @@ export default function Galery() {
             />
           </ImageContainer>
         ))}
+      {groupData !== null && groupData.length <= 0 && (
+        <section>
+          <StyledHeadline>Du hast noch keine Bilder</StyledHeadline>
+          <StyledParagraphWhenEmpty>
+            füge über das + Icon bilder hinzu, alle in deiner Gruppe können
+            diese sehen!
+          </StyledParagraphWhenEmpty>
+        </section>
+      )}
       {error && <div>{error.message}</div>}
       {clickedInput ? (
         <StyledForm onSubmit={handleSubmitUploadImage}>
@@ -165,6 +175,15 @@ export default function Galery() {
 const FadeInAnimation = keyframes`
 0% {opacity: 0}
 100% {opacity: 1}
+`;
+const StyledHeadline = styled.h3`
+  color: var(--secondary-color);
+  text-align: center;
+  margin-top: 4rem;
+`;
+const StyledParagraphWhenEmpty = styled.p`
+  text-align: center;
+  margin: 2rem 3rem auto 3rem;
 `;
 
 const ImageContainer = styled.div`

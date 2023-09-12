@@ -288,11 +288,3 @@ const StyledIcon = styled(FontAwesomeIcon)`
   margin-left: 1rem;
 `;
 
-const StyledGeneratedLink = styled.p`
-  word-break: break-all;
-  margin: 2rem;
-  width: 20rem;
-  height: 4rem;
-  border-radius: 9px;
-  box-shadow: 6px 9px 17px -3px rgba(0, 0, 0, 0.25);
-`;

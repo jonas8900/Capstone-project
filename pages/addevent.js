@@ -2,9 +2,9 @@ import BackButtonWithHeadLine from "@/components/BackButtonWithHeadline";
 import CreateAndEditForm from "@/components/CreateAndEditForm";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
+
 import { useRouter } from "next/router";
-import styled from "styled-components";
+
 import { uid } from "uid";
 
 export default function Addevent({}) {
@@ -47,30 +47,3 @@ export default function Addevent({}) {
     </main>
   );
 }
-
-const StyledBackButtonLink = styled(Link)`
-  color: black;
-  width: 100%;
-  height: 2rem;
-  margin-top: 0;
-  grid-area: 1 / 1 / 2 / 2;
-
-  &:active {
-    background-color: var(--secondary-color);
-  }
-`;
-
-const StyledSectionForHeadlineAndBackButton = styled.section`
-  display: grid;
-  grid-template-columns: 0.25fr 1fr 0.25fr;
-  grid-template-rows: 0.5fr;
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
-`;
-
-const StyledHeadlineForEvents = styled.h2`
-  font-size: var(--font-size-headline);
-  margin-left: 40px;
-  grid-area: 1 / 2 / 2 / 3;
-  align-content: center;
-`;

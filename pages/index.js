@@ -37,7 +37,7 @@ export default function HomePage({}) {
       }
     }
   }
-
+  //if you have a picture in your galery, this function put a random picture on your dashboard from your galery
   function getRandomizedPic(finalGroupData) {
     if (session) {
       const pictureList = finalGroupData.groupPictures.length;
@@ -45,13 +45,13 @@ export default function HomePage({}) {
       setRandomNumber(randomNumber);
       listOfRandomNumbers.push(randomNumber);
       const secondNumberInList = listOfRandomNumbers[0];
-      console.log(secondNumberInList);
+
       const changeableRandomPicture =
         finalGroupData.groupPictures[secondNumberInList];
       setRandomPicture(changeableRandomPicture);
     }
   }
-  console.log(randomPicture);
+
   async function getActivitySuggestions() {
     if (session) {
       await fetch("api/votes/getallvotingstovote", {
@@ -84,6 +84,7 @@ export default function HomePage({}) {
               alt="zufällig generiertes Bild aus der Freundesgalerie"
               width={randomPicture.width}
               height={randomPicture.height}
+              priority={true}
             />
           ) : (
             <StyledOpeningImage
@@ -118,6 +119,12 @@ const FadeInAnimation = keyframes`
 0% {opacity: 0}
 100% {opacity: 1}
 `;
+
+const FadeInForPicture = keyframes`
+0% {opacity: 0}
+70% {opacity: 0}
+100% {opacity: 1}
+`;
 const StyledOpeningImage = styled(Image)`
   display: block;
   margin: auto;
@@ -127,8 +134,8 @@ const StyledOpeningImage = styled(Image)`
   width: 80%;
   height: 80%;
   max-width: 400px;
-  animation-name: ${FadeInAnimation};
-  animation-duration: 3s;
+  animation-name: ${FadeInForPicture};
+  animation-duration: 2s;
 `;
 const StyledHeadlineSection = styled.h1`
   animation-name: ${FadeInAnimation};

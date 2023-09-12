@@ -282,12 +282,7 @@ export default function Votecard({}) {
                       <StyledDateHeadline>Datum 4</StyledDateHeadline>
                       <StyledDateFourLabel htmlFor="date4">
                         {moment(date.date4).format("lll")} Uhr
-                        <input
-                          type="checkbox"
-                          id="date4"
-                          name="date4"
-                          value={date.date4}
-                        />
+                        <input type="checkbox" id="date4" name="date4" />
                       </StyledDateFourLabel>
                     </article>
                   )}
@@ -432,11 +427,6 @@ const StyledVoteCardLi = styled.li`
   border-bottom: 1px solid black;
 `;
 
-const StyledVoteCardNoVoteSection = styled.section`
-  margin: 0px;
-  padding: 0px;
-  grid-area: 3 / 1 / 4 / 2;
-`;
 
 const StyledVoteCardFormFinalDatePick = styled.form`
   grid-area: 4 / 1 / 5 / 2;

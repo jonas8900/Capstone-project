@@ -11,7 +11,7 @@ export default async function getGroupDetails(request, response) {
       const createdGroup = await GroupDetails.find({
         _id: { $in: joinedGroupList },
       });
-      console.log(createdGroup);
+
       response.status(201).json(createdGroup);
     } catch (error) {
       console.log(error);

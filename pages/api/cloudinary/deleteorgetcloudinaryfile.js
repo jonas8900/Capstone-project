@@ -16,7 +16,7 @@ cloudinary.config({
 
 export default async function handleUploadPicture(request, response) {
   if (request.method === "POST") {
-    console.log(request.body);
+
     const form = formidable({});
     const [, files] = await form.parse(request);
 
