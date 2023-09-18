@@ -33,7 +33,8 @@ export default function Login() {
         <StyledLoginButton
           onClick={() => {
             signIn("google", {
-              callbackUrl: "http://localhost:3000//validateafterlogin",
+              callbackUrl:
+                "https://friends-project.vercel.app/validateafterlogin",
             });
             // https://friends-project.vercel.app/validateafterlogin
             //http://localhost:3000//validateafterlogin
