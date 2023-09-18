@@ -14,6 +14,8 @@ export default function Activitylist({}) {
   const { data: session } = useSession();
   const [activityData, setActivityData] = useState([]);
   const sessionTrue = session && true;
+  
+
 
   function getActivitySuggestions() {
     if (session) {
