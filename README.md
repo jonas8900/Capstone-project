@@ -1,39 +1,56 @@
 # Friends
 
-my app Friends is about organizing regular events in larger and smaller groups of friends. Since regular meetings often get lost in everyday life and you quickly forget what opportunities you have as a group, I have made it my task to solve this problem with this app.
+Welcome to Friends, an app dedicated to organizing regular events for both larger and smaller groups of friends. In the hustle of everyday life, it's easy to lose track of regular meetups and miss out on opportunities within your group. With Friends, my goal is to tackle this issue and make organizing events a breeze.
 
-You can enter activities, like them, vote, enter events and maintain a list for each event where you can see which person is taking which item to the event. It is also possible to have different groups of friends.
+## Table of Contents
+- [Features](#features)
+- [Highlights](#highlights)
+  - [How to Join or Create a Group](#how-to-join-or-create-a-group)
+  - [Voting Process](#voting-process)
+- [Deployment](#deployment)
+- [Tech Stack](#tech-stack)
 
-This app is still being programmed and is not yet complete, but you can already see a rough direction.
+## Features
 
-Thank you very much for your time!
+You can use Friends to:
 
-![image](https://github.com/jonas8900/Capstone-project/assets/123127839/08f85cc7-627a-48f7-a03b-b6aeb33d7f55)
+- Enter activities and let others know about them
+- Like and vote on activities
+- Create and manage events
+- Maintain a list for each event, showing who is bringing what
+- Manage different groups of friends
 
-## Hightlights:
+While the app is still under development, you can already get a glimpse of its direction.
 
-https://github.com/jonas8900/Capstone-project/assets/123127839/b5e4a974-3c3a-4e89-883e-fdb312a8608f
+Thank you for taking the time to explore Friends!
 
-Press play to see how to join or create a group
+![Friends App](https://github.com/jonas8900/Capstone-project/assets/123127839/08f85cc7-627a-48f7-a03b-b6aeb33d7f55)
 
-https://github.com/jonas8900/Capstone-project/assets/123127839/f579fcae-4ed4-49c2-b64d-e3312a2b8a86
+## Highlights
 
-Press play to see the voting process
+### How to Join or Create a Group
+[![Join or Create a Group](https://github.com/jonas8900/Capstone-project/assets/123127839/b5e4a974-3c3a-4e89-883e-fdb312a8608f)](https://github.com/jonas8900/Capstone-project/assets/123127839/b5e4a974-3c3a-4e89-883e-fdb312a8608f)
 
-Deployment
-You can have a look at the last update of CatYummy on Vercel: [Friends](https://friends-project.vercel.app/)
+### Voting Process
+[![Voting Process](https://github.com/jonas8900/Capstone-project/assets/123127839/f579fcae-4ed4-49c2-b64d-e3312a2b8a86)](https://github.com/jonas8900/Capstone-project/assets/123127839/f579fcae-4ed4-49c2-b64d-e3312a2b8a86)
 
-### Tech Stack
+## Deployment
 
-- [x] React
-- [x] Next.js
-- [x] React Router
-- [x] React Hook Form
-- [x] styled components
-- [x] Javascript
-- [x] MongoDB
-- [x] Mongoose
-- [x] NextAuth
-- [x] Cloudinary
-- [x] Git
-- [x] Shell
+Check out the latest update of Friends on Vercel: [Friends](https://friends-project.vercel.app/)
+
+## Tech Stack
+
+- React
+- Next.js
+- React Router
+- React Hook Form
+- Styled Components
+- JavaScript
+- MongoDB
+- Mongoose
+- NextAuth
+- Cloudinary
+- Git
+- Shell
+
+The app is a work in progress, and your feedback is highly appreciated as we continue to refine and enhance its features. Thank you for your support!
